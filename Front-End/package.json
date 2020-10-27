@@ -12,5 +12,6 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+    "snowpack": "~2.15.1"
   }
 }
