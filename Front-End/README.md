@@ -1,3 +1,18 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center">
+  <h1>IT Ticketing</h1>
+</div>
 
-The node_modules and enviroment varibles are not included
+<h2>Development Setup</h2>
+
+#### .env Example
+
+```
+process.env.NODE_ENV=development
+```
+
+#### Main Scripts
+``` bash
+
+# Serve with hot reload
+yarn start
+```
