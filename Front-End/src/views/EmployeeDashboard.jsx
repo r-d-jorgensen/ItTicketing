@@ -1,18 +1,17 @@
 import React from 'react';
 import loadable from '@loadable/component';
 
-const DEVELOPMENT = process.env.NODE_ENV === 'development';
 const TicketNav = loadable(() => import('components/TicketNav'));
 
-function TicketLogin() {
+function EmployeeDashboard() {
   return (
     <div>
-      { DEVELOPMENT && <TicketNav /> }
+      <TicketNav />
       <main>
-        TicketLogin
+        EmployeeDashboard
       </main>
     </div>
   );
 }
 
-export { TicketLogin as default };
+export { EmployeeDashboard as default };

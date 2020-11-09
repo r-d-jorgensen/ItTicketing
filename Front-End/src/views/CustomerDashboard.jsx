@@ -3,15 +3,15 @@ import loadable from '@loadable/component';
 
 const TicketNav = loadable(() => import('components/TicketNav'));
 
-function TicketHome() {
+function CustomerDashboard() {
   return (
     <div>
       <TicketNav />
       <main>
-        TicketHome
+        CustomerDashboard
       </main>
     </div>
   );
 }
 
-export { TicketHome as default };
+export { CustomerDashboard as default };
