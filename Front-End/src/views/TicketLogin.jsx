@@ -1,4 +1,5 @@
 import React from 'react';
+import InputMask  from 'react-input-mask'
 import loadable from '@loadable/component';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
@@ -9,7 +10,14 @@ function TicketLogin() {
     <div>
       { DEVELOPMENT && <TicketNav /> }
       <main>
-        TicketLogin
+        <h1>TicketLogin</h1>
+        <InputMask
+          placeholder="UserName"
+        />
+        <br/>
+        <InputMask
+          placeholder="Password"
+        />
       </main>
     </div>
   );
