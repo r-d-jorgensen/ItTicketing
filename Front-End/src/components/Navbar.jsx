@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
@@ -7,7 +7,7 @@ const NavLinks = () => {
   if (!DEVELOPMENT) {
     return (
       <nav>
-        
+
       </nav>
     );
   } else {
@@ -37,4 +37,4 @@ const Navbar = () => (
   </header>
 );
 
-export { Navbar as default };
+export default Navbar;

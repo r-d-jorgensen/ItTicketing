@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import NavLink from 'react-router-dom';
 import loadable from '@loadable/component';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
@@ -14,6 +13,9 @@ class Login extends Component {
   haddleSubmit = () => {
     console.log('called server');
   };
+
+  handlepasswordLink = () => history.push('/passwordRetival');
+  handleRegisterLink = () => history.push('/register');
 
   render () {
     return (
@@ -37,10 +39,10 @@ class Login extends Component {
             error="errorResponse"
           />
           <div>
-            <NavLink to="/register"></NavLink>
-            <NavLink to="/passwordRetival"></NavLink>
+            <button onClick={this.handlepasswordLink}>Forgot your password?</button>
+            <button onClick={this.handlepasswordLink}>Don't have an Account?</button>
           </div>
-          <button onClick={haddleSubmit}>Submit</button>
+          <button onClick={this.haddleSubmit}>Submit</button>
         </form>
       </div>
     );

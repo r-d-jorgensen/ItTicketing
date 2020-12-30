@@ -1,14 +1,14 @@
 import React from 'react';
 
-const PasswordRetrival = () => {
+const NotFound = () => {
   return (
     <div>
       { DEVELOPMENT && <Navbar /> }
       <main>
-        passwordRetival
+        
       </main>
     </div>
   );
 }
  
-export default PasswordRetrival;
+export default NotFound;
