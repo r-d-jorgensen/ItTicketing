@@ -1,12 +1,14 @@
 import React from 'react';
+import NavLink from 'react-router-dom';
 import loadable from '@loadable/component';
 
-const TicketNav = loadable(() => import('components/TicketNav'));
+const Navbar = loadable(() => import('components/Navbar'));
 
 function TicketHome() {
   return (
     <div>
       <TicketNav />
+      <NavLink to='/login'>Login</NavLink>
       <main>
         <div>
           <h3>About Us</h3>

@@ -16,6 +16,7 @@
   "devDependencies": {
     "@babel/core": "7.12.3",
     "@babel/eslint-parser": "7.12.1",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/plugin-syntax-dynamic-import": "7.8.3",
     "@babel/preset-react": "7.12.1",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.2",
@@ -40,5 +41,14 @@
     "webpack-cli": "^4.2.0",
     "webpack-dev-server": "3.11.0",
     "webpack-merge": "5.2.0"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+        "@babel/plugin-proposal-class-properties"
+    ]
   }
 }
