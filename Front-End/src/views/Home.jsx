@@ -3,11 +3,10 @@ import { useHistory } from 'react-router-dom';
 
 function Home() {
   const history = useHistory();
-  const handleLoginLink = () => history.push('/login');
 
   return (
     <Fragment>
-      <button type="button" onClick={handleLoginLink}>Login</button>
+      <button type="button" onClick={() => history.push('/login')}>Login</button>
       <div>
         <h3>About Us</h3>
         <p>words about the company</p>

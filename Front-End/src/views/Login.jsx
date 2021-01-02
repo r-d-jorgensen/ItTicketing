@@ -1,52 +1,46 @@
-import React, { Component } from 'react';
+import React, { Fragment, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import loadable from '@loadable/component';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 const Navbar = loadable(() => import('components/Navbar'));
 const Input = loadable(() => import('components/Input'));
 
-class Login extends Component {
-  state = {
-    value: ""
-  };
+function Login() {
+  const history = useHistory();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  haddleSubmit = () => {
-    console.log('called server');
-  };
-
-  handlepasswordLink = () => history.push('/passwordRetival');
-  handleRegisterLink = () => history.push('/register');
-
-  render () {
     return (
-      <div>
+      <Fragment>
         { DEVELOPMENT && <Navbar /> }
-        <form>
+        <div>
           <h1>TicketLogin</h1>
-          <Input
-            name="Username"
-            mask=""
-            value=""
-            onChange=""
-            error=""
-          />
+          <Input 
+            name={"Username"}
+            value={username}
+            mask={""}
+            maskChar={""}
+            onChange={e => setUsername(e.target.value)}
+            error={""}
+          /> 
           <br/>
-          <Input
-            name="Password"
-            mask=""
-            value=""
-            onChange=""
-            error="errorResponse"
-          />
+          <Input 
+            name={"Password"}
+            value={password}
+            mask={""}
+            maskChar={""}
+            onChange={e => setPassword(e.target.value)}
+            error={""}
+          /> 
           <div>
-            <button onClick={this.handlepasswordLink}>Forgot your password?</button>
-            <button onClick={this.handlepasswordLink}>Don't have an Account?</button>
+            <button onClick={() => history.push('/passwordRetrival')}>Forgot your password?</button>
+            <button onClick={() => history.push('/register')}>Don't have an Account?</button>
           </div>
-          <button onClick={this.haddleSubmit}>Submit</button>
-        </form>
-      </div>
+          <button>Submit</button>
+        </div>
+      </Fragment>
     );
-  }
 }
 
 export default Login;
