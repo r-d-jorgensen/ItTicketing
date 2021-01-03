@@ -4,9 +4,7 @@ const DEVELOPMENT = process.env.NODE_ENV === 'development';
 const NotFound = () => {
   return (
     <Fragment>
-      <main>
-        404 NOT FOUND
-      </main>
+      404 NOT FOUND
     </Fragment>
   );
 }

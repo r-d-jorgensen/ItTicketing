@@ -12,7 +12,7 @@ function Login() {
     return (
       <Fragment>
         <div>
-          <h1>TicketLogin</h1>
+          <h1>Ticket Login</h1>
           <Input 
             name={"Username"}
             value={username}
