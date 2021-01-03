@@ -2,8 +2,6 @@ import React, { Fragment, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import loadable from '@loadable/component';
 
-const DEVELOPMENT = process.env.NODE_ENV === 'development';
-const Navbar = loadable(() => import('components/Navbar'));
 const Input = loadable(() => import('components/Input'));
 
 function Login() {
@@ -13,7 +11,6 @@ function Login() {
 
     return (
       <Fragment>
-        { DEVELOPMENT && <Navbar /> }
         <div>
           <h1>TicketLogin</h1>
           <Input 
@@ -34,8 +31,8 @@ function Login() {
             error={""}
           /> 
           <div>
-            <button onClick={() => history.push('/passwordRetrival')}>Forgot your password?</button>
-            <button onClick={() => history.push('/register')}>Don't have an Account?</button>
+            <button onClick={() => history.push('/accountRetrival')}>Forgot your password?</button>
+            <button onClick={() => history.push('/registration')}>Don't have an Account?</button>
           </div>
           <button>Submit</button>
         </div>

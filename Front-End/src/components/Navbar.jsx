@@ -7,7 +7,28 @@ const NavLinks = () => {
   if (!DEVELOPMENT) {
     return (
       <nav>
-
+        <ul>
+          <li>
+            <Link to="/">
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link to="/login">
+              Login
+            </Link>
+          </li>
+          <li>
+            <Link to="/registration">
+              Registration
+            </Link>
+          </li>
+          <li>
+            <Link to="/accountRetrival">
+              Account Retrival
+            </Link>
+          </li>
+        </ul>
       </nav>
     );
   } else {
@@ -22,6 +43,16 @@ const NavLinks = () => {
           <li>
             <Link to="/login">
               Login
+            </Link>
+          </li>
+          <li>
+            <Link to="/registration">
+              Registration
+            </Link>
+          </li>
+          <li>
+            <Link to="/accountRetrival">
+              Account Retrival
             </Link>
           </li>
         </ul>

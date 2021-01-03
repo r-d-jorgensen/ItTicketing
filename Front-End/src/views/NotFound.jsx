@@ -1,14 +1,13 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
 const NotFound = () => {
   return (
-    <div>
-      { DEVELOPMENT && <Navbar /> }
+    <Fragment>
       <main>
         404 NOT FOUND
       </main>
-    </div>
+    </Fragment>
   );
 }
  

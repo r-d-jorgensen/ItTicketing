@@ -8,8 +8,8 @@ import 'normalize.css';
 const Navbar = loadable(() => import('components/Navbar'));
 const Home = loadable(() => import('views/Home'));
 const Login = loadable(() => import('views/Login'));
-const Register = loadable(() => import('views/Register'));
-const PasswordRetrival = loadable(() => import('views/PasswordRetrival'));
+const Registration = loadable(() => import('views/Registration'));
+const AccountRetrival = loadable(() => import('views/AccountRetrival'));
 const NotFound = loadable(() => import('views/NotFound'));
 
 ReactDOM.render(
@@ -18,8 +18,8 @@ ReactDOM.render(
       <Navbar />
       <main>
         <Switch>
-          <Route path="/passwordRetrival" component={PasswordRetrival} />
-          <Route path="/register" component={Register} />
+          <Route path="/accountRetrival" component={AccountRetrival} />
+          <Route path="/registration" component={Registration} />
           <Route path="/login" component={Login} />
           <Route path='/not-found' component={NotFound} />
           <Route path="/" exact component={Home} />
