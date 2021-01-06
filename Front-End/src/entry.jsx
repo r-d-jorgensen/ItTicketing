@@ -4,6 +4,7 @@ import {BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import loadable from '@loadable/component';
 
 import 'normalize.css';
+import './Entry.css';
 
 const Navbar = loadable(() => import('components/Navbar'));
 const Home = loadable(() => import('views/Home'));

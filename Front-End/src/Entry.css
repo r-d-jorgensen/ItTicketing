@@ -1,0 +1,16 @@
+html {
+  background-image: linear-gradient(to right, #2966e9, #eaf4fc, #2966e9);
+  text-align: center;
+}
+
+.navbar {
+  border-color: black;
+  border-style: solid;
+}
+
+main {
+  width: 60%;
+  margin: auto;
+  border-color: black;
+  border-style: solid;
+}

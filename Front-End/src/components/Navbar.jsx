@@ -62,7 +62,7 @@ const NavLinks = () => {
 };
 
 const Navbar = () => (
-  <header>
+  <header className="navbar">
     <h1>It Ticketing Systems Inc.</h1>
     <NavLinks />
   </header>
