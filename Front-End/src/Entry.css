@@ -1,16 +1,30 @@
+* {
+  padding: 0px;
+  margin: 0px;
+}
+
 html {
   background-image: linear-gradient(to right, #2966e9, #eaf4fc, #2966e9);
   text-align: center;
 }
 
-.navbar {
-  border-color: black;
-  border-style: solid;
+header {
+  margin: 10px;
+}
+
+nav {
+  padding: 5px;
+  background-color: #4ec1e6;
+}
+
+.nav-item {
+  padding: 5px 40px;
+  border-color: rgba(245, 245, 245, 0.8);
+  box-shadow: 2px 2px 2px 2px #6e6e6e inset;
 }
 
 main {
   width: 60%;
   margin: auto;
-  border-color: black;
   border-style: solid;
 }

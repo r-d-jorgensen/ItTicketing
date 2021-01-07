@@ -1,12 +1,8 @@
 import React, { Fragment } from 'react';
-import { useHistory } from 'react-router-dom';
 
 function Home() {
-  const history = useHistory();
-
   return (
     <Fragment>
-      <button type="button" onClick={() => history.push('/login')}>Login</button>
       <div>
         <h3>About Us</h3>
         <p>words about the company</p>

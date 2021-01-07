@@ -3,60 +3,35 @@ import { Link } from 'react-router-dom';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
+const navLandinglinks = [
+  {link: "/", name: "Home"},
+  {link: "/login", name: "Login"},
+  {link: "/registration", name: "Registration"},
+  {link: "/accountRetrival", name: "Account Retrival"},
+];
+
 const NavLinks = () => {
   if (!DEVELOPMENT) {
     return (
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">
-              Home
+        <nav>
+          {navLandinglinks.map(element => 
+            <Link to={element.link} className="nav-item" key={element.name}>
+              {element.name}
             </Link>
-          </li>
-          <li>
-            <Link to="/login">
-              Login
-            </Link>
-          </li>
-          <li>
-            <Link to="/registration">
-              Registration
-            </Link>
-          </li>
-          <li>
-            <Link to="/accountRetrival">
-              Account Retrival
-            </Link>
-          </li>
-        </ul>
-      </nav>
+          )}
+        </nav>
     );
   } else {
     return (
-      <nav>
         <ul>
-          <li>
-            <Link to="/">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/login">
-              Login
-            </Link>
-          </li>
-          <li>
-            <Link to="/registration">
-              Registration
-            </Link>
-          </li>
-          <li>
-            <Link to="/accountRetrival">
-              Account Retrival
-            </Link>
-          </li>
+          {navLandinglinks.map(element => 
+            <li key={element.name}>
+              <Link to={element.link}>
+                {element.name}
+              </Link>
+            </li>
+          )}
         </ul>
-      </nav>
     );
   }
 };

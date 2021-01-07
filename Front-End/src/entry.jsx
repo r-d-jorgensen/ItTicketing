@@ -14,7 +14,6 @@ const AccountRetrival = loadable(() => import('views/AccountRetrival'));
 const NotFound = loadable(() => import('views/NotFound'));
 
 ReactDOM.render(
-  <React.StrictMode>
     <BrowserRouter>
       <Navbar />
       <main>
@@ -27,7 +26,6 @@ ReactDOM.render(
           <Redirect to='/not-found' />
         </Switch>
       </main>
-    </BrowserRouter>
-  </React.StrictMode>,
+    </BrowserRouter>,
   document.getElementById('root'),
 );
