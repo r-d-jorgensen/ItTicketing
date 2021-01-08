@@ -1,6 +1,6 @@
 * {
-  padding: 0px;
-  margin: 0px;
+  margin: auto;
+  padding: auto;
 }
 
 html {
@@ -13,18 +13,18 @@ header {
 }
 
 nav {
-  padding: 5px;
+  padding: 15px;
   background-color: #4ec1e6;
 }
 
 .nav-item {
-  padding: 5px 40px;
+  padding: 15px 40px;
   border-color: rgba(245, 245, 245, 0.8);
   box-shadow: 2px 2px 2px 2px #6e6e6e inset;
 }
 
 main {
   width: 60%;
-  margin: auto;
   border-style: solid;
+  display: block;
 }

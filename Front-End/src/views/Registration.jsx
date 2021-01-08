@@ -1,4 +1,5 @@
 import React, {Fragment, useState} from 'react';
+import "./Registration.css"
 import loadable from '@loadable/component';
 
 const Input = loadable(() => import('components/Input'));
@@ -24,7 +25,7 @@ function Registration() {
           onChange={e => setUsername(e.target.value)}
           error={""}
         />
-      <div>
+      <div className="line-box">
         <Input 
           name={"First Name"}
           value={firstName}

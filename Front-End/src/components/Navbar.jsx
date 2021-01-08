@@ -3,15 +3,11 @@ import { Link } from 'react-router-dom';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
-const navLandinglinks = [
-  {link: "/", name: "Home"},
-  {link: "/login", name: "Login"},
-  {link: "/registration", name: "Registration"},
-  {link: "/accountRetrival", name: "Account Retrival"},
-];
-
 const NavLinks = () => {
   if (!DEVELOPMENT) {
+    const navLandinglinks = [
+      {link: "/login", name: "Login"},
+    ];
     return (
         <nav>
           {navLandinglinks.map(element => 
@@ -22,6 +18,12 @@ const NavLinks = () => {
         </nav>
     );
   } else {
+    const navLandinglinks = [
+      {link: "/", name: "Home"},
+      {link: "/login", name: "Login"},
+      {link: "/registration", name: "Registration"},
+      {link: "/accountRetrival", name: "Account Retrival"},
+    ];
     return (
         <ul>
           {navLandinglinks.map(element => 
