@@ -1,30 +1,87 @@
 * {
   margin: auto;
-  padding: auto;
 }
 
 html {
-  background-image: linear-gradient(to right, #2966e9, #eaf4fc, #2966e9);
+  background-image: url('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmotionarray-portfolio.imgix.net%2Fpreview-90490-85a71cb06fc0583bd0976d8a58e16596-high.jpg&f=1&nofb=1');
+  background-size: cover;
   text-align: center;
+  color: rgb(234, 244, 252);
 }
 
 header {
-  margin: 10px;
+  z-index: -1;
+  padding: 10px 0px 0px;
+}
+
+header h1 {
+  margin: 15px;
+  font-size: 50px;
+  cursor: pointer;
+}
+
+header h1:hover {
+  color: rgb(65, 134, 194);
 }
 
 nav {
-  padding: 15px;
-  background-color: #4ec1e6;
+  position: relative;
+  display: flex;
+  height: 100%;
+  border-style: double;
+  border-color: black;
+}
+
+nav::before {
+  content: '';
+  background-image: linear-gradient(to right, #4ec1e6, #eaf4fc, #4ec1e6);
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  z-index: -1;
+  opacity: 0.5;
 }
 
 .nav-item {
-  padding: 15px 40px;
-  border-color: rgba(245, 245, 245, 0.8);
-  box-shadow: 2px 2px 2px 2px #6e6e6e inset;
+  flex: auto;
+  padding: 5px 0px;
+  border-style: double;
+  border-color: black;
+  font-size: 30px;
+  color: #eaf4fc;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  color: rgb(35, 63, 88);
+}
+
+.filler {
+  flex: auto;
+  padding: 20px;
 }
 
 main {
-  width: 60%;
-  border-style: solid;
-  display: block;
+  position: relative;
+  height: 100vh;
+  width: 70%;
+  padding: 30px;
+  box-shadow: -1px 0px 5px 5px rgba(0, 0, 0, 0.5) inset;
+}
+
+main::before {
+  content: '';
+  background-image: linear-gradient(to right, #2966e9, #eaf4fc, #2966e9);
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  z-index: -1;
+  opacity: 0.5;
 }

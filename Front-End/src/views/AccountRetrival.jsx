@@ -14,5 +14,5 @@ const AccountRetrival = () => {
     </Fragment>
   );
 }
- 
+
 export default AccountRetrival;

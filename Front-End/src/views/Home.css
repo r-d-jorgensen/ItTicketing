@@ -1,4 +1,4 @@
-main {
+.main-content {
   display: grid;
   grid-template-columns: auto auto;
   grid-column-gap: 50px;

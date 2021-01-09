@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './Login.css';
 import loadable from '@loadable/component';
@@ -11,7 +11,7 @@ function Login() {
   const [password, setPassword] = useState('');
 
     return (
-      <Fragment>
+      <div>
           <h1>Ticket Login</h1>
           <Input 
             name={"Username"}
@@ -35,7 +35,7 @@ function Login() {
             <button onClick={() => history.push('/registration')}>Don't have an Account?</button>
           </div>
           <button>Submit</button>
-      </Fragment>
+      </div>
     );
 }
 

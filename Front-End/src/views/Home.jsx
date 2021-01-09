@@ -3,7 +3,7 @@ import './Home.css';
 
 function Home() {
   return (
-    <Fragment>
+    <div className="main-content">
         <div>
           <h3>About Us</h3>
           <p>
@@ -43,7 +43,7 @@ function Home() {
             </p>
           </div>          
         </div>
-    </Fragment>
+    </div>
   );
 }
 
