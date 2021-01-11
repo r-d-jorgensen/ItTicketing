@@ -1,0 +1,16 @@
+Need to install NodeJS in order to run the file.
+
+Installed and was running with Ubuntu mate
+
+need to install
+
+sudo apt install nodejs
+sudo apt install npm
+
+After installing npm you need to attach mysql to it
+
+npm install mysql
+
+After this to run the file from the directory it is in
+
+node <filename>.js
