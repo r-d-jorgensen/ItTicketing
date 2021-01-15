@@ -1,0 +1,12 @@
+#not-found-page h1 {
+  font-size: 200px;
+  margin: 10px;
+  background-image: linear-gradient(
+    -90deg,
+    #000000 0%,
+    #ffffff 50%,
+    #000000 100%
+  );
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}

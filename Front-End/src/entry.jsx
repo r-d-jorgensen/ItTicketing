@@ -16,14 +16,14 @@ const NotFound = loadable(() => import('views/NotFound'));
 ReactDOM.render(
     <BrowserRouter>
       <Navbar />
-        <Switch>
-          <Route path="/accountRetrival" component={AccountRetrival} />
-          <Route path="/registration" component={Registration} />
-          <Route path="/login" component={Login} />
-          <Route path='/not-found' component={NotFound} />
-          <Route path="/" exact component={Home} />
-          <Redirect to='/not-found' />
-        </Switch>
+      <Switch>
+        <Route path="/accountRetrival" component={AccountRetrival} />
+        <Route path="/registration" component={Registration} />
+        <Route path="/login" component={Login} />
+        <Route path='/not-found' component={NotFound} />
+        <Route path="/" exact component={Home} />
+        <Redirect to='/not-found' />
+      </Switch>
     </BrowserRouter>,
   document.getElementById('root'),
 );

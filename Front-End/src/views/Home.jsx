@@ -3,36 +3,59 @@ import './Home.css';
 
 function Home() {
   return (
-    <div className="main-content">
+    <main id="home-page">
         <div>
           <h3>About Us</h3>
           <p>
-            words about the company
-            words about the company
-            words about the company
-            words about the company
-            words about the company
-            words about the company
-            words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
+            words about the company words about the company words about the company
           </p>
         </div>
         <div>
           <div>
             <h3>How To Sign Up!</h3>
             <p>
-              words about how to sign up to our service
-              words about how to sign up to our service
-              words about how to sign up to our service
-              words about how to sign up to our service
-              words about how to sign up to our service
-              words about how to sign up to our service
-              words about how to sign up to our service
-              words about how to sign up to our service
+              words about how to sign up to our service words about how to sign up to our service
+              words about how to sign up to our service words about how to sign up to our service
+              words about how to sign up to our service words about how to sign up to our service
+              words about how to sign up to our service words about how to sign up to our service
+              words about how to sign up to our service words about how to sign up to our service
+              words about how to sign up to our service words about how to sign up to our service
+              words about how to sign up to our service words about how to sign up to our service
+              words about how to sign up to our service words about how to sign up to our service
             </p>
           </div>
           <div>
-            <h3>Contact Us</h3>
-            <p>
+            <h3>How to Contact Us</h3>
+            <p id="contact-info">
               contact information
               <br/>
               contact information
@@ -43,7 +66,7 @@ function Home() {
             </p>
           </div>          
         </div>
-    </div>
+    </main>
   );
 }
 

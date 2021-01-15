@@ -21,7 +21,9 @@ header h1 {
 }
 
 header h1:hover {
-  color: rgb(65, 134, 194);
+  background: linear-gradient(to right, #0404d3, #eaf4fc, #0404d3);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
 }
 
 nav {
@@ -46,7 +48,7 @@ nav::before {
 }
 
 .nav-item {
-  flex: auto;
+  flex: auto 1;
   padding: 5px 0px;
   border-style: double;
   border-color: black;
@@ -58,6 +60,16 @@ nav::before {
 
 .nav-item:hover {
   color: rgb(35, 63, 88);
+}
+
+.login-button {
+  padding: 5px 20px;
+  border-style: double;
+  border-color: black;
+  font-size: 30px;
+  color: #eaf4fc;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 .filler {
@@ -75,7 +87,7 @@ main {
 
 main::before {
   content: '';
-  background-image: linear-gradient(to right, #2966e9, #eaf4fc, #2966e9);
+  background-image: linear-gradient(to right, #2966e9, #262c31, #2966e9);
   background-size: cover;
   position: absolute;
   top: 0px;
@@ -83,5 +95,11 @@ main::before {
   bottom: 0px;
   left: 0px;
   z-index: -1;
-  opacity: 0.5;
+  opacity: 0.75;
+}
+
+.double-column {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-column-gap: 50px;
 }

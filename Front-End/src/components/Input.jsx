@@ -1,16 +1,17 @@
 import React from 'react';
 import InputMask  from 'react-input-mask';
 
-const Input = ({name, value, mask, maskChar, onChange, error}) => {
+const Input = ({label, name, value, mask, maskChar, onChange, error, inputClass}) => {
   return (
     <div>
-      <label>{name}</label>
+      {label ? <label>{name}</label> : null}
       <InputMask
+        className={inputClass}
         id={name}
         value={value}
         mask={mask}
         maskChar={maskChar}
-        placeholder="Username"
+        placeholder={name}
         onChange={onChange}
       />
       {error && <div className='alert alert-danger'>{error}</div>}

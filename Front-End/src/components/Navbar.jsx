@@ -11,12 +11,10 @@ function Navbar() {
     let navLandinglinks = [];
     if (!DEVELOPMENT) {
       navLandinglinks = [
-        {link: "/login", name: "Login"},
       ];
     } else {
       navLandinglinks = [
         {link: "/", name: "Home"},
-        {link: "/login", name: "Login"},
         {link: "/registration", name: "Registration"},
         {link: "/accountRetrival", name: "Account Retrival"},
       ];
@@ -34,13 +32,16 @@ function Navbar() {
         <span className="filler" />
         <span className="filler" />
         <span className="filler" />
+        <Link to={"/login"} className="login-button">
+            Login
+        </Link>
       </nav>
     );
   };
 
   return (
     <header className="navbar">
-      <h1 onClick={() => history.push('/')}>It Ticketing Systems Inc.</h1>
+      <h1 onClick={() => history.push('/')}>IT Ticketing Systems Inc.</h1>
       <NavLinks />
     </header>
   )

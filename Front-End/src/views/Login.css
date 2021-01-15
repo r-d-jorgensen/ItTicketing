@@ -1,3 +1,47 @@
-main {
-  display: block;
+#login-page {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  position: absolute;
+  top: 15%;
+}
+
+#login-page input {
+  width: 300px;
+  height: 50px;
+  font-size: 20px;
+  border-radius: 30px;
+  background-image: linear-gradient(to right, #4ec1e6, #eaf4fc, #4ec1e6);
+  text-align: center;
+}
+
+#login-page .double-column a {
+  padding: 10px;
+  background: linear-gradient(to right, #4ec1e6, #eaf4fc, #4ec1e6);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  cursor: pointer;
+}
+
+.button {
+  margin: 25px;
+  width: 200px;
+  height: 50px;
+  font-size: 30px;
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+  line-height: 50px;
+  box-shadow: 20px 5px 25px #4ec1e6, 0px 5px 25px #0404d3,
+    -20px 5px 25px #4ec1e6;
+  background-image: linear-gradient(
+    -90deg,
+    #4ec1e6 0%,
+    #0404d3 47%,
+    #4ec1e6 100%
+  );
+  cursor: pointer;
 }

@@ -11,15 +11,17 @@ function Login() {
   const [password, setPassword] = useState('');
 
     return (
-      <div>
-          <h1>Ticket Login</h1>
-          <Input 
+      <main id="login-page">
+        <div className="container">
+          <Input
+            label={""}
             name={"Username"}
             value={username}
             mask={""}
             maskChar={""}
             onChange={e => setUsername(e.target.value)}
             error={""}
+            inputClass="login-input"
           /> 
           <br/>
           <Input 
@@ -29,13 +31,15 @@ function Login() {
             maskChar={""}
             onChange={e => setPassword(e.target.value)}
             error={""}
+            inputClass="login-input"
           /> 
-          <div>
-            <button onClick={() => history.push('/accountRetrival')}>Forgot your password?</button>
-            <button onClick={() => history.push('/registration')}>Don't have an Account?</button>
+          <div className="double-column">
+            <a onClick={() => history.push('/accountRetrival')}>Forgot your password?</a>
+            <a onClick={() => history.push('/registration')}>Don't have an Account?</a>
           </div>
-          <button>Submit</button>
-      </div>
+          <button className="button">Login</button>
+        </div>
+      </main>
     );
 }
 

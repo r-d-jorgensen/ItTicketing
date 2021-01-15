@@ -1,5 +1,24 @@
-.main-content {
+#home-page {
   display: grid;
   grid-template-columns: auto auto;
   grid-column-gap: 50px;
+}
+
+#home-page div {
+  margin-top: 0px;
+  padding: 10px;
+}
+
+#home-page div h3 {
+  font-size: 30px;
+  padding: 5px;
+}
+
+#home-page div p {
+  font-size: 17px;
+  padding: 10px;
+}
+
+#contact-info {
+  font-size: 25px;
 }

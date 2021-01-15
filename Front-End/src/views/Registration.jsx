@@ -15,7 +15,7 @@ function Registration() {
   const [phone, setPhone] = useState('');
 
   return (
-    <Fragment>
+    <main>
       <h1>Registration</h1>
       <Input 
           name={"Username"}
@@ -84,7 +84,7 @@ function Registration() {
         error={""}
       />
       <button>Submit</button>
-    </Fragment>
+    </main>
   );
 }
 
