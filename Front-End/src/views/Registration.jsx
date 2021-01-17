@@ -15,8 +15,9 @@ function Registration() {
   const [phone, setPhone] = useState('');
 
   return (
-    <main>
-      <h1>Registration</h1>
+    <main id="registration-page">
+      <div id="container">
+      <h3>Sign up for an Account</h3>
       <Input 
           name={"Username"}
           value={username}
@@ -25,7 +26,7 @@ function Registration() {
           onChange={e => setUsername(e.target.value)}
           error={""}
         />
-      <div className="line-box">
+      <div id="name-inputs">
         <Input 
           name={"First Name"}
           value={firstName}
@@ -83,7 +84,8 @@ function Registration() {
         onChange={e => setPhone(e.target.value)}
         error={""}
       />
-      <button>Submit</button>
+      <a id="sumbit-button" className="button">Sign Up</a>
+      </div>
     </main>
   );
 }

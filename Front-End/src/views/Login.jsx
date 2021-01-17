@@ -34,7 +34,7 @@ function Login() {
             inputClass="login-input"
           /> 
           <div className="double-column">
-            <a onClick={() => history.push('/accountRetrival')}>Forgot your password?</a>
+            <a onClick={() => history.push('/accountRetrival')}>Forgot your password?<br/>Or<br/>Forgot your username?</a>
             <a onClick={() => history.push('/registration')}>Don't have an Account?</a>
           </div>
           <button className="button">Login</button>

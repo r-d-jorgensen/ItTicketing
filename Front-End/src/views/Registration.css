@@ -1,3 +1,36 @@
-.line-box {
+#registration-page {
+}
+
+#registration-page h3 {
+  font-size: 50px;
+  margin: 10px;
+}
+
+#container {
+  text-align: left;
+  margin-left: 300px;
+}
+
+#name-inputs {
   display: flex;
+}
+
+#name-inputs div {
+  margin-left: 0px;
+  margin-right: 75px;
+}
+
+#registration-page input {
+  margin: 10px;
+  width: 250px;
+  height: 40px;
+  font-size: 20px;
+  border-radius: 30px;
+  background-image: linear-gradient(to right, #4ec1e6, #eaf4fc, #4ec1e6);
+  text-align: center;
+}
+
+#sumbit-button {
+  margin-top: 100px;
+  padding: 10px 30px;
 }

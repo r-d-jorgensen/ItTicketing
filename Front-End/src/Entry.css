@@ -103,3 +103,23 @@ main::before {
   grid-template-columns: auto auto;
   grid-column-gap: 50px;
 }
+
+.button {
+  margin: 25px;
+  width: 200px;
+  height: 50px;
+  font-size: 30px;
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+  line-height: 50px;
+  box-shadow: 20px 5px 25px #4ec1e6, 0px 5px 25px #0404d3,
+    -20px 5px 25px #4ec1e6;
+  background-image: linear-gradient(
+    -90deg,
+    #4ec1e6 0%,
+    #0404d3 47%,
+    #4ec1e6 100%
+  );
+  cursor: pointer;
+}
