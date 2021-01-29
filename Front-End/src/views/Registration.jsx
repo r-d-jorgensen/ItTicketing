@@ -1,10 +1,21 @@
-import React, {Fragment, useState} from 'react';
+import React, { useState } from 'react';
 import "./Registration.css"
 import loadable from '@loadable/component';
 
 const Input = loadable(() => import('components/Input'));
 
-function Registration() {
+const SignUpUser = (username, firstName, lastName, password, passwordConfirm, email, emailConfirm, phone) => {
+  //need requierments for userinfo
+  
+  //send call to server to make new user
+  //or
+  //give errors on credetials
+
+  //give error if user already exists or other problems
+}
+
+const Registration = () => {
+  //needs condensing of hooks
   const [username, setUsername] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -84,7 +95,10 @@ function Registration() {
         onChange={e => setPhone(e.target.value)}
         error={""}
       />
-      <a id="sumbit-button" className="button">Sign Up</a>
+      <a id="sumbit-button" className="button"
+        onClick={() => SignUpUser(username, firstName, lastName, password,
+          passwordConfirm, email, emailConfirm, phone)}
+        >Sign Up</a>
       </div>
     </main>
   );
