@@ -12,11 +12,15 @@ const Login = loadable(() => import('views/Login'));
 const Registration = loadable(() => import('views/Registration'));
 const AccountRetrival = loadable(() => import('views/AccountRetrival'));
 const NotFound = loadable(() => import('views/NotFound'));
+const Customer = loadable(() => import('views/Customer'));
+const Employee = loadable(() => import('views/Employee'));
 
 ReactDOM.render(
     <BrowserRouter>
       <Navbar />
       <Switch>
+        <Route path="/customer" component={Customer} />
+        <Route path="/employee" component={Employee} />
         <Route path="/accountRetrival" component={AccountRetrival} />
         <Route path="/registration" component={Registration} />
         <Route path="/login" component={Login} />
