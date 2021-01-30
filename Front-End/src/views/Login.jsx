@@ -5,34 +5,34 @@ import loadable from '@loadable/component';
 
 const Input = loadable(() => import('components/Input'));
 
-const LoginAuthorization = (username, password) => {
-  //make call to server
-  console.log(`calling server with ${username} and ${password}`);
-  //store info
-  const user = {type: 'employee'};
-  if (user) {
-    //delete temp once server connection is posible and data can be sent
-    //in the mean time use this to navigate to deaper levels
-    const tempEmployee = { username: "bob", password: "123" }
-    const tempCustomer = { username: "steve", password: "456" }
-
-    if (tempEmployee.username === username &&  tempEmployee.password === password) {
-      history.push('/employee')
-    } else if (user.type === 'customer') {
-      //login customer side
-      history.push('/customer')
-    } else {
-      //display error
-    }
-  } else {
-    //display error
-  }
-}
-
 const Login = () => {
   const history = useHistory();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const LoginAuthorization = (username, password) => {
+    //make call to server
+    console.log(`calling server with ${username} and ${password}`);
+    //store info
+    const user = {type: 'employee'};
+    if (user) {
+      //delete temp once server connection is posible and data can be sent
+      //in the mean time use this to navigate to deaper levels
+      const tempEmployee = { username: "bob", password: "123" }
+      const tempCustomer = { username: "steve", password: "456" }
+  
+      if (tempEmployee.username === username &&  tempEmployee.password === password) {
+        history.push('/employee')
+      } else if (user.type === 'customer') {
+        //login customer side
+        history.push('/customer')
+      } else {
+        //display error
+      }
+    } else {
+      //display error
+    }
+  }
 
   return (
     <main id="login-page">
