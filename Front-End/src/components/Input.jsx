@@ -6,11 +6,11 @@ const Input = ({label, name, error, ...rest}) => {
     <div>
       {label ? <label>{name}</label> : null}
       <InputMask
-        id={name}
+        name={name}
         placeholder={name}
         {...rest}
       />
-      {error && <div className='alert alert-danger'>{error}</div>}
+      <div className="error">{error}</div>
     </div> 
   );
 }

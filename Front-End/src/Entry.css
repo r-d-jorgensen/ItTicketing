@@ -123,3 +123,8 @@ main::before {
   );
   cursor: pointer;
 }
+
+.error {
+  color: red;
+  margin: 5px;
+}

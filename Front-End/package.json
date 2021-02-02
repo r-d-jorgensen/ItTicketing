@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@loadable/component": "5.14.1",
+    "joi": "^17.3.0",
     "normalize.css": "8.0.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",

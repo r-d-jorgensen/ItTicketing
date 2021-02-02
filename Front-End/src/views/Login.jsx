@@ -7,57 +7,76 @@ const Input = loadable(() => import('components/Input'));
 
 const Login = () => {
   const history = useHistory();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [data, setData] = useState({ 
+    username: '', 
+    password: '',
+    error: ''
+  });
 
-  const LoginAuthorization = (username, password) => {
+  const updateField = e => { 
+    console.log(e.target.name)
+    setData({ 
+      ...data,
+      error: '',
+      [e.target.id]: e.target.value 
+    }); 
+  };
+
+  const LoginAuthorization = e => {
+    e.preventDefault();
     //make call to server
-    console.log(`calling server with ${username} and ${password}`);
+    console.log(`calling server with ${data.username} and ${data.password}`);
     //store info
-    const user = {type: 'employee'};
-    if (user) {
-      //delete temp once server connection is posible and data can be sent
-      //in the mean time use this to navigate to deaper levels
-      const tempEmployee = { username: "bob", password: "123" }
-      const tempCustomer = { username: "steve", password: "456" }
-  
-      if (tempEmployee.username === username &&  tempEmployee.password === password) {
-        history.push('/employee')
-      } else if (user.type === 'customer') {
-        //login customer side
-        history.push('/customer')
-      } else {
-        //display error
-      }
-    } else {
-      //display error
+    const user = {};
+
+    //delete temp once server connection is posible and data can be sent
+    //reset this with the userinfo recived from the server
+    //in the mean time use this to navigate to deaper levels
+    const tempEmployee = { username: "bob", password: "123" }
+    const tempCustomer = { username: "steve", password: "456" }
+    if (tempEmployee.username === data.username &&  tempEmployee.password === data.password) {
+      user = {type: 'employee'};
+    } else if (tempCustomer.username === data.username &&  tempCustomer.password === data.password) {
+      user = {type: 'customer'};
+    }
+    
+    if (user.type === "employee") {
+      history.push('/employee');
+    } else if (user.type === "customer") {
+      history.push('/customer');
+    }else {
+      setData({
+        ...data,
+        error: "Incorrect username or password."
+      });
     }
   }
 
   return (
     <main id="login-page">
-      <div className="container">
+      <form className="container" onSubmit={LoginAuthorization}>
         <Input
-          name={"Username"}
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          error={""}
+          id="username"
+          name="Username"
+          value={data.username}
+          onChange={updateField}
           className="login-input"
         /> 
         <br/>
         <Input 
-          name={"Password"}
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          error={""}
+          id="password"
+          name="Password"
+          value={data.password}
+          onChange={updateField}
+          error={data.error}
           className="login-input"
         /> 
         <div className="double-column">
           <a onClick={() => history.push('/accountRetrival')}>Forgot your password?<br/>Or<br/>Forgot your username?</a>
           <a onClick={() => history.push('/registration')}>Don't have an Account?</a>
         </div>
-        <button className="button" onClick={() => LoginAuthorization(username, password)}>Login</button>
-      </div>
+        <button className="button">Login</button>
+      </form>
     </main>
   );
 }
