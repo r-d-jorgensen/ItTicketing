@@ -29,5 +29,11 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error', {
       devDependencies: true,
     }],
+
+    'object-curly-newline': ['error', {
+      multiline: true,
+      minProperties: 4,
+      consistent: false,
+    }],
   },
 };
