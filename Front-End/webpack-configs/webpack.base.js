@@ -52,7 +52,7 @@ const base = {
   },
   // Externals excludes this module from the final bundle.
   externals: {
-    'prop-types': 'prop-types',
+  //  'prop-types': 'prop-types',
   },
   // The meat of webpack and where various asset types are told how to be handled.
   // A rule is composed of conditions that specify matching modules and one or more
@@ -99,6 +99,7 @@ const base = {
       eslintPath: require.resolve('eslint'),
       context: './src',
       cache: true,
+      failOnError: false,
       resolvePluginsRelativeTo: __dirname,
     }),
     // Sets global constant at *compile* time

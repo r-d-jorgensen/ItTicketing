@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Joi, { string } from "joi";
-import "./Registration.css"
+import "./Registration.css";
 import loadable from '@loadable/component';
 
 const Input = loadable(() => import('components/Input'));
@@ -56,12 +56,12 @@ const Registration = () => {
       // send call to server to make new user and send back to Login
       // history.push('/login');
     } else {
-      const errs = result.error?.details.map(({ message, context: { label } }) => (
+      const errs = result.error.details.map(({ message, context: { label } }) => (
         { label, message: message.replace(/['"]/g, '') }
       ));
       let temp = {}
       errs.forEach(element => {
-        temp[element.label] = element.message;
+        temp.[element.label] = element.message;
       });
       setErrors({ ...temp });
     }

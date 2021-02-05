@@ -29,7 +29,7 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error', {
       devDependencies: true,
     }],
-
+    'linebreak-style': 'off',
     'object-curly-newline': ['error', {
       multiline: true,
       minProperties: 4,
