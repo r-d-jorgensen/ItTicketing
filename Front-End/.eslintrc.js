@@ -33,7 +33,7 @@ module.exports = {
     'object-curly-newline': ['error', {
       multiline: true,
       minProperties: 4,
-      consistent: false,
+      consistent: true,
     }],
   },
 };
