@@ -1,6 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Route,
+  Switch,
+  Redirect,
+} from 'react-router-dom';
 import loadable from '@loadable/component';
 
 import 'normalize.css';
@@ -16,18 +21,18 @@ const Customer = loadable(() => import('views/Customer'));
 const Employee = loadable(() => import('views/Employee'));
 
 ReactDOM.render(
-    <BrowserRouter>
-      <Navbar />
-      <Switch>
-        <Route path="/customer" component={Customer} />
-        <Route path="/employee" component={Employee} />
-        <Route path="/accountRetrival" component={AccountRetrival} />
-        <Route path="/registration" component={Registration} />
-        <Route path="/login" component={Login} />
-        <Route path='/not-found' component={NotFound} />
-        <Route path="/" exact component={Home} />
-        <Redirect to='/not-found' />
-      </Switch>
-    </BrowserRouter>,
+  <BrowserRouter>
+    <Navbar />
+    <Switch>
+      <Route path="/customer" component={Customer} />
+      <Route path="/employee" component={Employee} />
+      <Route path="/accountRetrival" component={AccountRetrival} />
+      <Route path="/registration" component={Registration} />
+      <Route path="/login" component={Login} />
+      <Route path='/not-found' component={NotFound} />
+      <Route path="/" exact component={Home} />
+      <Redirect to='/not-found' />
+    </Switch>
+  </BrowserRouter>,
   document.getElementById('root'),
 );

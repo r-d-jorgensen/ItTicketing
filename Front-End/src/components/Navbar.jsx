@@ -14,9 +14,9 @@ function Navbar() {
       ];
     } else {
       navLandinglinks = [
-        {link: "/", name: "Home"},
-        {link: "/registration", name: "Registration"},
-        {link: "/accountRetrival", name: "Account Retrival"},
+        { link: "/", name: "Home" },
+        { link: "/registration", name: "Registration" },
+        { link: "/accountRetrival", name: "Account Retrival" },
       ];
     }
     return (
@@ -24,16 +24,18 @@ function Navbar() {
         <span className="filler" />
         <span className="filler" />
         <span className="filler" />
-        {navLandinglinks.map(element => 
-          <Link to={element.link} className="nav-item" key={element.name}>
-            {element.name}
-          </Link>
-        )}
+        {
+          navLandinglinks.map((element) => (
+            <Link to={element.link} className="nav-item" key={element.name}>
+              {element.name}
+            </Link>
+          ))
+        }
         <span className="filler" />
         <span className="filler" />
         <span className="filler" />
         <Link to={"/login"} className="login-button">
-            Login
+          Login
         </Link>
       </nav>
     );
