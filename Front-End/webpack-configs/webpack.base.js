@@ -50,6 +50,10 @@ const base = {
     // to load the specified module
     extensions: ['.jsx', '.js'],
   },
+  // Externals excludes this module from the final bundle.
+  externals: {
+    'prop-types': 'prop-types',
+  },
   // The meat of webpack and where various asset types are told how to be handled.
   // A rule is composed of conditions that specify matching modules and one or more
   // loaders. These loaders let webpack process a variety of modules.
