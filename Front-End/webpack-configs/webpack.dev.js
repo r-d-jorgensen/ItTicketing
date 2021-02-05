@@ -10,11 +10,13 @@ module.exports = merge(baseConfig, {
     port: 8080,
 
     compress: true,
+    // Necessary for an SPA
     historyApiFallback: true,
+    // Only hot reload without page refresh
     hotOnly: true,
 
-    noInfo: true,
-    quiet: true,
+    noInfo: false,
+    quiet: false,
   },
   module: {
     rules: [

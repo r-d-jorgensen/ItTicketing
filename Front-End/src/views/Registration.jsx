@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Joi, { string } from "joi";
-import _ from "lodash";
 import "./Registration.css"
 import loadable from '@loadable/component';
 
@@ -9,7 +8,7 @@ const Input = loadable(() => import('components/Input'));
 
 const Registration = () => {
   const history = useHistory();
-  const [data, setData] = useState({ 
+  const [data, setData] = useState({
     username: '',
     firstName: '',
     lastName: '',
@@ -30,17 +29,17 @@ const Registration = () => {
   })
 
   const updateField = e => {
-    setData({ 
-      ...data, 
-      [e.target.id]: e.target.value 
+    setData({
+      ...data,
+      [e.target.id]: e.target.value
     });
   };
 
   const signUpUser = e => {
     e.preventDefault();
     const regSchema = Joi.object({
-      //need requierments for userinfo
-      //how long should a password be same for username and such
+      // need requierments for userinfo
+      // how long should a password be same for username and such
       username: Joi.string().regex(/[a-zA-Z1-9]/).required(),
       firstName: Joi.string().regex(/[a-zA-Z]/).required(),
       lastName: Joi.string().regex(/[a-zA-Z]/).required(),
@@ -54,19 +53,17 @@ const Registration = () => {
     const result = regSchema.validate(data);
     if (result.error === undefined) {
       console.log(`calling server with ${data.username} and ${data.password} and more`);
-      //send call to server to make new user and send back to Login
-      //history.push('/login');
+      // send call to server to make new user and send back to Login
+      // history.push('/login');
     } else {
-      const errs = _.map(result.error.details, ({message, context: {label}}) => (
-        {label, message: message.replace(/['"]/g, '')}
+      const errs = result.error?.details.map(({ message, context: { label } }) => (
+        { label, message: message.replace(/['"]/g, '') }
       ));
       let temp = {}
       errs.forEach(element => {
-        temp.[element.label] = element.message; 
+        temp[element.label] = element.message;
       });
-      setErrors({
-        ...temp
-      });
+      setErrors({ ...temp });
     }
   }
 

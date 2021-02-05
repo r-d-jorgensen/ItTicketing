@@ -1,6 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Route,
+  Switch,
+  Redirect,
+} from 'react-router-dom';
 import loadable from '@loadable/component';
 
 import 'normalize.css';
@@ -11,7 +16,7 @@ const Home = loadable(() => import('views/Home'));
 const Login = loadable(() => import('views/Login'));
 const Registration = loadable(() => import('views/Registration'));
 const AccountRetrival = loadable(() => import('views/AccountRetrival'));
-const NotFound = loadable(() => import('views/NotFound'));dwdw
+const NotFound = loadable(() => import('views/NotFound'));
 const CustomerDashboard = loadable(() => import('views/CustomerDashboard'));
 const EmployeeDashboard = loadable(() => import('views/EmployeeDashboard'));
 
@@ -23,7 +28,7 @@ ReactDOM.render(
         <Route path="/employee/dashboard" component={EmployeeDashboard} />
         <Route path="/accountRetrival" component={AccountRetrival} />
         <Route path="/registration" component={Registration} />
-        <Route path="/login" component={Login} />ds
+        <Route path="/login" component={Login} />
         <Route path='/not-found' component={NotFound} />
         <Route path="/" exact component={Home} />
         <Redirect to='/not-found' />

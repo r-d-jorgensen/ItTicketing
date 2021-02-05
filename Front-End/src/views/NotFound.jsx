@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react';
+import React, { Fragment } from 'react';
+
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 import './NotFound.css';
 
@@ -10,5 +11,5 @@ const NotFound = () => {
     </main>
   );
 }
- 
+
 export default NotFound;
