@@ -4,6 +4,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 const webpack = require('webpack');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
+const ESLintWebpackPlugin = require('eslint-webpack-plugin');
 
 const PRODUCTION = process.env.NODE_ENV === 'production';
 
@@ -87,6 +88,15 @@ const base = {
     ],
   },
   plugins: [
+    // ESLint performs static analysis to mark possible errors based
+    // on certain rules defined in .eslintrc.js
+    new ESLintWebpackPlugin({
+      extensions: ['js', 'jsx'],
+      eslintPath: require.resolve('eslint'),
+      context: './src',
+      cache: true,
+      resolvePluginsRelativeTo: __dirname,
+    }),
     // Sets global constant at *compile* time
     // https://webpack.js.org/plugins/define-plugin/
     new webpack.DefinePlugin({

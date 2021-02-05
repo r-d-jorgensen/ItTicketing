@@ -15,8 +15,8 @@ module.exports = merge(baseConfig, {
     // Only hot reload without page refresh
     hotOnly: true,
 
-    noInfo: true,
-    quiet: true,
+    noInfo: false,
+    quiet: false,
   },
   module: {
     rules: [

@@ -18,3 +18,5 @@ process.env.NODE_ENV=development
 # the specified config file for development
 yarn start
 ```
+
+*Note*: All build scripts will run ESLint to mitigate syntactical errors and ensure consistent code across the application source code. The ESLint config is `.eslintrc.js` if modifications are necessary.
