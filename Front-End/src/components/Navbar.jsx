@@ -9,15 +9,14 @@ function Navbar() {
 
   const NavLinks = () => {
     let navLandinglinks = [];
-    if (!DEVELOPMENT) {
-      navLandinglinks = [
-      ];
-    } else {
+    if (DEVELOPMENT) {
       navLandinglinks = [
         {link: "/", name: "Home"},
         {link: "/registration", name: "Registration"},
         {link: "/accountRetrival", name: "Account Retrival"},
       ];
+    } else {
+      navLandinglinks = [];
     }
     return (
       <nav>

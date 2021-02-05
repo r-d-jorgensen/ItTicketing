@@ -27,7 +27,7 @@ const Login = () => {
     //make call to server
     console.log(`calling server with ${data.username} and ${data.password}`);
     //store info
-    const user = {};
+    let user = {};
 
     //delete temp once server connection is posible and data can be sent
     //reset this with the userinfo recived from the server
@@ -41,9 +41,9 @@ const Login = () => {
     }
     
     if (user.type === "employee") {
-      history.push('/employee');
+      history.push('/employee/dashboard');
     } else if (user.type === "customer") {
-      history.push('/customer');
+      history.push('/customer/dashboard');
     }else {
       setData({
         ...data,

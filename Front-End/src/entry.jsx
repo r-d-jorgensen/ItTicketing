@@ -11,7 +11,7 @@ const Home = loadable(() => import('views/Home'));
 const Login = loadable(() => import('views/Login'));
 const Registration = loadable(() => import('views/Registration'));
 const AccountRetrival = loadable(() => import('views/AccountRetrival'));
-const NotFound = loadable(() => import('views/NotFound'));
+const NotFound = loadable(() => import('views/NotFound'));dwdw
 const CustomerDashboard = loadable(() => import('views/CustomerDashboard'));
 const EmployeeDashboard = loadable(() => import('views/EmployeeDashboard'));
 
