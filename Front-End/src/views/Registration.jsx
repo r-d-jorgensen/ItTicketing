@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import Joi, { string } from "joi";
+import Joi from "joi";
+import Input from '../components/Input'
 import "./Registration.css";
-import loadable from '@loadable/component';
-
-const Input = loadable(() => import('components/Input'));
 
 const Registration = () => {
   const history = useHistory();
@@ -106,7 +104,7 @@ const Registration = () => {
         <Input
           type="password"
           id="passwordConfirm"
-          name={"Password Confirm"}
+          name="Password Confirm"
           value={data.passwordConfirm}
           mask=""
           onChange={updateField}
@@ -115,7 +113,7 @@ const Registration = () => {
         <Input
           type="email"
           id="email"
-          name={"Email"}
+          name="Email"
           value={data.email}
           onChange={updateField}
           error={errors.email}
@@ -133,7 +131,7 @@ const Registration = () => {
           id='phone'
           name="Phone"
           value={data.phone}
-          mask={'999-999-9999'}
+          mask='999-999-9999'
           onChange={updateField}
           error={errors.phone}
         />

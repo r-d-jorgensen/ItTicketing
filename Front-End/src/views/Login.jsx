@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './Login.css';
-import loadable from '@loadable/component';
-
-const Input = loadable(() => import('components/Input'));
+import Input from '../components/Input'
 
 const Login = () => {
   const history = useHistory();
