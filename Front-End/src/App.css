@@ -62,7 +62,7 @@ nav::before {
   color: rgb(35, 63, 88);
 }
 
-.login-button {
+.log-button {
   padding: 5px 20px;
   border-style: double;
   border-color: black;

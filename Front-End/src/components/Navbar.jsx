@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../App';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
-const Navbar = () => {
+const Navbar = ({isLogedIn}) => {
+  const { dispatch } = React.useContext(AuthContext);
   const NavLinks = () => {
     let navLandinglinks = [];
     if (DEVELOPMENT) {
@@ -29,16 +31,21 @@ const Navbar = () => {
         <span className="filler" />
         <span className="filler" />
         <span className="filler" />
-        <Link to="/login" className="login-button">
-          Login
-        </Link>
+        {isLogedIn ?
+          <Link to="/" onClick={() => dispatch({type: 'LOGOUT'})} className="log-button">
+            Logout
+          </Link>
+          :
+          <Link to="/login" className="log-button">
+            Login
+          </Link>}
       </nav>
     );
   };
 
   return (
     <header className="navbar">
-      <a href="/">IT Ticketing Systems Inc.</a>
+      <Link to="/">IT Ticketing Systems Inc.</Link>
       <NavLinks />
     </header>
   );

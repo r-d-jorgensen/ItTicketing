@@ -19,20 +19,58 @@ const NotFound = loadable(() => import('views/NotFound'));
 const CustomerDashboard = loadable(() => import('views/CustomerDashboard'));
 const EmployeeDashboard = loadable(() => import('views/EmployeeDashboard'));
 
+export const AuthContext = React.createContext();
+const initialAuthState = {
+  isAuthenticated: false,
+  user: null,
+  token: null,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'LOGIN':
+      localStorage.setItem('user', JSON.stringify(action.payload.user));
+      localStorage.setItem('token', JSON.stringify(action.payload.token));
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: action.payload.user,
+        token: action.payload.token,
+      };
+    case 'LOGOUT':
+      localStorage.clear();
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+      };
+    default:
+      return state;
+  }
+};
+
 function App() {
+  const [state, dispatch] = React.useReducer(reducer, initialAuthState);
   return (
     <BrowserRouter>
-      <Navbar />
-      <Switch>
-        <Route path="/customer/dashboard" component={CustomerDashboard} />
-        <Route path="/employee/dashboard" component={EmployeeDashboard} />
-        <Route path="/accountRetrival" component={AccountRetrival} />
-        <Route path="/registration" component={Registration} />
-        <Route path="/login" component={Login} />
-        <Route path="/not-found" component={NotFound} />
-        <Route path="/" exact component={Home} />
-        <Redirect to="/not-found" />
-      </Switch>
+      <AuthContext.Provider
+        value={{
+          state,
+          dispatch,
+        }}
+      >
+        <Navbar isLogedIn={state.isAuthenticated} />
+        <Switch>
+          <Route path="/customer/dashboard" component={CustomerDashboard} />
+          <Route path="/employee/dashboard" component={EmployeeDashboard} />
+          <Route path="/accountRetrival" component={AccountRetrival} />
+          <Route path="/registration" component={Registration} />
+          <Route path="/login" component={Login} />
+          <Route path="/not-found" component={NotFound} />
+          <Route path="/" exact component={Home} />
+          <Redirect to="/not-found" />
+        </Switch>
+      </AuthContext.Provider>
     </BrowserRouter>
   );
 }
