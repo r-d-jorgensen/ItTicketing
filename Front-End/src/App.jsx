@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {
   BrowserRouter,
   Route,
@@ -20,20 +21,25 @@ const EmployeeDashboard = loadable(() => import('views/EmployeeDashboard'));
 
 function App() {
   return (
-      <BrowserRouter>
-        <Navbar />
-        <Switch>
-          <Route path="/customer/dashboard" component={CustomerDashboard} />
-          <Route path="/employee/dashboard" component={EmployeeDashboard} />
-          <Route path="/accountRetrival" component={AccountRetrival} />
-          <Route path="/registration" component={Registration} />
-          <Route path="/login" component={Login} />
-          <Route path="/not-found" component={NotFound} />
-          <Route path="/" exact component={Home} />
-          <Redirect to="/not-found" />
-        </Switch>
-      </BrowserRouter>
+    <BrowserRouter>
+      <Navbar />
+      <Switch>
+        <Route path="/customer/dashboard" component={CustomerDashboard} />
+        <Route path="/employee/dashboard" component={EmployeeDashboard} />
+        <Route path="/accountRetrival" component={AccountRetrival} />
+        <Route path="/registration" component={Registration} />
+        <Route path="/login" component={Login} />
+        <Route path="/not-found" component={NotFound} />
+        <Route path="/" exact component={Home} />
+        <Redirect to="/not-found" />
+      </Switch>
+    </BrowserRouter>
   );
 }
 
-export default App;
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root'),
+);
