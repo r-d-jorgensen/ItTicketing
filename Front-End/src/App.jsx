@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {
   BrowserRouter,
   Route,
@@ -7,9 +6,8 @@ import {
   Redirect,
 } from 'react-router-dom';
 import loadable from '@loadable/component';
-
 import 'normalize.css';
-import './Entry.css';
+import './App.css';
 
 const Navbar = loadable(() => import('components/Navbar'));
 const Home = loadable(() => import('views/Home'));
@@ -20,19 +18,22 @@ const NotFound = loadable(() => import('views/NotFound'));
 const CustomerDashboard = loadable(() => import('views/CustomerDashboard'));
 const EmployeeDashboard = loadable(() => import('views/EmployeeDashboard'));
 
-ReactDOM.render(
-    <BrowserRouter>
-      <Navbar />
-      <Switch>
-        <Route path="/customer/dashboard" component={CustomerDashboard} />
-        <Route path="/employee/dashboard" component={EmployeeDashboard} />
-        <Route path="/accountRetrival" component={AccountRetrival} />
-        <Route path="/registration" component={Registration} />
-        <Route path="/login" component={Login} />
-        <Route path="/not-found" component={NotFound} />
-        <Route path="/" exact component={Home} />
-        <Redirect to="/not-found" />
-      </Switch>
-    </BrowserRouter>,
-  document.getElementById('root'),
-);
+function App() {
+  return (
+      <BrowserRouter>
+        <Navbar />
+        <Switch>
+          <Route path="/customer/dashboard" component={CustomerDashboard} />
+          <Route path="/employee/dashboard" component={EmployeeDashboard} />
+          <Route path="/accountRetrival" component={AccountRetrival} />
+          <Route path="/registration" component={Registration} />
+          <Route path="/login" component={Login} />
+          <Route path="/not-found" component={NotFound} />
+          <Route path="/" exact component={Home} />
+          <Redirect to="/not-found" />
+        </Switch>
+      </BrowserRouter>
+  );
+}
+
+export default App;

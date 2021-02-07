@@ -27,7 +27,7 @@ const base = {
   mode: PRODUCTION ? 'production' : 'development',
   // Initial entry point of the application
   entry: {
-    app: './src/entry.jsx',
+    app: './src/index.jsx',
   },
   output: {
     path: path.resolve(__dirname, '../dist'),
