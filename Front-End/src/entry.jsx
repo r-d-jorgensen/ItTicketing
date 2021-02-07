@@ -29,9 +29,9 @@ ReactDOM.render(
         <Route path="/accountRetrival" component={AccountRetrival} />
         <Route path="/registration" component={Registration} />
         <Route path="/login" component={Login} />
-        <Route path='/not-found' component={NotFound} />
+        <Route path="/not-found" component={NotFound} />
         <Route path="/" exact component={Home} />
-        <Redirect to='/not-found' />
+        <Redirect to="/not-found" />
       </Switch>
     </BrowserRouter>,
   document.getElementById('root'),

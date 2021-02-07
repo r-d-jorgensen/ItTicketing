@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import Joi from "joi";
-import Input from '../components/Input'
-import "./Registration.css";
+//import { useHistory } from 'react-router-dom';
+import Joi from 'joi';
+import Input from '../components/Input';
+import './Registration.css';
 
 const Registration = () => {
-  const history = useHistory();
+  //const history = useHistory();
   const [data, setData] = useState({
     username: '',
     firstName: '',
@@ -23,17 +23,17 @@ const Registration = () => {
     passwordConfirmError: '',
     emailError: '',
     emailConfirmError: '',
-    phoneError: ''
-  })
+    phoneError: '',
+  });
 
-  const updateField = e => {
+  const updateField = (e) => {
     setData({
       ...data,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     });
   };
 
-  const signUpUser = e => {
+  const signUpUser = (e) => {
     e.preventDefault();
     const regSchema = Joi.object({
       // need requierments for userinfo
@@ -50,20 +50,20 @@ const Registration = () => {
 
     const result = regSchema.validate(data);
     if (result.error === undefined) {
-      console.log(`calling server with ${data.username} and ${data.password} and more`);
+      //console.log(`calling server with ${data.username} and ${data.password} and more`);
       // send call to server to make new user and send back to Login
       // history.push('/login');
     } else {
       const errs = result.error.details.map(({ message, context: { label } }) => (
         { label, message: message.replace(/['"]/g, '') }
       ));
-      let temp = {}
-      errs.forEach(element => {
+      const temp = {};
+      errs.forEach((element) => {
         temp.[element.label] = element.message;
       });
       setErrors({ ...temp });
     }
-  }
+  };
 
   return (
     <main id="registration-page">
@@ -128,17 +128,17 @@ const Registration = () => {
         />
         <Input
           type="tel"
-          id='phone'
+          id="phone"
           name="Phone"
           value={data.phone}
-          mask='999-999-9999'
+          mask="999-999-9999"
           onChange={updateField}
           error={errors.phone}
         />
-        <button className="button">Sign Up</button>
+        <button className="button" type="button">Sign Up</button>
       </form>
     </main>
   );
-}
+};
 
 export default Registration;

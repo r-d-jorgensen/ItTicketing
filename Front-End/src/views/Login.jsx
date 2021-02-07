@@ -1,54 +1,53 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './Login.css';
-import Input from '../components/Input'
+import Input from '../components/Input';
 
 const Login = () => {
   const history = useHistory();
   const [data, setData] = useState({
     username: '',
     password: '',
-    error: ''
+    error: '',
   });
 
-  const updateField = e => {
-    console.log(e.target.name)
+  const updateField = (e) => {
     setData({
       ...data,
       error: '',
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     });
   };
 
-  const LoginAuthorization = e => {
+  const LoginAuthorization = (e) => {
     e.preventDefault();
     // make call to server
-    console.log(`calling server with ${data.username} and ${data.password}`);
+    //console.log(`calling server with ${data.username} and ${data.password}`);
     //store info
     let user = {};
 
     // delete temp once server connection is posible and data can be sent
     // reset this with the userinfo recived from the server
     // in the mean time use this to navigate to deaper levels
-    const tempEmployee = { username: "bob", password: "123" }
-    const tempCustomer = { username: "steve", password: "456" }
+    const tempEmployee = { username: 'bob', password: '123' };
+    const tempCustomer = { username: 'steve', password: '456' };
     if (tempEmployee.username === data.username && tempEmployee.password === data.password) {
       user = { type: 'employee' };
     } else if (tempCustomer.username === data.username && tempCustomer.password === data.password) {
       user = { type: 'customer' };
     }
 
-    if (user.type === "employee") {
+    if (user.type === 'employee') {
       history.push('/employee/dashboard');
-    } else if (user.type === "customer") {
+    } else if (user.type === 'customer') {
       history.push('/customer/dashboard');
     }else {
       setData({
         ...data,
-        error: "Incorrect username or password."
+        error: 'Incorrect username or password.',
       });
     }
-  }
+  };
 
   return (
     <main id="login-page">
@@ -70,19 +69,19 @@ const Login = () => {
           className="login-input"
         />
         <div className="double-column">
-          <a onClick={() => history.push('/accountRetrival')}>
+          <a href="/accountRetrival">
             Forgot your password?
             <br />
             Or
             <br />
             Forgot your username?
           </a>
-          <a onClick={() => history.push('/registration')}>Don't have an Account?</a>
+          <a href="/registration">Don&apos;t have an Account?</a>
         </div>
-        <button className="button">Login</button>
+        <button className="button" type="button">Login</button>
       </form>
     </main>
   );
-}
+};
 
 export default Login;

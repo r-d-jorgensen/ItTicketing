@@ -11,6 +11,6 @@ const EmployeeDashboard = () => {
       </div>
     </main> 
   );
-}
+};
 
 export default EmployeeDashboard;

@@ -6,6 +6,6 @@ const CustomerDashboard = () => {
       <h1>CUSTOMER SIDE</h1>
     </main> 
   );
-}
+};
 
 export default CustomerDashboard;

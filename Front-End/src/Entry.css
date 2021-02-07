@@ -14,13 +14,13 @@ header {
   padding: 10px 0px 0px;
 }
 
-header h1 {
-  margin: 15px;
-  font-size: 50px;
-  cursor: pointer;
+header a {
+  font-size: 60px;
+  color: rgb(234, 244, 252);
+  text-decoration: none;
 }
 
-header h1:hover {
+header a:hover {
   background: linear-gradient(to right, #0404d3, #eaf4fc, #0404d3);
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;

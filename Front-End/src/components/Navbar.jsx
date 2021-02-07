@@ -1,23 +1,19 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
-function Navbar() {
-  const history = useHistory();
-
+const Navbar = () => {
   const NavLinks = () => {
     let navLandinglinks = [];
     if (DEVELOPMENT) {
       navLandinglinks = [
-        { link: "/", name: "Home" },
-        { link: "/registration", name: "Registration" },
-        { link: "/accountRetrival", name: "Account Retrival" },
+        { link: '/', name: 'Home' },
+        { link: '/registration', name: 'Registration' },
+        { link: '/accountRetrival', name: 'Account Retrival' },
       ];
-    } else {
-      navLandinglinks = [];
-    }
+    } else navLandinglinks = [];
+
     return (
       <nav>
         <span className="filler" />
@@ -33,7 +29,7 @@ function Navbar() {
         <span className="filler" />
         <span className="filler" />
         <span className="filler" />
-        <Link to={"/login"} className="login-button">
+        <Link to="/login" className="login-button">
           Login
         </Link>
       </nav>
@@ -42,10 +38,10 @@ function Navbar() {
 
   return (
     <header className="navbar">
-      <h1 onClick={() => history.push('/')}>IT Ticketing Systems Inc.</h1>
+      <a href="/">IT Ticketing Systems Inc.</a>
       <NavLinks />
     </header>
-  )
+  );
 };
 
 export default Navbar;
