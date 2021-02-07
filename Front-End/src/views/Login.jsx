@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import './Login.css';
 import Input from '../components/Input';
 
-const Login = () => {
+function Login() {
   const history = useHistory();
   const [data, setData] = useState({
     username: '',
@@ -82,6 +82,6 @@ const Login = () => {
       </form>
     </main>
   );
-};
+}
 
 export default Login;

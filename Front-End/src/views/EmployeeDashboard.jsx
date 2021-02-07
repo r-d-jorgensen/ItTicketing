@@ -1,6 +1,6 @@
 import React from 'react';
 
-const EmployeeDashboard = () => {
+function EmployeeDashboard() {
   return (
     <main id="employee-dashboard">
       <div id="dashboard-filters">
@@ -11,6 +11,6 @@ const EmployeeDashboard = () => {
       </div>
     </main> 
   );
-};
+}
 
 export default EmployeeDashboard;

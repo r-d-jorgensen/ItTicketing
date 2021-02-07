@@ -4,7 +4,7 @@ import Joi from 'joi';
 import Input from '../components/Input';
 import './Registration.css';
 
-const Registration = () => {
+function Registration() {
   //const history = useHistory();
   const [data, setData] = useState({
     username: '',
@@ -139,6 +139,6 @@ const Registration = () => {
       </form>
     </main>
   );
-};
+}
 
 export default Registration;
