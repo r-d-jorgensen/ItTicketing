@@ -1,0 +1,67 @@
+.header {
+  margin: 0 auto;
+
+  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 2px rgba(16, 16, 16, 0.1);
+}
+
+.navbar {
+  display: grid;
+  grid-template: 'logo links user-actions' /  max-content 1fr min-content;
+  gap: 4px;
+  align-items: center;
+
+  min-height: 64px;
+  padding: 8px 16px;
+}
+
+.user-actions {
+  grid-area: user-actions;
+}
+
+.nav-links {
+  grid-area: links;
+}
+
+.nav-item {
+  color: #212121;
+  text-decoration: none;
+}
+
+.logo {
+  position: relative;
+  grid-area: logo;
+
+  margin: 0;
+
+  font-family: rift, sans-serif;
+  text-align: left;
+  color: #212121;
+}
+
+.logo::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  background-color: #212121;
+
+  transform: scaleX(0);
+  transition-property: transform;
+  transition-duration: 128ms;
+  transition-timing-function: ease-out;
+  transform-origin: left center;
+}
+
+.logo:hover::after {
+  transform: scale(100%);
+}
+
+.logo a { text-decoration: none; }
+
+.logo a:link,
+.logo a:visited {
+  color: currentColor;
+}
