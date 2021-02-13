@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { AuthContext } from '../App';
 import Input from '../components/Input';
 import './Login.css';
@@ -63,35 +63,35 @@ function Login() {
 
   return (
     <main id="login-page">
-      <form className="container" onSubmit={handleLoginSubmit}>
-        <Input
-          id="username"
-          name="Username"
-          value={data.username}
-          onChange={handleInputChange}
-          className="login-input"
-        />
-        <br />
-        <Input
-          id="password"
-          name="Password"
-          value={data.password}
-          onChange={handleInputChange}
-          error={data.error}
-          className="login-input"
-        />
-        <div className="double-column">
-          <a href="/accountRetrival">
-            Forgot your password?
-            <br />
-            Or
-            <br />
-            Forgot your username?
-          </a>
-          <a href="/registration">Don&apos;t have an Account?</a>
-        </div>
-        <button className="button" type="submit">Login</button>
-      </form>
+      <div className="login-container">
+        <span className="login-header">Log in to your account</span>
+        <form className="login-form" onSubmit={handleLoginSubmit}>
+          <label htmlFor="login-username" className="login-label">Username</label>
+          <Input
+            id="login-username"
+            name="Username"
+            value={data.username}
+            onChange={handleInputChange}
+            className="login-input"
+          />
+          <label htmlFor="login-password" className="login-label">Password</label>
+          <Input
+            id="login-password"
+            name="Password"
+            value={data.password}
+            onChange={handleInputChange}
+            error={data.error}
+            className="login-input"
+            type="password"
+          />
+          <button className="login-button" type="submit">Login</button>
+        </form>
+        <Link className="login-retrieval" to="/accountRetrival">Forgot your username or password?</Link>
+        <span className="login-register">
+          Don&apos;t have an account?
+          <Link to="/registration">Register Here</Link>
+        </span>
+      </div>
     </main>
   );
 }

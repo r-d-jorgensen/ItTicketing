@@ -1,27 +1,108 @@
-#login-page {
+.login-container {
   position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+
+  margin: 1.5rem auto 6rem;
+  min-width: 320px;
+  width: 66%;
+  padding: 40px 42px 48px;
+
+  background-color: rgb(246, 249, 252);
+  box-shadow: 0 0 18px 2px rgba(4, 4, 4, 0.025),
+              0 2px 9px rgba(4, 4, 4, 0.1);
+  border-radius: 3px;
 }
 
-.container {
-  position: absolute;
-  top: 15%;
+.login-form {
+  display: flex;
+  flex-direction: column;
 }
 
-#login-page input {
-  width: 300px;
-  height: 50px;
-  font-size: 20px;
-  border-radius: 30px;
-  background-image: linear-gradient(to right, #4ec1e6, #eaf4fc, #4ec1e6);
-  text-align: center;
+.login-header {
+  text-align: left;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
 }
 
-#login-page .double-column a {
-  padding: 10px;
-  background: linear-gradient(to right, #4ec1e6, #eaf4fc, #4ec1e6);
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
+.login-label {
+  text-align: left;
+  padding-bottom: 4px;
+}
+
+.login-input {
+  width: 100%;
+  min-height: 42px;
+  border-radius: 3px;
+  background-color: #f6f8fa;
+  border: 1px solid #c2c7ca;
+  padding: 4px 8px;
+
+  transition-property: border, box-shadow, background-color;
+  transition-duration: 88ms;
+}
+
+.login-input:hover {
+  border-color: #dadada;
+  background-color: #fcfcfc;
+}
+
+.login-input:focus {
+  outline: 0;
+  background-color: white;
+  border-color: transparent;
+  --saf-0: rgba(var(--sk_highlight,18,100,163),1);
+  box-shadow: 0 0 0 1px var(--saf-0), 0 0 0 4px rgba(29, 155, 209, 0.3);
+  appearance: none;
+  border-radius: 3px;
+}
+
+* + .login-label {
+  margin-top: 1rem;
+}
+
+.login-button { 
+  margin-top: 1rem;
+  min-height: 42px;
+  border-radius: 3px;
+  color: white;
+  background-color: rgb(52, 141, 224);
+  border: 0;
   cursor: pointer;
+
+  transition-property: background-color;
+  transition-duration: 128ms;
+  transition-timing-function: ease-out;
 }
+
+.login-button:hover {
+  background-color: rgb(69, 164, 241);
+}
+
+.login-button:active {
+  background-color: rgb(44, 115, 221);
+}
+
+.login-retrieval {
+  margin: 1.8rem 0 0;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.login-register {
+  position: absolute;
+  bottom: -16px;
+  left: 0;
+
+  font-size: 0.9rem;
+
+  transform: translateY(100%);
+}
+
+.login-register a {
+  margin-left: 5px;
+  text-decoration: none;
+}
+
+.login-register a:hover { text-decoration: underline; }
