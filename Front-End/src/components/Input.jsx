@@ -11,7 +11,6 @@ const Input = ({
     {label ? <label>{name}</label> : null}
     <InputMask
       name={name}
-      placeholder={name}
       {...rest}
     />
     <div className="error">{error}</div>
