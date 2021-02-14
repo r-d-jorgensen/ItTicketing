@@ -26,7 +26,7 @@ function Login() {
     // make call to server
 
     //store info
-    let user = {};
+    let user = { type: null};
     // delete temp once server connection is posible and data can be sent
     // reset this with the userinfo recived from the server
     // in the mean time use this to navigate to deaper levels
