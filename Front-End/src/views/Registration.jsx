@@ -135,7 +135,7 @@ function Registration() {
           onChange={updateField}
           error={errors.phone}
         />
-        <button className="button" type="button">Sign Up</button>
+        <button className="button" type="submit">Sign Up</button>
       </form>
     </main>
   );

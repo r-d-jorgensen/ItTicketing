@@ -4,6 +4,8 @@ import { AuthContext } from '../App';
 import Input from '../components/Input';
 import './Login.css';
 
+const USER_TYPES = new Set(['employee', 'customer']);
+
 function Login() {
   const history = useHistory();
   const { dispatch } = React.useContext(AuthContext);
@@ -13,11 +15,11 @@ function Login() {
     error: '',
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (id, { target: { value } }) => {
     setData({
       ...data,
       error: '',
-      [e.target.id]: e.target.value,
+      [id]: value,
     });
   };
 
@@ -25,7 +27,7 @@ function Login() {
     e.preventDefault();
     // make call to server
 
-    //store info
+    // store info
     let user = {};
     // delete temp once server connection is posible and data can be sent
     // reset this with the userinfo recived from the server
@@ -38,8 +40,8 @@ function Login() {
       user = { type: 'customer' };
     }
 
-    //this should be checking the call from server
-    if (user.type !== null) {
+    // this should be checking the call from server
+    if (user && user.type && USER_TYPES.has(user.type)) {
       dispatch({
         type: 'LOGIN',
         payload: {
@@ -59,6 +61,8 @@ function Login() {
         error: 'Incorrect username or password.',
       });
     }
+    user.type = null;
+    delete user.type;
   };
 
   return (
@@ -66,20 +70,20 @@ function Login() {
       <div className="login-container">
         <span className="login-header">Log in to your account</span>
         <form className="login-form" onSubmit={handleLoginSubmit}>
-          <label htmlFor="login-username" className="login-label">Username</label>
+          <label htmlFor="loginUsername" className="login-label">Username</label>
           <Input
-            id="login-username"
+            id="loginUsername"
             name="Username"
             value={data.username}
-            onChange={handleInputChange}
+            onChange={(e) => { handleInputChange('username', e); }}
             className="login-input"
           />
-          <label htmlFor="login-password" className="login-label">Password</label>
+          <label htmlFor="loginPassword" className="login-label">Password</label>
           <Input
-            id="login-password"
+            id="loginPassword"
             name="Password"
             value={data.password}
-            onChange={handleInputChange}
+            onChange={(e) => { handleInputChange('password', e); }}
             error={data.error}
             className="login-input"
             type="password"
