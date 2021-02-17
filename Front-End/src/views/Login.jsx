@@ -23,15 +23,57 @@ function Login() {
     });
   };
 
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-    // make call to server
+  /* function to handle login errors from the server
+  async function handleLoginError(response) {
+    return response.text().then(text => {
+        const data = text && JSON.parse(text);
+        if (!response.ok) {
+          const error = (data && data.message) || response.statusText;
+          return Promise.reject(error);
+        }
 
-    //store info
-    let user = { type: null};
-    // delete temp once server connection is posible and data can be sent
-    // reset this with the userinfo recived from the server
-    // in the mean time use this to navigate to deaper levels
+        return data;
+    });
+  }
+  */
+
+  async function handleLoginSubmit(e) {
+    e.preventDefault();
+    let user = { type: null, token: null };
+    /* make call to server, needs api endpoint to test functionality
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+    };
+    const user = await fetch(`API-ENDPOINT`, requestOptions)
+      .then(handleLoginError)
+      .then(user => {
+        if (user) {
+          // store user details and basic auth credentials in local storage 
+          // to keep user logged in between page refreshes
+          user.authdata = window.btoa(username + ':' + password);
+          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('token', JSON.stringify(action.payload.token));
+          dispatch({
+            type: 'LOGIN',
+            payload: {
+              user: user.type,
+              token: user.token,
+            },
+          });
+        }
+        return user;
+      })
+      .then(
+        user => {
+          history.push(`/${user.Type}/dashboard`);
+        },
+        error => this.setState({ error, loading: false })
+      );
+    */
+    // faking call from server with temp values
+    // everything bellow this in the function will have to be removed
     const tempEmployee = { username: 'bob', password: '123' };
     const tempCustomer = { username: 'steve', password: '456' };
     if (tempEmployee.username === data.username && tempEmployee.password === data.password) {
@@ -61,9 +103,8 @@ function Login() {
         error: 'Incorrect username or password.',
       });
     }
-    user.type = null;
     delete user.type;
-  };
+  }
 
   return (
     <main id="login-page">

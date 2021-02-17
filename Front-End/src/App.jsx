@@ -29,6 +29,7 @@ const initialAuthState = {
 const reducer = (state, action) => {
   switch (action.type) {
     case 'LOGIN':
+      //delete localStorage set here once api calls are in place
       localStorage.setItem('user', JSON.stringify(action.payload.user));
       localStorage.setItem('token', JSON.stringify(action.payload.token));
       return {
