@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-//import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Joi from 'joi';
 import Input from '../components/Input';
 import './Registration.css';
 
 function Registration() {
-  //const history = useHistory();
+  const history = useHistory();
   const [data, setData] = useState({
     username: '',
     firstName: '',
@@ -38,28 +38,30 @@ function Registration() {
     const regSchema = Joi.object({
       // need requierments for userinfo
       // how long should a password be same for username and such
-      username: Joi.string().regex(/[a-zA-Z1-9]/).required(),
-      firstName: Joi.string().regex(/[a-zA-Z]/).required(),
-      lastName: Joi.string().regex(/[a-zA-Z]/).required(),
-      password: Joi.string().regex(/[a-zA-Z1-9]/).required(),
-      passwordConfirm: Joi.string().valid(Joi.ref('password')).required().strict(),
-      email: Joi.string().required(),
-      emailConfirm: Joi.string().valid(Joi.ref('email')).required().strict(),
-      phone: Joi.string().regex(/^\d{3}-\d{3}-\d{4}$/).required(),
+      
+      // not sure if should be on submit or on change??
+      username: Joi.string().regex(/[a-zA-Z1-9]/).required().label('Username'),
+      firstName: Joi.string().regex(/[a-zA-Z]/).required().label('First Name'),
+      lastName: Joi.string().regex(/[a-zA-Z]/).required().label('Last Name'),
+      password: Joi.string().regex(/[a-zA-Z1-9]/).required().label('Password'),
+      passwordConfirm: Joi.string().valid(Joi.ref('password')).required().strict().label('Password Confirm'),
+      email: Joi.string().required().label('Email'),
+      emailConfirm: Joi.string().valid(Joi.ref('email')).required().strict().label('Email Confirm'),
+      phone: Joi.string().regex(/^\d{3}-\d{3}-\d{4}$/).required().label('Phone'),
     }).options({ abortEarly: false });
 
     const result = regSchema.validate(data);
     if (result.error === undefined) {
-      //console.log(`calling server with ${data.username} and ${data.password} and more`);
-      // send call to server to make new user and send back to Login
-      // history.push('/login');
+      console.log(`calling server with ${data.username} and ${data.password} and more`);
+      // make call to server to make new user and send back to Login
+      history.push('/login');
     } else {
-      const errs = result.error.details.map(({ message, context: { label } }) => (
-        { label, message: message.replace(/['"]/g, '') }
+      const errs = result.error.details.map(({ message, path }) => (
+        { path, message: message.replace(/['"]/g, '') }
       ));
       const temp = {};
       errs.forEach((element) => {
-        temp.[element.label] = element.message;
+        temp.[element.path] = element.message;
       });
       setErrors({ ...temp });
     }
@@ -82,7 +84,7 @@ function Registration() {
             name="First Name"
             value={data.firstName}
             onChange={updateField}
-            error={errors.phone}
+            error={errors.firstName}
           />
           <Input
             id="lastName"
