@@ -11,13 +11,13 @@ import 'normalize.css';
 import './App.css';
 
 const Navbar = loadable(() => import('components/Navbar'));
-const Home = loadable(() => import('views/Home'));
-const Login = loadable(() => import('views/Login'));
-const Registration = loadable(() => import('views/Registration'));
-const AccountRetrival = loadable(() => import('views/AccountRetrival'));
+const Home = loadable(() => import('views/Landing/Home'));
+const Login = loadable(() => import('views/Landing/Login'));
+const Registration = loadable(() => import('views/Landing/Registration'));
+const AccountRetrival = loadable(() => import('views/Landing/AccountRetrival'));
 const NotFound = loadable(() => import('views/NotFound'));
-const CustomerDashboard = loadable(() => import('views/CustomerDashboard'));
-const EmployeeDashboard = loadable(() => import('views/EmployeeDashboard'));
+const CustomerDashboard = loadable(() => import('views/Customer/CustomerDashboard'));
+const EmployeeDashboard = loadable(() => import('views/Employee/EmployeeDashboard'));
 
 export const AuthContext = React.createContext();
 const initialAuthState = {

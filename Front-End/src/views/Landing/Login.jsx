@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import { AuthContext } from '../App';
-import Input from '../components/Input';
+import { AuthContext } from '../../App';
+import Input from '../../components/Input';
 import './Login.css';
 
 const USER_TYPES = new Set(['employee', 'customer']);

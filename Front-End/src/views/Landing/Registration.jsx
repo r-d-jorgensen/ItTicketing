@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Joi from 'joi';
-import Input from '../components/Input';
+import Input from '../../components/Input';
 import './Registration.css';
 
 function Registration() {
@@ -52,7 +52,6 @@ function Registration() {
 
     const result = regSchema.validate(data);
     if (result.error === undefined) {
-      console.log(`calling server with ${data.username} and ${data.password} and more`);
       // make call to server to make new user and send back to Login
       history.push('/login');
     } else {
