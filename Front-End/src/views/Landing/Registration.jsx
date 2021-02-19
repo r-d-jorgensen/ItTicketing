@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import Joi from 'joi';
 import Input from '../../components/Input';
 import './Registration.css';
@@ -38,7 +38,7 @@ function Registration() {
     const regSchema = Joi.object({
       // need requierments for userinfo
       // how long should a password be same for username and such
-      
+
       // not sure if should be on submit or on change??
       username: Joi.string().regex(/[a-zA-Z1-9]/).required().label('Username'),
       firstName: Joi.string().regex(/[a-zA-Z]/).required().label('First Name'),
@@ -67,78 +67,93 @@ function Registration() {
   };
 
   return (
-    <main id="registration-page">
-      <form id="container" onSubmit={signUpUser}>
-        <h3>Sign up for an Account</h3>
-        <Input
-          id="username"
-          name="Username"
-          value={data.username}
-          onChange={updateField}
-          error={errors.username}
-        />
-        <div id="name-inputs">
-          <Input
-            id="firstName"
-            name="First Name"
-            value={data.firstName}
-            onChange={updateField}
-            error={errors.firstName}
-          />
-          <Input
-            id="lastName"
-            name="Last Name"
-            value={data.lastName}
-            onChange={updateField}
-            error={errors.lastName}
-          />
+    <>
+      <header>
+        <h1 className="logo">
+          <Link to="/">IT Ticketing Systems Inc.</Link>
+        </h1>
+      </header>
+      <main id="registration-page">
+        <div className="registration-container">
+          <span className="registration-header">Sign up for an Account</span>
+          <form className="registration-form" onSubmit={signUpUser}>
+            <label htmlFor="username" className="registration-label">Username</label>
+            <Input
+              id="username"
+              name="Username"
+              value={data.username}
+              onChange={updateField}
+              error={errors.username}
+            />
+            <label htmlFor="firstName" className="registration-label">First name</label>
+            <Input
+              id="firstName"
+              name="First Name"
+              value={data.firstName}
+              onChange={updateField}
+              error={errors.firstName}
+            />
+            <label htmlFor="lastName" className="registration-label">Last name</label>
+            <Input
+              id="lastName"
+              name="Last Name"
+              value={data.lastName}
+              onChange={updateField}
+              error={errors.lastName}
+            />
+            <label htmlFor="password" className="registration-label">Password</label>
+            <Input
+              type="password"
+              id="password"
+              name="Password"
+              value={data.password}
+              mask=""
+              onChange={updateField}
+              error={errors.password}
+            />
+            <label htmlFor="passwordConfirm" className="registration-label">Confirm password</label>
+            <Input
+              type="password"
+              id="passwordConfirm"
+              name="Password Confirm"
+              value={data.passwordConfirm}
+              mask=""
+              onChange={updateField}
+              error={errors.passwordConfirm}
+            />
+            <label htmlFor="email" className="registration-label">Email</label>
+            <Input
+              type="email"
+              id="email"
+              name="Email"
+              value={data.email}
+              onChange={updateField}
+              error={errors.email}
+            />
+            <label htmlFor="emailConfirm" className="registration-label">Confirm Email</label>
+            <Input
+              type="email"
+              id="emailConfirm"
+              name="Email Confirm"
+              value={data.emailConfirm}
+              onChange={updateField}
+              error={errors.emailConfirm}
+            />
+            <label htmlFor="phone" className="registration-label">Phone number</label>
+            <Input
+              type="tel"
+              id="phone"
+              name="Phone"
+              value={data.phone}
+              mask="999-999-9999"
+              onChange={updateField}
+              error={errors.phone}
+            />
+            <button className="registration-button" type="submit">Sign Up</button>
+          </form>
         </div>
-        <Input
-          type="password"
-          id="password"
-          name="Password"
-          value={data.password}
-          mask=""
-          onChange={updateField}
-          error={errors.password}
-        />
-        <Input
-          type="password"
-          id="passwordConfirm"
-          name="Password Confirm"
-          value={data.passwordConfirm}
-          mask=""
-          onChange={updateField}
-          error={errors.passwordConfirm}
-        />
-        <Input
-          type="email"
-          id="email"
-          name="Email"
-          value={data.email}
-          onChange={updateField}
-          error={errors.email}
-        />
-        <Input
-          type="email"
-          id="emailConfirm"
-          name="Email Confirm"
-          value={data.emailConfirm}
-          onChange={updateField}
-          error={errors.emailConfirm}
-        />
-        <Input
-          type="tel"
-          id="phone"
-          name="Phone"
-          value={data.phone}
-          mask="999-999-9999"
-          onChange={updateField}
-          error={errors.phone}
-        />
-        <button className="button" type="submit">Sign Up</button>
-      </form>
-    </main>
+      </main>
+    </>
   );
 }
 

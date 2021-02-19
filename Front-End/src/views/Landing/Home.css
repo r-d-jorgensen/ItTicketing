@@ -1,24 +1,15 @@
-#home-page {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-column-gap: 50px;
+.home-title {
+  font-family: futura-pt-bold, sans-serif;
+  font-size: 4rem;
+  text-align: left;
+  margin-top: 6rem;
+  margin-bottom: 0;
 }
 
-#home-page div {
-  margin-top: 50px;
-  padding: 10px;
-}
-
-#home-page div h3 {
-  font-size: 30px;
-  padding: 5px;
-}
-
-#home-page div p {
-  font-size: 17px;
-  padding: 10px;
-}
-
-#contact-info {
-  font-size: 25px;
+.home-body {
+  font-family: objektiv-mk3, sans-serif;
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.4;
+  text-align: left;
 }

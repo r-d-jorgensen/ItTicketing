@@ -20,6 +20,7 @@ const CustomerDashboard = loadable(() => import('views/Customer/CustomerDashboar
 const EmployeeDashboard = loadable(() => import('views/Employee/EmployeeDashboard'));
 
 export const AuthContext = React.createContext();
+
 const initialAuthState = {
   isAuthenticated: false,
   user: null,
@@ -29,7 +30,7 @@ const initialAuthState = {
 const reducer = (state, action) => {
   switch (action.type) {
     case 'LOGIN':
-      //delete localStorage set here once api calls are in place
+      // delete localStorage set here once api calls are in place
       localStorage.setItem('user', JSON.stringify(action.payload.user));
       localStorage.setItem('token', JSON.stringify(action.payload.token));
       return {
@@ -60,7 +61,6 @@ function App() {
           dispatch,
         }}
       >
-        <Navbar isLogedIn={state.isAuthenticated} />
         <Switch>
           <Route path="/customer/dashboard" component={CustomerDashboard} />
           <Route path="/employee/dashboard" component={EmployeeDashboard} />

@@ -107,37 +107,42 @@ function Login() {
   }
 
   return (
-    <main id="login-page">
-      <div className="login-container">
-        <span className="login-header">Log in to your account</span>
-        <form className="login-form" onSubmit={handleLoginSubmit}>
-          <label htmlFor="loginUsername" className="login-label">Username</label>
-          <Input
-            id="loginUsername"
-            name="Username"
-            value={data.username}
-            onChange={(e) => { handleInputChange('username', e); }}
-            className="login-input"
-          />
-          <label htmlFor="loginPassword" className="login-label">Password</label>
-          <Input
-            id="loginPassword"
-            name="Password"
-            value={data.password}
-            onChange={(e) => { handleInputChange('password', e); }}
-            error={data.error}
-            className="login-input"
-            type="password"
-          />
-          <button className="login-button" type="submit">Login</button>
-        </form>
-        <Link className="login-retrieval" to="/accountRetrival">Forgot your username or password?</Link>
-        <span className="login-register">
-          Don&apos;t have an account?
-          <Link to="/registration">Register Here</Link>
-        </span>
-      </div>
-    </main>
+    <>
+      <header>
+        <h1 className="logo">
+          <Link to="/">IT Ticketing Systems Inc.</Link>
+        </h1>
+      </header>
+      <main id="login-page">
+        <div className="login-container">
+          <span className="login-header">Log in to your account</span>
+          <form className="login-form" onSubmit={handleLoginSubmit}>
+            <label htmlFor="loginUsername" className="login-label">Username</label>
+            <Input
+              id="loginUsername"
+              name="Username"
+              value={data.username}
+              onChange={(e) => { handleInputChange('username', e); }}
+            />
+            <label htmlFor="loginPassword" className="login-label">Password</label>
+            <Input
+              id="loginPassword"
+              name="Password"
+              value={data.password}
+              onChange={(e) => { handleInputChange('password', e); }}
+              error={data.error}
+              type="password"
+            />
+            <button className="login-button" type="submit">Login</button>
+          </form>
+          <Link className="login-retrieval" to="/accountRetrival">Forgot your username or password?</Link>
+          <span className="login-register">
+            Don&apos;t have an account?
+            <Link to="/registration">Register Here</Link>
+          </span>
+        </div>
+      </main>
+    </>
   );
 }
 

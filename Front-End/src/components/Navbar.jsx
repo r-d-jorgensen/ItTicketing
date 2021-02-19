@@ -6,8 +6,8 @@ import './Navbar.css';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
-const Navbar = ({isLogedIn}) => {
-  const { dispatch } = React.useContext(AuthContext);
+const Navbar = () => {
+  const { dispatch, state: { isAuthenticated } } = React.useContext(AuthContext);
   const NavLinks = () => {
     const navLandinglinks = DEVELOPMENT ? [
       { link: '/', name: 'Home' },
@@ -37,7 +37,7 @@ const Navbar = ({isLogedIn}) => {
         <NavLinks />
         <div className="navbar-actions">
           {
-          isLogedIn
+          isAuthenticated
             ? (
               <Link to="/" onClick={() => dispatch({ type: 'LOGOUT' })} className="navbar-item">
                 Logout
