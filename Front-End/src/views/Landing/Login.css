@@ -32,33 +32,6 @@
   padding-bottom: 4px;
 }
 
-.login-input {
-  width: 100%;
-  min-height: 42px;
-  border-radius: 3px;
-  background-color: #F6F8F7;
-  border: 1px solid #BDBDBD;
-  padding: 4px 8px;
-
-  transition-property: border, box-shadow, background-color;
-  transition-duration: 88ms;
-}
-
-.login-input:hover {
-  border-color: #57A85F;
-  background-color: white;
-}
-
-.login-input:focus {
-  outline: 0;
-  background-color: white;
-  border-color: transparent;
-  --saf-0: rgba(var(--sk_highlight,18,100,163),1);
-  box-shadow: 0 0 0 1px var(--saf-0), 0 0 0 4px #57a85f52;
-  appearance: none;
-  border-radius: 3px;
-}
-
 * + .login-label {
   margin-top: 1rem;
 }

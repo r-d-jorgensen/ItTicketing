@@ -2,14 +2,14 @@
   width: 100%;
   min-height: 42px;
   border-radius: 3px;
-  background-color: #F6F8F7;
+  background-color: #bdbdbd0e;
   border: 1px solid #BDBDBD;
   padding: 4px 8px;
   margin: 4px 0;
 
   transition-property: border, box-shadow, background-color;
   transition-duration: 150ms;
-  transition-timing-function: ease-in-out;
+  transition-timing-function: cubic-bezier(0.1, 0, 0.25, 1);
 }
 
 .input:hover {
