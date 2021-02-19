@@ -1,20 +1,25 @@
 import React from 'react';
 import InputMask from 'react-input-mask';
 
+import './Input.css';
+
 const Input = ({
-  label,
   name,
   error,
   ...rest
 }) => (
-  <div>
-    {label ? <label>{name}</label> : null}
+  <>
     <InputMask
+      className="input"
       name={name}
       {...rest}
     />
-    <div className="error">{error}</div>
-  </div>
+    {
+      error
+        ? <div className="input-error">{error}</div>
+        : null
+    }
+  </>
 );
 
 export default Input;
