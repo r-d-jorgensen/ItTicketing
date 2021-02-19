@@ -16,10 +16,10 @@ const Navbar = ({isLogedIn}) => {
     ] : [];
 
     return (
-      <nav className="nav-links">
+      <nav className="navbar-links">
         {
           navLandinglinks.map((element) => (
-            <Link to={element.link} className="nav-item" key={element.name}>
+            <Link to={element.link} className="navbar-item" key={element.name}>
               {element.name}
             </Link>
           ))
@@ -31,20 +31,20 @@ const Navbar = ({isLogedIn}) => {
   return (
     <header className="header">
       <div className="navbar">
-        <h1 className="logo">
+        <h1 className="logo logo-sm-margin">
           <Link to="/">IT Ticketing Systems Inc.</Link>
         </h1>
         <NavLinks />
-        <div className="user-actions">
+        <div className="navbar-actions">
           {
           isLogedIn
             ? (
-              <Link to="/" onClick={() => dispatch({ type: 'LOGOUT' })} className="nav-item">
+              <Link to="/" onClick={() => dispatch({ type: 'LOGOUT' })} className="navbar-item">
                 Logout
               </Link>
             )
             : (
-              <Link to="/login" className="nav-item">
+              <Link to="/login" className="navbar-item">
                 Login
               </Link>
             )

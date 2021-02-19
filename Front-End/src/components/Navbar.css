@@ -1,8 +1,8 @@
 .header {
   margin: 0 auto;
 
-  background-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 4px 2px rgba(16, 16, 16, 0.1);
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 3px 3px rgba(16, 16, 16, 0.1);
 }
 
 .navbar {
@@ -15,53 +15,42 @@
   padding: 8px 16px;
 }
 
-.user-actions {
+.navbar-actions {
+  display: flex;
+  align-items: center;
   grid-area: user-actions;
+  height: 100%;
 }
 
-.nav-links {
+.navbar-links {
   grid-area: links;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 16px;
 }
 
-.nav-item {
-  color: #212121;
-  text-decoration: none;
-}
-
-.logo {
+.navbar-item {
   position: relative;
-  grid-area: logo;
-
-  margin: 0;
-
-  font-family: rift, sans-serif;
-  text-align: left;
-  color: #212121;
+  padding: 4px 8px;
+  color: #292929;
+  text-decoration: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
-.logo::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  height: 4px;
-  background-color: #212121;
-
-  transform: scaleX(0);
-  transition-property: transform;
-  transition-duration: 128ms;
-  transition-timing-function: ease-out;
-  transform-origin: left center;
+.navbar-item:hover {
+  color: #57A85F;
 }
 
-.logo:hover::after {
-  transform: scale(100%);
+.navbar-actions > .navbar-item {
+  max-height: 40px;
+  border: 1px solid #292929;
+  border-radius: 3px;
 }
 
-.logo a { text-decoration: none; }
-
-.logo a:link,
-.logo a:visited {
-  color: currentColor;
+.navbar-actions > .navbar-item:hover {
+  border-color: #57A85F;
 }

@@ -32,3 +32,21 @@ main {
   max-width: 777px;
   padding: 30px;
 }
+
+.logo {
+  font-family: rift, sans-serif;
+  color: #292929;
+}
+
+.logo a { text-decoration: none; }
+
+.logo a:hover { text-decoration: underline; }
+
+.logo a:link,
+.logo a:visited {
+  color: currentColor;
+}
+
+.logo-sm-margin {
+  margin: 0.5rem 0;
+}
