@@ -8,7 +8,8 @@
   width: 66%;
   padding: 40px 42px 48px;
 
-  background-color: rgb(246, 249, 252);
+  border: 1px solid white;
+  background-color: #F6F8F7;
   box-shadow: 0 0 18px 2px rgba(4, 4, 4, 0.025),
               0 2px 9px rgba(4, 4, 4, 0.1);
   border-radius: 3px;
@@ -35,8 +36,8 @@
   width: 100%;
   min-height: 42px;
   border-radius: 3px;
-  background-color: #f6f8fa;
-  border: 1px solid #c2c7ca;
+  background-color: #F6F8F7;
+  border: 1px solid #BDBDBD;
   padding: 4px 8px;
 
   transition-property: border, box-shadow, background-color;
@@ -44,8 +45,8 @@
 }
 
 .login-input:hover {
-  border-color: #dadada;
-  background-color: #fcfcfc;
+  border-color: #57A85F;
+  background-color: white;
 }
 
 .login-input:focus {
@@ -53,7 +54,7 @@
   background-color: white;
   border-color: transparent;
   --saf-0: rgba(var(--sk_highlight,18,100,163),1);
-  box-shadow: 0 0 0 1px var(--saf-0), 0 0 0 4px rgba(29, 155, 209, 0.3);
+  box-shadow: 0 0 0 1px var(--saf-0), 0 0 0 4px #57a85f52;
   appearance: none;
   border-radius: 3px;
 }
@@ -67,21 +68,25 @@
   min-height: 42px;
   border-radius: 3px;
   color: white;
-  background-color: rgb(52, 141, 224);
-  border: 0;
+  background-color: #498D64;
+  border: 1px solid #3C7C55;
   cursor: pointer;
 
-  transition-property: background-color;
+  box-shadow: 0 0 4px rgba(4, 4, 4, 0.28);
+
+  transition-property: background-color, box-shadow;
   transition-duration: 128ms;
   transition-timing-function: ease-out;
 }
 
 .login-button:hover {
-  background-color: rgb(69, 164, 241);
+  background-color: #57A85F;
+  box-shadow: 0 0 5px rgba(4, 4, 4, 0.33);
 }
 
 .login-button:active {
-  background-color: rgb(44, 115, 221);
+  background-color: #3C7C55;
+  box-shadow: 0 0 3px rgba(4, 4, 4, 0.35);
 }
 
 .login-retrieval {
