@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import Joi from 'joi';
 import Input from '../../components/Input';
@@ -40,14 +40,14 @@ function Registration() {
       // how long should a password be same for username and such
 
       // not sure if should be on submit or on change??
-      username: Joi.string().regex(/[a-zA-Z1-9]/).required().label('Username'),
-      firstName: Joi.string().regex(/[a-zA-Z]/).required().label('First Name'),
-      lastName: Joi.string().regex(/[a-zA-Z]/).required().label('Last Name'),
-      password: Joi.string().regex(/[a-zA-Z1-9]/).required().label('Password'),
+      username: Joi.string().min(3).required().label('Username'),
+      firstName: Joi.string().required().label('First Name'),
+      lastName: Joi.string().required().label('Last Name'),
+      password: Joi.string().min(3).required().label('Password'),
       passwordConfirm: Joi.string().valid(Joi.ref('password')).required().strict().label('Password Confirm'),
       email: Joi.string().required().label('Email'),
       emailConfirm: Joi.string().valid(Joi.ref('email')).required().strict().label('Email Confirm'),
-      phone: Joi.string().regex(/^\d{3}-\d{3}-\d{4}$/).required().label('Phone'),
+      phone: Joi.string().regex(/^\(\d{3}\)-\d{3}-\d{4}$/).required().label('Phone'),
     }).options({ abortEarly: false });
 
     const result = regSchema.validate(data);
@@ -55,19 +55,25 @@ function Registration() {
       // make call to server to make new user and send back to Login
       history.push('/login');
     } else {
-      const errs = result.error.details.map(({ message, path }) => (
-        { path, message: message.replace(/['"]/g, '') }
-      ));
-      const temp = {};
-      errs.forEach((element) => {
-        temp.[element.path] = element.message;
+      const errs = {};
+      result.error.details.forEach(({ message, path }) => {
+        errs[path] = message.replace(/['"]/g, '');
       });
-      setErrors({ ...temp });
+      if ('passwordConfirm' in errs && errs.passwordConfirm.includes('ref:password')) {
+        errs.passwordConfirm = 'Passwords must match';
+      }
+      if ('emailConfirm' in errs && errs.emailConfirm.includes('ref:email')) {
+        errs.emailConfirm = 'Emails must match';
+      }
+      if ('phone' in errs && errs.phone.includes('pattern')) {
+          errs.phone = 'Phone area is incomplete';
+      }
+      setErrors({ ...errs });
     }
   };
 
   return (
-    <>
+    <Fragment>
       <header>
         <h1 className="logo">
           <Link to="/">IT Ticketing Systems Inc.</Link>
@@ -81,6 +87,8 @@ function Registration() {
             <Input
               id="username"
               name="Username"
+              maskChar=" "
+              mask= "*************************"
               value={data.username}
               onChange={updateField}
               error={errors.username}
@@ -89,6 +97,8 @@ function Registration() {
             <Input
               id="firstName"
               name="First Name"
+              maskChar=" "
+              mask= "aaaaaaaaaaaaaaaaaaaaaaaaa"
               value={data.firstName}
               onChange={updateField}
               error={errors.firstName}
@@ -97,6 +107,8 @@ function Registration() {
             <Input
               id="lastName"
               name="Last Name"
+              maskChar=" "
+              mask= "aaaaaaaaaaaaaaaaaaaaaaaaa"
               value={data.lastName}
               onChange={updateField}
               error={errors.lastName}
@@ -107,7 +119,6 @@ function Registration() {
               id="password"
               name="Password"
               value={data.password}
-              mask=""
               onChange={updateField}
               error={errors.password}
             />
@@ -117,7 +128,6 @@ function Registration() {
               id="passwordConfirm"
               name="Password Confirm"
               value={data.passwordConfirm}
-              mask=""
               onChange={updateField}
               error={errors.passwordConfirm}
             />
@@ -145,7 +155,8 @@ function Registration() {
               id="phone"
               name="Phone"
               value={data.phone}
-              mask="999-999-9999"
+              maskChar="_"
+              mask="(999)-999-9999"
               onChange={updateField}
               error={errors.phone}
             />
@@ -153,7 +164,7 @@ function Registration() {
           </form>
         </div>
       </main>
-    </>
+    </Fragment>
   );
 }
 
