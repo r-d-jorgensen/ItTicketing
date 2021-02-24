@@ -4,7 +4,7 @@ import './AccountRetrival.css';
 
 function AccountRetrival() {
   return (
-    <>
+    <fragment>
       <Navbar />
       <main id="account-retrival-page" className="double-column">
         <div>
@@ -39,7 +39,7 @@ function AccountRetrival() {
           </p>
         </div>
       </main>
-    </>
+    </fragment>
   );
 }
 

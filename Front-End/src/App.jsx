@@ -10,7 +10,6 @@ import loadable from '@loadable/component';
 import 'normalize.css';
 import './App.css';
 
-const Navbar = loadable(() => import('components/Navbar'));
 const Home = loadable(() => import('views/Landing/Home'));
 const Login = loadable(() => import('views/Landing/Login'));
 const Registration = loadable(() => import('views/Landing/Registration'));

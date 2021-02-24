@@ -5,7 +5,7 @@ import './Home.css';
 
 function Home() {
   return (
-    <>
+    <fragment>
       <Navbar />
       <main id="home-page">
         <h2 className="home-title">About Us</h2>
@@ -53,7 +53,7 @@ function Home() {
           contact information
         </p>
       </main>
-    </>
+    </fragment>
   );
 }
 
