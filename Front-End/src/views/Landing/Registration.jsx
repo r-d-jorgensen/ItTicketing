@@ -153,7 +153,7 @@ function Registration() {
             <Input
               type="tel"
               id="phone"
-              name="Phone"
+              name="Phone number"
               value={data.phone}
               maskChar="_"
               mask="(999)-999-9999"

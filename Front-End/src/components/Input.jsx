@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import InputMask from 'react-input-mask';
 
 import './Input.css';
@@ -8,7 +8,7 @@ const Input = ({
   error,
   ...rest
 }) => (
-  <>
+  <Fragment>
     <InputMask
       className="input"
       name={name}
@@ -19,7 +19,7 @@ const Input = ({
         ? <div className="input-error">{error}</div>
         : null
     }
-  </>
+  </Fragment>
 );
 
 export default Input;
