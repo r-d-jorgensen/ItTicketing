@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Navbar from 'components/Navbar';
 
 function EmployeeDashboard() {
   return (
-    <fragment>
+    <Fragment>
       <Navbar />
       <main id="employee-dashboard">
         <div id="dashboard-filters">
@@ -14,7 +14,7 @@ function EmployeeDashboard() {
           {/*map function to render active tickets */}
         </div>
       </main> 
-    </fragment>
+    </Fragment>
   );
 }
 

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Navbar from 'components/Navbar';
 
 import './Home.css';
 
 function Home() {
   return (
-    <fragment>
+    <Fragment>
       <Navbar />
       <main id="home-page">
         <h2 className="home-title">About Us</h2>
@@ -53,7 +53,7 @@ function Home() {
           contact information
         </p>
       </main>
-    </fragment>
+    </Fragment>
   );
 }
 

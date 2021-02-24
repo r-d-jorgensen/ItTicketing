@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { AuthContext } from '../../App';
 import Input from '../../components/Input';
@@ -107,7 +107,7 @@ function Login() {
   }
 
   return (
-    <>
+    <Fragment>
       <header>
         <h1 className="logo">
           <Link to="/">IT Ticketing Systems Inc.</Link>
@@ -142,7 +142,7 @@ function Login() {
           </span>
         </div>
       </main>
-    </>
+    </Fragment>
   );
 }
 

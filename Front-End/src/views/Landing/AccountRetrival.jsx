@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Navbar from 'components/Navbar';
 import './AccountRetrival.css';
 
 function AccountRetrival() {
   return (
-    <fragment>
+    <Fragment>
       <Navbar />
       <main id="account-retrival-page" className="double-column">
         <div>
@@ -39,7 +39,7 @@ function AccountRetrival() {
           </p>
         </div>
       </main>
-    </fragment>
+    </Fragment>
   );
 }
 
