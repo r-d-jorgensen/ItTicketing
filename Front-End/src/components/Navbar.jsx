@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../App';
+import { useAuth } from '../auth';
 
 import './Navbar.css';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
 const Navbar = () => {
-  const { dispatch, state: { isAuthenticated } } = React.useContext(AuthContext);
+  const auth = useAuth();
   const NavLinks = () => {
     const navLandinglinks = DEVELOPMENT ? [
       { link: '/', name: 'Home' },
@@ -37,9 +37,9 @@ const Navbar = () => {
         <NavLinks />
         <div className="navbar-actions">
           {
-          isAuthenticated
+          auth.user
             ? (
-              <Link to="/" onClick={() => dispatch({ type: 'LOGOUT' })} className="navbar-item">
+              <Link to="/" onClick={auth.logout} className="navbar-item">
                 Logout
               </Link>
             )
