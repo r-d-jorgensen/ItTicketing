@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import loadable from '@loadable/component';
 
-import { AuthProvider } from './auth';
+import { AuthProvider } from './services/auth';
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './components/Dashboard';
 

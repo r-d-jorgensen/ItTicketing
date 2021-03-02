@@ -1,7 +1,7 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useAuth } from '../../auth';
+import { useAuth } from '../../services/auth';
 import Input from '../../components/Input';
 import './Login.css';
 

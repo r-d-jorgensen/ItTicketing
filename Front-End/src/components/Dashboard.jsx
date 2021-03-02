@@ -1,7 +1,7 @@
 import React from 'react';
 import loadable from '@loadable/component';
 
-import { useAuth } from 'src/auth';
+import { useAuth } from '../services/auth';
 
 function Dashboard() {
   const { user } = useAuth();
