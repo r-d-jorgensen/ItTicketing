@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
 import InputMask from 'react-input-mask';
-
 import './Input.css';
 
 const Input = ({
@@ -21,5 +21,14 @@ const Input = ({
     }
   </Fragment>
 );
+
+Input.propTypes = {
+  name: PropTypes.string.isRequired,
+  error: PropTypes.string,
+};
+
+Input.defaultProps = {
+  error: null,
+};
 
 export default Input;

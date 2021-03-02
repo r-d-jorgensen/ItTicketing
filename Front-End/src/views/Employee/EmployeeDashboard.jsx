@@ -17,6 +17,18 @@ const filters = [
   'Alphabetical',
 ];
 
+function handleRequest() {
+  console.log('Requesting more info from ticket holder');
+}
+
+function handleUpdate() {
+  console.log('Updateing Ticket');
+}
+
+function handleClose() {
+  console.log('Closing Ticket');
+}
+
 function EmployeeDashboard() {
   return (
     <Fragment>
@@ -39,7 +51,10 @@ function EmployeeDashboard() {
             <p>{priority}</p>
             <p>{company}: {ticketOwner}</p>
             <p>{details}</p>
-          </div>)}
+            <button type="button" onClick={handleRequest}>Request</button>
+            <button type="button" onClick={handleUpdate}>Update</button>
+            <button type="button" onClick={handleClose}>Close</button>
+          </div>)};
         </div>
       </main> 
     </Fragment>
