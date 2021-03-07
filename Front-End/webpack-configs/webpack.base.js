@@ -106,6 +106,7 @@ const base = {
     // https://webpack.js.org/plugins/define-plugin/
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.TICKET_API_URL': JSON.stringify(process.env.TICKET_API_URL),
     }),
     // https://webpack.js.org/plugins/html-webpack-plugin/
     // This plugin accepts lodash templates - in our case `index.ejs`
