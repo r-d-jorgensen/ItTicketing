@@ -1,14 +1,14 @@
-import React, { Fragment } from 'react';
+import React, { useState, Fragment } from 'react';
 import Navbar from 'components/Navbar';
 import './EmployeeDashboard.css';
 
 const activeTickets = [
-  {ticketOwner: 'Homer Stevenson', company: 'Dix-It', title: 'Email not sending attachments',  priority: 'Urgent',
-    details: 'The email is currently not sending attachments that are meant to go with it.'},
-  {ticketOwner: 'John Jacobson', company: 'Big Stuff',  title: 'Stuff',  priority: 'Low',
-    details: 'words about the problem. words about the problem words about the problem words about the problem'},
-  {ticketOwner: 'Bob Levy', company: 'Fix-It', title: 'Unable to add ',  priority: 'mid',
-    details: 'words about the problem. words about the problem words about the problem words about the problem'},
+  {id: '12345', ticketOwner: 'Homer Stevenson', company: 'Dix-It', title: 'Email not sending attachments',  priority: 'Urgent',
+    details: ['The email is currently not sending attachments that are meant to go with it.']},
+  {id: '4651', ticketOwner: 'John Jacobson', company: 'Big Stuff',  title: 'Stuff',  priority: 'Low',
+    details: ['words about the problem. words about the problem words about the problem words about the problem']},
+  {id: '4843216', ticketOwner: 'Bob Levy', company: 'Fix-It', title: 'Unable to add ',  priority: 'mid',
+    details: ['words about the problem. words about the problem words about the problem words about the problem']},
 ];
 
 const filters = [
@@ -17,44 +17,58 @@ const filters = [
   'Alphabetical',
 ];
 
-function handleRequest() {
-  console.log('Requesting more info from ticket holder');
-}
-
-function handleUpdate() {
-  console.log('Updateing Ticket');
-}
-
-function handleClose() {
-  console.log('Closing Ticket');
-}
-
 function EmployeeDashboard() {
+  const [activeFilter, setFilter] = useState(filters[0]);
+  const handleRequest = () => {
+    console.log('Requesting more info from ticket holder');
+  };
+  
+  const handleUpdate = () => {
+    console.log('Updateing Ticket');
+  };
+  
+  const handleClose = () => {
+    console.log('Closing Ticket');
+  };
+  
+  const handleFilterEvent = ({target}) => {
+    setFilter(target.value);
+  };
+  //may need to create extra rows as it breaks when too many filters exist
+  const filterGrid = {gridTemplateColumns: 'auto'};
+  filters.forEach(() => {
+    filterGrid.gridTemplateColumns += ' auto';
+  });
   return (
     <Fragment>
       <Navbar />
       <main id="employee-dashboard">
-        <input type="text" placeholder="Look Up Ticket"/>
-        <div id="dashboard-filters">
+        <div className="filter-container">
           <h2>Filters</h2>
-          {filters.map((type) =>
-          <div className="filter">
-            <label htmlFor={type}>{type}</label>
-            <input type="radio" id={type} value={type} />
-          </div> )}
+          <div className="filter-elements" style={filterGrid}>
+            {filters.map((type) =>
+            <div key={type} className="filter">
+              <label htmlFor={type}>{type}&nbsp;</label>
+              <input type="radio" name="filter" id={type} value={type} onClick={handleFilterEvent}/>
+            </div>)}
+          </div>
         </div>
-        <div>
+        <div className="tickets-container">
           <h2>Active Tickets</h2>
-          {activeTickets.map(({title, ticketOwner, company, priority, details}) => 
-          <div className="activeTicket">
+          <input type="text" placeholder="Look Up Ticket"/>
+          {activeTickets.map(({id, title, ticketOwner, company, priority, details}) => 
+          <div key={id} className="active-ticket">
             <h4>{title}</h4>
-            <p>{priority}</p>
-            <p>{company}: {ticketOwner}</p>
-            <p>{details}</p>
-            <button type="button" onClick={handleRequest}>Request</button>
-            <button type="button" onClick={handleUpdate}>Update</button>
-            <button type="button" onClick={handleClose}>Close</button>
-          </div>)};
+            <div className="ticket-body">
+              <p><b>Priority: </b>{priority}&emsp;&emsp;&emsp; {company}: {ticketOwner}</p>
+              <p>&emsp;&emsp;{details}</p>
+              </div>
+            <div className="ticket-actions">
+              <button type="button" onClick={handleRequest}>Request</button>
+              <button type="button" onClick={handleUpdate}>Update</button>
+              <button type="button" onClick={handleClose}>Close</button>
+            </div>
+          </div>)}
         </div>
       </main> 
     </Fragment>
