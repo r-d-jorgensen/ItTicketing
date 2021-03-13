@@ -18,6 +18,7 @@
 .login-form {
   display: flex;
   flex-direction: column;
+  justify-content: stretch;
 }
 
 .login-header {
@@ -34,32 +35,6 @@
 
 * + .login-label {
   margin-top: 1rem;
-}
-
-.login-button { 
-  margin-top: 1rem;
-  min-height: 42px;
-  border-radius: 3px;
-  color: white;
-  background-color: #498D64;
-  border: 1px solid #3C7C55;
-  cursor: pointer;
-
-  box-shadow: 0 0 4px rgba(4, 4, 4, 0.28);
-
-  transition-property: background-color, box-shadow;
-  transition-duration: 128ms;
-  transition-timing-function: ease-out;
-}
-
-.login-button:hover {
-  background-color: #57A85F;
-  box-shadow: 0 0 5px rgba(4, 4, 4, 0.33);
-}
-
-.login-button:active {
-  background-color: #3C7C55;
-  box-shadow: 0 0 3px rgba(4, 4, 4, 0.35);
 }
 
 .login-retrieval {

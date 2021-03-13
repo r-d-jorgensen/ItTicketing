@@ -2,6 +2,7 @@ import React, { useState, Fragment } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import Joi from 'joi';
 import Input from '../../components/Input';
+import Button from '../../components/Button';
 import './Registration.css';
 
 function Registration() {
@@ -66,7 +67,7 @@ function Registration() {
         errs.emailConfirm = 'Emails must match';
       }
       if ('phone' in errs && errs.phone.includes('pattern')) {
-          errs.phone = 'Phone area is incomplete';
+        errs.phone = 'Phone area is incomplete';
       }
       setErrors({ ...errs });
     }
@@ -160,7 +161,7 @@ function Registration() {
               onChange={updateField}
               error={errors.phone}
             />
-            <button className="registration-button" type="submit">Sign Up</button>
+            <Button type="submit">Sign Up</Button>
           </form>
         </div>
       </main>

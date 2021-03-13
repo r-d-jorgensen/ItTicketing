@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { useAuth } from '../../services/auth';
 import Input from '../../components/Input';
+import Button from '../../components/Button';
 import './Login.css';
 
 function Login() {
@@ -51,13 +52,12 @@ function Login() {
               error={auth.message}
               type="password"
             />
-            <button
-              className="login-button"
+            <Button
               type="submit"
-              disabled={password === '' || username === ''}
+              disabled={(password === '' || username === '')}
             >
               Login
-            </button>
+            </Button>
           </form>
           <Link className="login-retrieval" to="/accountRetrival">Forgot your username or password?</Link>
           <span className="login-register">
