@@ -4,48 +4,25 @@ import PropTypes from 'prop-types';
 
 const context = createContext();
 
-// TODO: remove. used for fake network delay
-function randomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
-
 async function authLogin(username, password) {
-  // make call to server, needs api endpoint to test functionality
-  /*
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-    };
-    t
-    const user = await fetch(`API-ENDPOINT`, requestOptions)
+  const headers = new Headers();
+  headers.set('Content-Type', 'application/json');
 
-  */
+  const reqOpts = {
+    headers,
+    method: 'POST',
+    body: JSON.stringify({ username, password }),
+  };
 
-  // fake network delay
-  await new Promise((resolve) => {
-    setTimeout(resolve, randomInt(500) + 32);
-  });
-
-  // TODO: replace with API POST.
-  if (username === 'bob' && password === '123') {
-    return {
-      user: {
-        username: 'bob',
-        type: 'employee',
-      },
-    };
-  // eslint-disable-next-line no-else-return
-  } else if (username === 'steve' && password === '123') {
-    return {
-      user: {
-        username: 'steve',
-        type: 'customer',
-      },
-    };
+  const req = new Request('/api/auth', reqOpts);
+  const resp = await fetch(req);
+  if (resp.ok) {
+    const { data } = await resp.json();
+    return data;
   }
 
-  throw new Error('Username or password is invalid');
+  // TODO: better error message
+  throw new Error(resp.statusText);
 }
 
 function useProviderAuth() {
@@ -70,10 +47,11 @@ function useProviderAuth() {
         state: 'loading',
       }));
       try {
-        const resp = await authLogin(username, password);
+        // TODO: create storage module to store token
+        const { token, user } = await authLogin(username, password);
         setProviderAuth({
           state: 'authorized',
-          user: resp.user,
+          user,
           errorMsg: '',
         });
 

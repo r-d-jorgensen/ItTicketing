@@ -5,7 +5,6 @@ const mysql = require('mysql');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const expressjwt = require('express-jwt');
-const cookieParser = require('cookie-parser');
 const prexit = require('prexit');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -14,20 +13,12 @@ const app = express();
 
 const validateAuth = expressjwt({
 	secret: process.env.TICKET_SECRET,
-	credentialsRequired: false,
 	algorithms: ['HS256'],
-	getToken ({ cookies }) {
-		if (cookies && cookies.session) {
-			return cookies.session;
-		}
-		return null;
-	}
 });
 
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
 
 const serverPort = process.env.TICKET_PORT || 80;
 app.listen(serverPort, () => {
@@ -43,7 +34,7 @@ const connection = mysql.createConnection({
 });
 
 connection.connect(function(err) {
-	if(err) {
+	if (err) {
 		console.error("Database connection failed: " + err.stack);
 		return;
 	}
@@ -57,33 +48,53 @@ app.get('/protected', validateAuth, function(req, res) {
 });
 
 app.post('/api/auth', function apiAuth(req, res) {
-	const { email, password } = req.body;
-	console.log('api/auth', req.body);
-
-	//validate that the incoming email and password are strings
-	//so that they can then be sanitized properly to prevent any
-	//sort of sql injection.
-	if(typeof email !== 'string' || typeof password !== 'string'){
-		res.status(400).send('Bad Request');
-		return;
+	if (!req.is('application/json')) {
+		return res.status(400).send({ message: 'Bad Request'});
 	}
 
-	// email is escaped internally
-	connection.query('SELECT * FROM  `user` WHERE `email` = ?', [email], (err, [user]) => {
+	let username;
+	let userPass;
+	try {
+		username = req.body.hasOwnProperty('username') && req.body.username;
+		userPass = req.body.hasOwnProperty('password') && req.body.password;
+	} catch (_) {
+		return res.status(400).send({ message: 'Bad Request' });
+	}
+
+	// validate that the incoming username and password are strings
+	// so that they can then be sanitized properly to prevent any
+	// sort of sql injection.
+	if (typeof username !== 'string' || typeof userPass !== 'string') {
+		return res.status(400).send({ message: 'Bad Request' });
+	}
+
+	// username is escaped internally
+	connection.query('SELECT * FROM  `user` WHERE `username` = ?', [username], (err, [user]) => {
 		if (user) {
-			const { password: pHash, user_type, first_name, last_name, phone_number } = user;
-			bcrypt.compare(password, pHash).then((match) => {
+			const {
+				user_id,
+				password: passHash,
+				user_type,
+				email,
+				first_name,
+				last_name,
+				phone_number
+			} = user;
+			bcrypt.compare(userPass, passHash).then((match) => {
 				if (match) {
-					const token = jwt.sign(email + user.user_id, process.env.TICKET_SECRET);
-					res.cookie('token', token, { httpOnly: true, secure: true });
-					res.json({'success': true, user: {
-						   email,
-						   first_name,
-						   last_name,
-						   phone_number,
-						   user_type,
-						}
-					});
+					const payload = {
+						id: user_id,
+						user_type,
+						email,
+						first_name,
+						last_name,
+						phone_number,
+					};
+					const token = jwt.sign(payload, process.env.TICKET_SECRET);
+					res.status(201).json({ success: true, data: {
+						token,
+						user: payload,
+					}});
 				} else {
 					res.sendStatus(401);
 				}
@@ -95,7 +106,11 @@ app.post('/api/auth', function apiAuth(req, res) {
 });
 
 app.use(function(err, req, res, next){
-	console.log(err.name)
+	if (err.name === 'SyntaxError') {
+		return res.status(400).send({ message: 'Bad Request' });
+	}
+
+	console.error(err);
 	if(err.name === 'UnauthorizedError'){
 		console.log('jwt error');
 		next();

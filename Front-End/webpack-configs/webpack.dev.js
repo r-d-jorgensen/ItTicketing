@@ -17,6 +17,10 @@ module.exports = merge(baseConfig, {
 
     noInfo: false,
     quiet: false,
+
+    proxy: {
+      '/api': 'http://localhost:8081',
+    },
   },
   module: {
     rules: [
