@@ -32,7 +32,7 @@ function Login() {
           <Link to="/">IT Ticketing Systems Inc.</Link>
         </h1>
       </header>
-      <main id="login-page">
+      <main className="login-page">
         <div className="login-container">
           <span className="login-header">Log in to your account</span>
           <form className="login-form" onSubmit={handleLoginSubmit}>

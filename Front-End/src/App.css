@@ -27,10 +27,6 @@ body {
 
 main {
   position: relative;
-  margin: 0 auto;
-  width: 70%;
-  max-width: 777px;
-  padding: 30px;
 }
 
 .logo {

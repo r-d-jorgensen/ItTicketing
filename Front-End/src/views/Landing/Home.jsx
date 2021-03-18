@@ -7,7 +7,7 @@ function Home() {
   return (
     <Fragment>
       <Navbar />
-      <main id="home-page">
+      <main className="home-page">
         <h2 className="home-title">About Us</h2>
         <p className="home-body">
           words about the company words about the company words about the company

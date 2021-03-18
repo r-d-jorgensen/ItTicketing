@@ -80,7 +80,7 @@ function Registration() {
           <Link to="/">IT Ticketing Systems Inc.</Link>
         </h1>
       </header>
-      <main id="registration-page">
+      <main className="registration-page">
         <div className="registration-container">
           <span className="registration-header">Sign up for an Account</span>
           <form className="registration-form" onSubmit={signUpUser}>
@@ -89,7 +89,7 @@ function Registration() {
               id="username"
               name="Username"
               maskChar=" "
-              mask= "*************************"
+              mask="*************************"
               value={data.username}
               onChange={updateField}
               error={errors.username}
@@ -99,7 +99,7 @@ function Registration() {
               id="firstName"
               name="First Name"
               maskChar=" "
-              mask= "aaaaaaaaaaaaaaaaaaaaaaaaa"
+              mask="aaaaaaaaaaaaaaaaaaaaaaaaa"
               value={data.firstName}
               onChange={updateField}
               error={errors.firstName}
@@ -109,7 +109,7 @@ function Registration() {
               id="lastName"
               name="Last Name"
               maskChar=" "
-              mask= "aaaaaaaaaaaaaaaaaaaaaaaaa"
+              mask="aaaaaaaaaaaaaaaaaaaaaaaaa"
               value={data.lastName}
               onChange={updateField}
               error={errors.lastName}

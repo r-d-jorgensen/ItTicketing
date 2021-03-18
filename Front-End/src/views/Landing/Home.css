@@ -1,3 +1,10 @@
+.home-page {
+  margin: 0 auto;
+  width: 70%;
+  max-width: 777px;
+  padding: 30px;
+}
+
 .home-title {
   font-family: futura-pt-bold, sans-serif;
   font-size: 4rem;

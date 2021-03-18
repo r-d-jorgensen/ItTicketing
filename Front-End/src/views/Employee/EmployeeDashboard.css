@@ -1,3 +1,10 @@
+.employee-dashboard {
+  margin: 0 auto;
+  width: 70%;
+  max-width: 777px;
+  padding: 30px;
+}
+
 .filter-container {
   min-width: 320px;
   border: 1px solid white;
