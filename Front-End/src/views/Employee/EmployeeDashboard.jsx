@@ -45,7 +45,7 @@ function EmployeeDashboard() {
   return (
     <Fragment>
       <Navbar />
-      <main id="employee-dashboard">
+      <main className="employee-dashboard">
         <div className="filter-container">
           <h2>Filters</h2>
           <div className="filter-elements" style={filterGrid}>

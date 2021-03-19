@@ -6,7 +6,7 @@ function AccountRetrival() {
   return (
     <Fragment>
       <Navbar />
-      <main id="account-retrival-page" className="double-column">
+      <main className="account-retrival-page">
         <div>
           <h3>If Lost Password</h3>
           <p>
