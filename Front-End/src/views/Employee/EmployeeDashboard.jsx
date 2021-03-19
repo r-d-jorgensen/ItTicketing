@@ -1,10 +1,11 @@
 import React, { useState, Fragment } from 'react';
 import Navbar from 'components/Navbar';
+import Button from '../../components/Button';
 import './EmployeeDashboard.css';
 
 const activeTickets = [
   {id: '12345', ticketOwner: 'Homer Stevenson', company: 'Dix-It', title: 'Email not sending attachments',  priority: 'Urgent',
-    details: ['The email is currently not sending attachments that are meant to go with it.']},
+    details: [{tech: 'Steve', words: 'The email is currently not sending attachments that are meant to go with it.'}]},
   {id: '4651', ticketOwner: 'John Jacobson', company: 'Big Stuff',  title: 'Stuff',  priority: 'Low',
     details: ['words about the problem. words about the problem words about the problem words about the problem']},
   {id: '4843216', ticketOwner: 'Bob Levy', company: 'Fix-It', title: 'Unable to add ',  priority: 'mid',
@@ -15,6 +16,8 @@ const filters = [
   'Priority',
   'Company',
   'Alphabetical',
+  'Date',
+  'Status',
 ];
 
 function EmployeeDashboard() {
@@ -64,9 +67,9 @@ function EmployeeDashboard() {
               <p>&emsp;&emsp;{details}</p>
               </div>
             <div className="ticket-actions">
-              <button type="button" onClick={handleRequest}>Request</button>
-              <button type="button" onClick={handleUpdate}>Update</button>
-              <button type="button" onClick={handleClose}>Close</button>
+              <Button onClick={handleRequest}>Request</Button>
+              <Button onClick={handleUpdate}>Update</Button>
+              <Button onClick={handleClose}>Close</Button>
             </div>
           </div>)}
         </div>
