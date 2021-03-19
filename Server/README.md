@@ -1,16 +1,27 @@
 Need to install NodeJS in order to run the file.
 
-Installed and was running with Ubuntu mate
-
-need to install
-
+```bash
 sudo apt install nodejs
-sudo apt install npm
+sudo apt install yarn
 
-After installing npm you need to attach mysql to it
-
-npm install mysql
+yarn install
+```
 
 After this to run the file from the directory it is in
 
-node <filename>.js
+```bash
+yarn start
+```
+
+Required Environment Variables
+```bash
+# Example
+TICKET_DB_HOST=...
+TICKET_DB_PORT=3306
+TICKET_DB_USER=USER
+TICKET_DB_DATABASE=DB_NAME
+TICKET_DB_PASSWORD=...
+TICKET_SECRET=...
+TICKET_PORT=8081
+
+```
