@@ -2,9 +2,10 @@ import React, { useState, Fragment } from 'react';
 import Navbar from 'components/Navbar';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import { ticketsShallowCall } from './ticketCalls';
+import { ticketsCall } from './ticketCalls';
 import './EmployeeDashboard.css';
 
+const ticketsPerPage = 4;
 const filters = [
   'Priority',
   'Company',
@@ -16,7 +17,8 @@ const filters = [
 function EmployeeDashboard() {
   const [activeFilter, setFilter] = useState(filters[0]);
   const [activePage, setPage] = useState(1);
-  const tickets = ticketsShallowCall(activeFilter, activePage);
+  const tickets = ticketsCall(activeFilter);
+  const numPages = Math.ceil(tickets.length / ticketsPerPage);
 
   const FilterView = () => {
     const filterGrid = {gridTemplateColumns: 'auto'};
@@ -24,9 +26,8 @@ function EmployeeDashboard() {
       filterGrid.gridTemplateColumns += ' auto';
     });
   
-    const handleFilterEvent = ({target}) => {
-      setFilter(target.value);
-    };
+    const handleFilterEvent = ({target}) => { setFilter(target.value); };
+
     return (
       <div className="filter-container">
         <h2>Filters</h2>
@@ -43,6 +44,7 @@ function EmployeeDashboard() {
   };
 
   const TicketView = () => {
+    const displyedTickets = tickets.slice((activePage-1)*ticketsPerPage, activePage*ticketsPerPage);
     const handleDetails = () => {
       //console.log('Open details');
     };
@@ -50,7 +52,7 @@ function EmployeeDashboard() {
     return (
       <div className="tickets-container">
         <h2>Tickets</h2>
-        {tickets.map(({
+        {displyedTickets.map(({
           id,
           title,
           ticketOwner,
@@ -72,18 +74,16 @@ function EmployeeDashboard() {
   };
 
   const PageButtons = () => {
-    const pageSize = 1;
     const [userPage, setUserPage] = useState('');
     const [userPageError, setUserPageError] = useState(null);
-    const numPages = Math.ceil(tickets.length / pageSize);
-    const handleUserPage = ({target}) => {
-      setUserPage(target.value);
-    };
+    const handleUserPage = ({target}) => { setUserPage(target.value); };
 
     const handlePageEvent = ({target}) => {
       if (target.value <= numPages && target.value > 0) {
         setPage(target.value);
-      } else { setUserPageError('Invalid Input'); }
+      } else {
+        setUserPageError('Invalid Input');
+      }
     };
     
     return (
@@ -98,6 +98,7 @@ function EmployeeDashboard() {
             name="userPage"
             placeholder="Go To"
             value={userPage}
+            type="number"
             onChange={handleUserPage}
             error={userPageError}/>
           <Button
