@@ -3,13 +3,13 @@
 
 
 "@mapbox/node-pre-gyp@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@mapbox/node-pre-gyp/-/node-pre-gyp-1.0.0.tgz#2b809e701da0f6729b47fe78ad4b9dc187a7d2e5"
-  integrity sha512-mEaiD1CURETR/dBIiJAwz0M0Q0mH3gCW4pPMaIlNt97mdzYUVeqGcTJSamgJpS6Tg4tBHDrOJpjdh5fJTLnyNQ==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@mapbox/node-pre-gyp/-/node-pre-gyp-1.0.1.tgz#1b23a8decb5e6356b04770d586067d2bff2703dd"
+  integrity sha512-CUBdThIZMoLEQQxACwhLsPg/puxBca0abTH3ixuvBQkhjJ80Hdp99jmVjxFCOa52/tZqN9d70IbGUf+OuKDHGA==
   dependencies:
     detect-libc "^1.0.3"
     http-proxy-agent "^4.0.1"
-    mkdirp "^1.0.4"
+    make-dir "^3.1.0"
     node-fetch "^2.6.1"
     nopt "^5.0.0"
     npmlog "^4.1.2"
@@ -339,10 +339,10 @@ crypto-random-string@^2.0.0:
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-2.0.0.tgz#ef2a7a966ec11083388369baa02ebead229b30d5"
   integrity sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==
 
-csp-header@^2.1.1:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/csp-header/-/csp-header-2.1.2.tgz#ad9aac1b58241947aa467a715e4463a0ab691c88"
-  integrity sha512-Dofxg0rSSdkXiNCSRHLKlaCC6qc5gPS7rDMnRW/C/4v3X6nJ4Scgai3QjQBmmcnSY7zJATtL+akaZZFVMwPwvw==
+csp-header@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/csp-header/-/csp-header-2.2.0.tgz#cb1f83179b2e5b43f5759281458357b22511a626"
+  integrity sha512-uxhyJpDpH1yuqjMLz2Ve8OXsjkVzRtJ0skXxVUx81iUBbTbd5qBYwwKOZ6WXZFGveM2pAb/fHwtDJb5T42URMA==
 
 debug@2.6.9, debug@^2.2.0:
   version "2.6.9"
@@ -469,11 +469,11 @@ etag@~1.8.1:
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
 express-csp-header@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/express-csp-header/-/express-csp-header-4.0.0.tgz#117e2920d49ebdb6ae519addea161967ab28aba5"
-  integrity sha512-ksDlHZUHmZtNyULAuFqeX91q1bVNJk8z26cYRrKmPxkgeqEDrdI72uvI77/8ufxsnPLZ9gbgmt31fWVXD4d0pw==
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/express-csp-header/-/express-csp-header-4.1.0.tgz#0ce723d9ef1c74d1a46e1cfb3e483af09c60d6d3"
+  integrity sha512-es9RwKPRriINOhJoMGhw6Iz5Ia/SrjHMfxgsNlje08gbPukdfi5S5kLMpUVTwQ1MPp5tmRhvIdkq2SMisPA6Wg==
   dependencies:
-    csp-header "^2.1.1"
+    csp-header "^2.2.0"
     psl "^1.8.0"
 
 express-jwt@^6.0.0:
@@ -961,7 +961,7 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-make-dir@^3.0.0:
+make-dir@^3.0.0, make-dir@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-3.1.0.tgz#415e967046b3a7f1d185277d84aa58203726a13f"
   integrity sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==
@@ -1032,7 +1032,7 @@ minizlib@^2.1.1:
     minipass "^3.0.0"
     yallist "^4.0.0"
 
-mkdirp@^1.0.3, mkdirp@^1.0.4:
+mkdirp@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
