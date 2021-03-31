@@ -17,7 +17,7 @@ const filters = [
 function EmployeeDashboard() {
   const [activeFilter, setFilter] = useState(filters[0]);
   const [activePage, setPage] = useState(1);
-  const tickets = ticketsCall(activeFilter);
+  const tickets = ticketsCall();
   const numPages = Math.ceil(tickets.length / ticketsPerPage);
 
   const FilterView = () => {
@@ -58,13 +58,14 @@ function EmployeeDashboard() {
           ticketOwner,
           company,
           priority,
-          details: {userTitle, user, content}}) => 
+          details: {userID, userTitle, user, content}}) => 
           <div key={id} className="active-ticket">
             <h4>{title}</h4>
             <div className="ticket-body">
-              <p><b>Priority: </b>{priority}&emsp;&emsp;&emsp;{company}: {ticketOwner}</p>
-              <p>{userTitle}: {user}</p>
-              <p>{content}</p>
+              <p>Ticket ID - {id}</p>
+              <p><b>Priority - </b>{priority}&emsp;&emsp;&emsp;{company} - {ticketOwner}</p>
+              <p>{userTitle}: {userID} - {user}</p>
+              <p>&emsp;{content}</p>
             </div>
             <Button onClick={handleDetails}>Details</Button>
           </div>,
