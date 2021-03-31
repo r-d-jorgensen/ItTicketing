@@ -1,5 +1,4 @@
-function ticketsCall(filter) {
-  //console.log(filter);
+function ticketsCall() {
   const tickets = [
     {
       id: 52898,
@@ -130,7 +129,7 @@ function ticketsCall(filter) {
         userID: 50035,
         content: 'Sequi deleniti soluta rem qui dolorum beatae numquam autem quis. Cupiditate quam ea. Fuga aut cumque dignissimos. Consequatur enim quas ea qui consequuntur.',
       },
-    }
+    },
   ];
   
   return tickets;

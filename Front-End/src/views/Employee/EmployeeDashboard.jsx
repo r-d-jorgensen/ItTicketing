@@ -7,36 +7,38 @@ import './EmployeeDashboard.css';
 
 const ticketsPerPage = 4;
 const filters = [
-  'Priority',
-  'Company',
-  'Title',
-  'Date',
-  'Status',
+  {name: 'priority', values: ['All', 'Low', 'Mid', 'High', 'Urgent']},
+  //{name: 'title', values: ['A -> Z', 'Z -> A']},
 ];
 
 function EmployeeDashboard() {
-  const [activeFilter, setFilter] = useState(filters[0]);
+  const [activeFilter, setFilter] = useState('All');
   const [activePage, setPage] = useState(1);
-  const tickets = ticketsCall();
-  const numPages = Math.ceil(tickets.length / ticketsPerPage);
+  const tickets = ticketsCall().filter((ticket) => {
+    if (activeFilter === 'All') {
+      return ticket;
+    }
+    return ticket.priority === activeFilter;
+  });
 
   const FilterView = () => {
-    const filterGrid = {gridTemplateColumns: 'auto'};
-    filters.forEach(() => {
-      filterGrid.gridTemplateColumns += ' auto';
-    });
-  
-    const handleFilterEvent = ({target}) => { setFilter(target.value); };
-
+    function handleFilterChange({target}) {
+      setFilter(target.value);
+    }
     return (
       <div className="filter-container">
         <h2>Filters</h2>
-        <div className="filter-elements" style={filterGrid}>
-          {filters.map((type) => 
-            <div key={type} className="filter">
-              <label htmlFor={type}>{type}&nbsp;</label>
-              <input type="radio" name="filter" id={type} value={type} onClick={handleFilterEvent}/>
+        <div className="filter-elements">
+          {filters.map(({name, values}) =>
+          <div key={name} >
+            {name}
+            {values.map((value) =>
+            <div key={value} className="filterValues">
+              <label htmlFor={value}>{value}&nbsp;</label>
+              <input type="radio" name={name} value={value} onClick={handleFilterChange}/>
             </div>,
+            )}
+          </div>,
           )}
         </div>
       </div>
@@ -78,6 +80,7 @@ function EmployeeDashboard() {
     const [userPage, setUserPage] = useState('');
     const [userPageError, setUserPageError] = useState(null);
     const handleUserPage = ({target}) => { setUserPage(target.value); };
+    const numPages = Math.ceil(tickets.length / ticketsPerPage);
 
     const handlePageEvent = ({target}) => {
       if (target.value <= numPages && target.value > 0) {
