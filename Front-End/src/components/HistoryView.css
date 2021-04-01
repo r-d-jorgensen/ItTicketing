@@ -1,0 +1,8 @@
+.it-history-view {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #bdbdbd0e;
+  border: 1px solid #BDBDBD;
+  border-radius: 3px;
+}

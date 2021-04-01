@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import request from './api';
 import PropTypes from 'prop-types';
 
 const context = createContext();
@@ -14,15 +15,7 @@ async function authLogin(username, password) {
     body: JSON.stringify({ username, password }),
   };
 
-  const req = new Request('/api/auth', reqOpts);
-  const resp = await fetch(req);
-  if (resp.ok) {
-    const { data } = await resp.json();
-    return data;
-  }
-
-  // TODO: better error message
-  throw new Error(resp.statusText);
+  return request('/api/auth', reqOpts);
 }
 
 function useProviderAuth() {
@@ -48,7 +41,8 @@ function useProviderAuth() {
       }));
       try {
         // TODO: create storage module to store token
-        const { token, user } = await authLogin(username, password);
+        const { success, data } = await authLogin(username, password);
+        const { token, user } = data;
         setProviderAuth({
           state: 'authorized',
           user,

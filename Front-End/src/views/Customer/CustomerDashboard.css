@@ -1,16 +1,16 @@
 .it-customer-dashboard {
   display: grid;
-  grid-template: 'ticket-list ticket-view' 1fr
-                 / 360px 1fr;
+  grid-template: [cd-l] 'ticket-list ticket-view' 1fr [cd-r]
+                 / minmax(180px, auto) 1fr;
   height: calc(100% - 69px);
+  font-family: acumin-pro, sans-serif;
 }
 
 .it-cdv-tk-list-container {
   overflow-y: auto;
-  background-color: #498D64;
+  background-color: #F6F8F7;
   border-right: 1px solid #DBE5DF;
 }
-
 
 .it-cdv-tk-list {
   display: flex;
@@ -26,10 +26,16 @@
 
 .it-cdv-tk-item {
   width: 100%;
+}
+
+.it-cdv-tk-btn {
+  width: 100%;
   border-radius: 4px;
   padding: 16px;
 
-  color: #FAFAFA;
+  background-color: transparent;
+  border: 0;
+  outline: none;
 
   transition-property: background-color, box-shadow;
   transition-duration: 123ms;
@@ -38,26 +44,22 @@
   cursor: pointer;
 }
 
-.it-cdv-tk-item:hover,
-.it-cdv-tk-item--selected {
-  color: #498D64;
+.it-cdv-tk-btn:hover,
+.it-cdv-tk-btn--selected {
+  color: #3C7C55;
 }
 
-.it-cdv-tk-item:hover {
-  background-color: #F0F0F0;
+.it-cdv-tk-btn:hover {
+  background-color: #F6F8F7;
 }
 
-.it-cdv-tk-item--selected {
+.it-cdv-tk-btn--selected {
   background-color: #FAFAFA;
 }
 
-.it-cdv-tk-item:hover,
-.it-cdv-tk-item--selected {
-  box-shadow: 0 1px 5px rgba(11, 11, 11, 13%);
-}
-
-.it-cdv-tk-view {
-  background-color: transparent;
+.it-cdv-tk-btn:hover,
+.it-cdv-tk-btn--selected {
+  box-shadow: 0 1px 5px rgba(11, 55, 11, 13%);
 }
 
 .it-cdv-tk-view-empty {
@@ -68,4 +70,92 @@
 .it-loading-view {
   font-size: 2rem;
   font-weight: bold;
+}
+
+.it-ticket-detail-view {
+  display: flex;
+  flex-direction: column;
+}
+
+.it-tdv-extra svg {
+  margin-right: 4px;
+  min-width: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.it-tdv-detail-item {
+  display: flex;
+  align-items: center;
+  height: 32px;
+}
+
+.it-tdv-detail-item span {
+  display: inline-block;
+  width: 100%;
+
+  text-align: left;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.it-tdv-extra {
+  display: flex;
+  flex-direction: column;
+  grid-area: extra;
+  background-color: #F0F0F0;
+  border: 1px solid #E5E5E5;
+  padding: 10px;
+}
+
+.it-tdv-contact {
+  display: grid;
+  grid-template: 'title title' 32px
+                 'a name' 32px
+                 'a email' 32px
+                 / 64px 1fr;
+  align-items: center;
+  margin: 12px 0;
+  border-top: 1px solid #E5E5E5;
+  border-bottom: 1px solid #E5E5E5;
+  text-align: left;
+}
+
+.it-tdv-contact > span:first-of-type {
+  font-weight: bold;
+  align-self: flex-end;
+}
+
+.it-tdv-name {
+  grid-area: name;
+  align-self: flex-end;
+}
+
+.it-tdv-email {
+  grid-area: email;
+  align-self: flex-start;
+}
+
+.it-tdv-contact svg {
+  grid-area: a;
+  margin: 0;
+  padding-right: 8px;
+  width: 64px;
+  height: 100%;
+}
+
+.it-tdv-content {
+  display: flex;
+  flex-direction: column;
+  grid-area: content;
+  gap: 4px;
+  padding: 16px 16px 12px;
+  height: 100%;
+  background-color: #FAFAFA;
+}
+
+.it-tdv-content input {
+  align-self: flex-end;
 }
