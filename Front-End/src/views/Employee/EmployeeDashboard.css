@@ -1,36 +1,71 @@
 .employee-dashboard {
-  margin: 0 auto;
-  width: 70%;
-  max-width: 777px;
-  padding: 30px;
+  display: grid;
+  grid-template:
+    'filter-container tickets-container' 1fr
+    / 300px 1fr;
+  height: calc(100% - 69px);
 }
 
-.filter-container {
-  min-width: 320px;
-  border: 1px solid white;
+.controls-container {
   background-color: #f6f8f7;
-  box-shadow: 0 0 18px 2px rgba(4, 4, 4, 0.025), 0 2px 9px rgba(4, 4, 4, 0.1);
   border-radius: 3px;
+  background-color: #98c0a8;
+  border-right: 1px solid #dbe5df;
 }
 
-.filter-elements {
-  display: inline-grid;
+.control-header {
+  padding: 0;
+  margin: 0;
 }
 
-.filter {
+.page-button-display {
+  width: 90%;
+  height: auto;
   margin: 10px;
+}
+
+.user-page-input {
+  width: 50px;
+}
+
+.page-button {
+  width: auto;
+  height: auto;
+  border-radius: 3px;
+  color: white;
+  background-color: #498d64;
+  border: 1px solid #3c7c55;
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(4, 4, 4, 0.28);
+  transition-property: background-color, box-shadow;
+  transition-duration: 128ms;
+  transition-timing-function: ease-out;
+}
+
+.page-button:hover {
+  background-color: #57a85f;
+  box-shadow: 0 0 5px rgba(4, 4, 4, 0.33);
+}
+
+.page-button:active {
+  background-color: #3c7c55;
+  box-shadow: 0 0 3px rgba(4, 4, 4, 0.35);
+}
+
+.page-error {
+  color: red;
 }
 
 .tickets-container {
   margin: 1rem auto;
   min-width: 320px;
   padding: 20px 15px 20px;
-
   border: 1px solid white;
   background-color: #f6f8f7;
   box-shadow: 0 0 18px 2px rgba(4, 4, 4, 0.025), 0 2px 9px rgba(4, 4, 4, 0.1);
   border-radius: 3px;
 }
+
 .active-ticket {
   background-color: #a3dfc1;
   box-shadow: 0 0 18px 2px rgba(4, 4, 4, 0.025), 0 2px 9px rgba(4, 4, 4, 0.1);
@@ -43,19 +78,16 @@
   text-align: left;
 }
 
-.ticket-actions button {
-  margin-top: 1rem;
-  min-height: 42px;
+.ticket-change-button {
+  width: 30%;
+  height: auto;
   border-radius: 3px;
   color: white;
   background-color: #498d64;
   border: 1px solid #3c7c55;
   cursor: pointer;
-
   box-shadow: 0 0 4px rgba(4, 4, 4, 0.28);
-
   transition-property: background-color, box-shadow;
   transition-duration: 128ms;
   transition-timing-function: ease-out;
-  margin: 15px;
 }
