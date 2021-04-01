@@ -18,6 +18,11 @@ process.env.NODE_ENV=development
 # the specified config file for development
 yarn start
 
+# This command will run `webpack --config ./webpack-configs/webpack.base.js`
+# Webpack will build an optimized version of the application in the 
+# `dist` folder. Ensure the dist is empty or removed before building.
+yarn build
+
 # Runs `eslint --ext .js --ext .jsx src/**
 yarn lint:js
 ```

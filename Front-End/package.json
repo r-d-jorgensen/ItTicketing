@@ -13,6 +13,7 @@
     "react-router-dom": "5.2.0"
   },
   "scripts": {
+    "build": "cross-env NODE_ENV=production webpack --config ./webpack-configs/webpack.base.js",
     "start": "cross-env NODE_ENV=development webpack serve --config ./webpack-configs/webpack.dev.js",
     "lint:js": "eslint --ext .js --ext .jsx src/**"
   },
@@ -25,6 +26,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.2",
     "autoprefixer": "10.2.4",
     "babel-loader": "8.1.0",
+    "babel-plugin-transform-react-remove-prop-types": "0.4.24",
     "cross-env": "7.0.3",
     "css-loader": "5.2.0",
     "dotenv": "8.2.0",
@@ -54,6 +56,17 @@
     ],
     "plugins": [
       "@babel/plugin-proposal-class-properties"
-    ]
+    ],
+    "env": {
+      "production": {
+        "plugins": [
+          ["transform-react-remove-prop-types", {
+            "mode": "remove",
+            "removeImport": true,
+            "ignoreFilenames": ["node_modules"]
+          }]
+        ]
+      }
+    }
   }
 }
