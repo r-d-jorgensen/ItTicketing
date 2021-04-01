@@ -6,17 +6,13 @@ const baseConfig = require('./webpack.base.js');
 
 module.exports = merge(baseConfig, {
   devServer: {
-    publicPath: '/',
     port: 8080,
 
     compress: true,
     // Necessary for an SPA
     historyApiFallback: true,
     // Only hot reload without page refresh
-    hotOnly: true,
-
-    noInfo: false,
-    quiet: false,
+    hot: 'only',
 
     proxy: {
       '/api': 'http://localhost:8081',
