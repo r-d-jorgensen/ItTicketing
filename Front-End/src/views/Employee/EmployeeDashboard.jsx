@@ -5,13 +5,8 @@ import Input from '../../components/Input';
 import { ticketsCall, ticketDetails } from './ticketCalls';
 import './EmployeeDashboard.css';
 
-const ticketsPerPage = 4;
-const filters = [
-  {name: 'priority', values: ['All', 'Low', 'Mid', 'High', 'Urgent']},
-  //{name: 'title', values: ['A -> Z', 'Z -> A']},
-];
-
 function EmployeeDashboard() {
+  const ticketsPerPage = 4;
   const [activeFilter, setFilter] = useState('All');
   const [activePage, setPage] = useState(1);
   const tickets = ticketsCall().filter((ticket) => {
@@ -63,7 +58,7 @@ function EmployeeDashboard() {
             onClick={handlePageEvent}
             >GO
           </button>
-          {userPageError ? <p className="page-error" >{userPageError}</p> : ''}
+          {userPageError ? <p className="page-error" ><b>{userPageError}</b></p> : ''}
         </div>
       </div>
     );
@@ -71,13 +66,17 @@ function EmployeeDashboard() {
 
   const FilterView = () => {
     const handleFilterChange = ({target}) => { setFilter(target.value); };
+    const filters = [
+      {name: 'Title', className: 'title-filter', values: ['A -> Z', 'Z -> A']},
+      {name: 'Priority', className: 'priority-filter', values: ['All', 'Low', 'Mid', 'High', 'Urgent']},
+    ];
+    
     return (
-      <div className="controls-container">
-        <PageButtons />
-        <h2>Filters</h2>
-        <div>
-          {filters.map(({name, values}) =>
-          <div key={name} >
+      <Fragment>
+        <h2 className="control-header" >Filters</h2>
+        <div className="filters-display">
+          {filters.map(({name, values, className}) =>
+          <div key={name} className={className} >
             {name}
             {values.map((value) =>
             <div key={value} >
@@ -88,7 +87,7 @@ function EmployeeDashboard() {
           </div>,
           )}
         </div>
-      </div>
+      </Fragment>
     );
   };
 
@@ -126,7 +125,7 @@ function EmployeeDashboard() {
   
     return (
       <div className="tickets-container">
-        <h2 className="control-header" >Tickets</h2>
+        <h1 id="main-title">Tickets</h1>
         {displyedTickets.map(({
           id,
           title,
@@ -135,28 +134,37 @@ function EmployeeDashboard() {
           priority,
           details: {userIdInitial, userTitleInitial, userInitial, contentInitial}}) => 
           <div key={id} className="active-ticket">
-            <h4>{title}</h4>
+            <h3 className="main-details" id="ticket-title" >{title}</h3>
             <div className="ticket-body">
-              <p>Ticket ID - {id}</p>
-              <p><b>Priority - </b>{priority}&emsp;&emsp;&emsp;{company} - {ticketOwner}</p>
-              <p>{userTitleInitial}: {userIdInitial} - {userInitial}</p>
-              <p>&emsp;{contentInitial}</p>
-              <Button id={id} onClick={handleDetails}>Details</Button>
-              {activeDetails != id ? '' : <div>
+              <h4 className="main-details" >Ticket ID - {id}</h4>
+              <p className="main-details" ><b>Priority - </b>{priority}</p>
+              <p className="main-details" ><b>{company}</b> - {ticketOwner}</p>
+              {activeDetails != id ?
+                <div>
+                <div className="ticket-detail">
+                  <h5>{userTitleInitial}: {userIdInitial} - {userInitial}</h5>
+                  <p>&emsp;{contentInitial}</p>
+                </div>
+                <Button id={id} onClick={handleDetails}>Expand Details</Button>
+              </div> : <div >
                 {ticketDetails(id).map(({userID, userTitle, user, content}) => 
-                  <div key={id+content} >
-                    <p>{userTitle}: {userID} - {user}</p>
+                  <div key={id+content} className="ticket-detail" >
+                    <h5>{userTitle}: {userID} - {user}</h5>
                     <p>&emsp;{content}</p>
                   </div>,
                 )}
+                <Button id={id} onClick={handleDetails}>Collapse Details</Button>
                 <Input
                   name="ticketChange"
+                  id="ticket-input"
                   value={ticketChange}
                   onChange={handleTicketChange}
                 />
-                <button id={id} className="ticket-change-button" type="button" onClick={handleRequest}>Request</button>
-                <button id={id} className="ticket-change-button" type="button" onClick={handleUpdate}>Update</button>
-                <button id={id} className="ticket-change-button" type="button" onClick={handleClose}>Close</button>
+                <div className="button-container" >
+                  <button id={id} className="ticket-change-button" type="button" onClick={handleRequest}>Request</button>
+                  <button id={id} className="ticket-change-button" type="button" onClick={handleUpdate}>Update</button>
+                  <button id={id} className="ticket-change-button" type="button" onClick={handleClose}>Close</button>
+                </div>
               </div>}
             </div>
           </div>,
@@ -169,7 +177,10 @@ function EmployeeDashboard() {
     <Fragment>
       <Navbar />
       <main className="employee-dashboard">
-        <FilterView />
+        <div className="controls-container">
+          <PageButtons />
+          <FilterView />
+        </div>
         <TicketView />
       </main> 
     </Fragment>
