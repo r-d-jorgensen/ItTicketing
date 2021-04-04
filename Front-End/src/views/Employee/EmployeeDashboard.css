@@ -62,12 +62,16 @@
 
 .filters-display {
   display: grid;
-  grid-template:
-    'title-filter' 'priority-filter'
-    / 40%;
+  grid-template-columns: 40% 40%;
 }
 
-.priority-filter {
+.filter-set {
+  margin: 0px 0px auto auto;
+  padding: 0px;
+}
+
+.filter-values {
+  display: flex;
 }
 
 .tickets-container {

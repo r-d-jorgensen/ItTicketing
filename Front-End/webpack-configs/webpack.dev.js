@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+//const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const baseConfig = require('./webpack.base.js');
 
@@ -12,7 +12,7 @@ module.exports = merge(baseConfig, {
     // Necessary for an SPA
     historyApiFallback: true,
     // Only hot reload without page refresh
-    hot: 'only',
+    //hot: 'only',
 
     proxy: {
       '/api': 'http://localhost:8081',
@@ -27,7 +27,7 @@ module.exports = merge(baseConfig, {
           {
             loader: 'babel-loader',
             options: {
-              plugins: ['react-refresh/babel'],
+              //plugins: ['react-refresh/babel'],
             },
           },
         ],
@@ -35,7 +35,7 @@ module.exports = merge(baseConfig, {
     ],
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new ReactRefreshWebpackPlugin(),
+    //new webpack.HotModuleReplacementPlugin(),
+    //new ReactRefreshWebpackPlugin(),
   ],
 });
