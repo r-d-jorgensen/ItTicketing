@@ -1,6 +1,6 @@
 require('dotenv').config({ path: '.env.local' });
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const mysql = require('mysql');
 const express = require('express');
 const jwt = require('jsonwebtoken');
@@ -45,6 +45,46 @@ app.get('/protected', validateAuth, function(req, res) {
 	if(req.user.email){
 		res.send(`Logged in as ${req.user.email}`)
 	}
+});
+
+app.get('/api/tickets', validateAuth, function(req, res) {
+	console.log(`Getting tickets for userid: ${req.user.id}`)
+	
+	let queryOptions = req.query.filters  == undefined ? ({'query':'SELECT * FROM `ticket` WHERE `user_id` = ?', 'params':[req.user.id]}) : (function(filters){
+		console.log(`Applying filter: ${req.query.filters}`)
+		let string = 'SELECT * FROM `ticket` WHERE `user_id` = ?'
+		let params = [req.user.id]
+		if(filters.priority !== undefined){
+			string += ' AND `ticket_severity` = ?'
+			params.push(filters.priority)
+		}
+		
+		if(filters.company !== undefined)
+		{
+			
+		}
+		
+		if(filters.closed !== undefined)
+		{
+			string += ' AND `status` = ?'
+			params.push(filters.closed)
+		}
+		
+		if(filters.Date !== undefined)
+		{
+			//Date format must be YYYY-MM-DD HH:MM:SS
+			//A simple way to get a date in this format is the following: ( new Date().toISOString().replace('T', ' ').split('.')[0] )
+			string += ' AND `created` BETWEEN ? AND ?'
+			params.push(filters.Date.start)
+			params.push(filters.Date.end)
+		}
+		
+		return ({'query':string, 'params':params})
+	}(JSON.parse(req.query.filters)))
+	
+	connection.query(queryOptions.query, queryOptions.params, (err, tickets) => {
+		res.status(200).json(tickets)
+	});
 });
 
 app.post('/api/auth', function apiAuth(req, res) {
