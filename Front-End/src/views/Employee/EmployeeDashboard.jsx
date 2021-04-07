@@ -55,9 +55,8 @@ const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
   );
 };
 
-const FilterAndSortView = ({tickets, setProcessedTickets}) => {
+const FilterView = ({tickets, setProcessedTickets}) => {
   const filters = [
-    { name: 'Title', values: ['A -> Z', 'Z -> A'] },
     { name: 'Priority', values: ['All', 'Low', 'Mid', 'High', 'Urgent'] },
   ];
 
@@ -73,30 +72,62 @@ const FilterAndSortView = ({tickets, setProcessedTickets}) => {
   };
 
   return (
-    <Fragment>
-      <h2 className="control-header" >Filters & Sorts</h2>
-      <div className="filters-display">
+    <div className="control-section">
+      <h2 className="control-header" >Filters</h2>
+      <div className="grid-display">
         {filters.map(({ name, values }) =>
-          <div key={name} className="filter-set" >
-            <b>{name}</b>
+          <div key={name} className="grid-set" >
+            <h5 className="grid-setname">{name}</h5>
             {values.map((value) =>
-              <div key={value} className="filter-values">
-                <label className="filter-values" htmlFor={value}>{value}&nbsp;</label>
-                <input className="filter-values" type="radio" name={name} value={value} onClick={handlePrioityChange} />
+              <div key={value} className="grid-values">
+                <input className="grid-input" type="radio" name={name} value={value} onClick={handlePrioityChange} />
+                <label className="grid-lable" htmlFor={value}>{value}&nbsp;</label>
               </div>,
             )}
           </div>,
         )}
       </div>
-    </Fragment>
+    </div>
+  );
+};
+
+const SortView = ({tickets, setProcessedTickets}) => {
+  const sorters = [
+    { name: 'Title', values: ['A --> Z', 'Z --> A'] },
+  ];
+
+  const handlePrioityChange = ({ target: {value} }) => {
+    setProcessedTickets(
+      tickets
+      //sort systems
+    );
+  };
+
+  return (
+    <div className="control-section">
+      <h2 className="control-header" >Sorters</h2>
+      <div className="grid-display">
+        {sorters.map(({ name, values }) =>
+          <div key={name} className="grid-set" >
+            <h5 className="grid-setname">{name}</h5>
+            {values.map((value) =>
+              <div key={value} className="grid-values">
+                <input className="grid-input" type="radio" name={name} value={value} onClick={handlePrioityChange} />
+                <label className="grid-lable" htmlFor={value}>{value}&nbsp;</label>
+              </div>,
+            )}
+          </div>,
+        )}
+      </div>
+    </div>
   );
 };
 
 const TicketView = ({tickets, user}) => {
-  const [activeDetails, setActiveDetails] = useState(-1);
+  const [activeDetails, setActiveDetails] = useState(null);
   const handleDetails = ({ target }) => {
     if (activeDetails === target.id) {
-      setActiveDetails('');
+      setActiveDetails(null);
     } else {
       setActiveDetails(target.id);
     }
@@ -118,7 +149,7 @@ const TicketView = ({tickets, user}) => {
             <h4 className="main-details" >Ticket ID - {ticketID}</h4>
             <p className="main-details" ><b>Priority - </b>{priority}</p>
             <p className="main-details" ><b>{company}</b> - {ticketOwner}</p>
-            {parseInt(activeDetails) === ticketID
+            {parseInt(activeDetails, 10) === ticketID
             ?
             <TicketDetailsView
               user={user}
@@ -132,9 +163,14 @@ const TicketView = ({tickets, user}) => {
                 <h5>{userTitle}: {userID} - {userFullName}</h5>
                 <p>&emsp;{detail}</p>
               </div>
-              <Button id={ticketID} onClick={handleDetails}>Expand Details</Button>
-            </div>
-            }
+              <button
+                className="ticket-button details-button"
+                type="button"
+                id={ticketID}
+                onClick={handleDetails}>
+                  Expand Details
+              </button>
+            </div>}
           </div>
         </div>,
       )}
@@ -152,17 +188,14 @@ const TicketDetailsView = ({user, ticketID, setActiveDetails, handleDetails}) =>
   };
 
   const handleRequest = () => {
-
     setActiveDetails(null);
   };
 
   const handleUpdate = () => {
-
     setActiveDetails(null);
   };
 
   const handleClose = () => {
-
     setActiveDetails(null);
   };
 
@@ -189,17 +222,18 @@ const TicketDetailsView = ({user, ticketID, setActiveDetails, handleDetails}) =>
           <p>&emsp;{detail}</p>
         </div>,
       )}
-      <Button id={ticketID} onClick={handleDetails}>Collapse Details</Button>
-      <Input
+      <Button className="ticket-button details-button" id={ticketID} onClick={handleDetails}>Collapse Details</Button>
+      <textarea
         name="ticketChange"
         id="ticket-input"
+        className="textarea"
         value={ticketChange}
         onChange={handleTicketChange}
       />
       <div className="button-container" >
-        <button id={ticketID} className="ticket-change-button" type="button" onClick={handleRequest}>Request</button>
-        <button id={ticketID} className="ticket-change-button" type="button" onClick={handleUpdate}>Update</button>
-        <button id={ticketID} className="ticket-change-button" type="button" onClick={handleClose}>Close</button>
+        <button id={ticketID} className="ticket-button change-button" type="button" onClick={handleRequest}>Request</button>
+        <button id={ticketID} className="ticket-button change-button" type="button" onClick={handleUpdate}>Update</button>
+        <button id={ticketID} className="ticket-button change-button" type="button" onClick={handleClose}>Close</button>
       </div>
     </div>
   );
@@ -233,9 +267,16 @@ function EmployeeDashboard() {
             setPage={setPage}
             ticketsPerPage={ticketsPerPage}
             tickets={processedTickets}/>
-          <FilterAndSortView
+          <FilterView
             tickets={tickets}
             setProcessedTickets={setProcessedTickets}/>
+          <SortView
+            tickets={tickets}
+            setProcessedTickets={setProcessedTickets}/>
+          <PageButtons
+            setPage={setPage}
+            ticketsPerPage={ticketsPerPage}
+            tickets={processedTickets}/>
         </div>
         {loading ? <h1>Loading Tickets</h1> : 
         <TicketView
@@ -261,7 +302,7 @@ PageButtons.propTypes = {
   ticketsPerPage: PropTypes.number.isRequired,
 };
 
-FilterAndSortView.propTypes = {
+FilterView.propTypes = {
   tickets: PropTypes.arrayOf(PropTypes.object).isRequired,
   setProcessedTickets: PropTypes.func.isRequired,
 };
