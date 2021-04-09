@@ -8,20 +8,68 @@ const expressjwt = require('express-jwt');
 const prexit = require('prexit');
 const cors = require('cors');
 const helmet = require('helmet');
+const { UnauthorizedError } = require('express-jwt');
 
 const app = express();
+const httpServer = require('http').createServer(app);
+
+const corsOpts = {
+	cors: {
+		origin: '*',
+		methods: ['GET', 'POST'],
+		preflightContinue: false,
+		optionsSuccessStatus: 204,
+	},
+};
+Object.freeze(corsOpts);
+
+const io = require('socket.io')(httpServer, corsOpts);
 
 const validateAuth = expressjwt({
 	secret: process.env.TICKET_SECRET,
 	algorithms: ['HS256'],
 });
 
+io.use(async (socket, next) => {
+	const parts = socket.handshake.auth.token && socket.handshake.auth.token.split(' ');
+	let token;
+	if (parts.length === 2) {
+		const [scheme, credentials] = parts;
+		if (/^Bearer$/i.test(scheme)) {
+			token = credentials;
+		} else {
+			return next(new UnauthorizedError('credentials_bad_format', { message: 'Token format: Bearer [token]' }));
+		}
+	} else {
+		return next(new UnauthorizedError('credentials_bad_format', { message: 'Token format: Bearer [token]' }));
+	}
+
+	if (!token) {
+		return next(new UnauthorizedError('credentials_required', { message: 'Missing token' }));
+	}
+
+	jwt.verify(token, process.env.TICKET_SECRET, (err, decoded) => {
+		if (err) {
+			return next(new UnauthorizedError('invalid_token', err));
+		} else {
+			socket.user = decoded;
+			return next();
+		}
+	})
+});
+
+io.on('connection', async (socket) => {
+	socket.onAny((name, data) => {
+		console.log(name, data);
+	});
+})
+
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOpts));
 app.use(express.json());
 
 const serverPort = process.env.TICKET_PORT || 80;
-app.listen(serverPort, () => {
+httpServer.listen(serverPort, () => {
 	console.log(`Started server at http://localhost:${serverPort}`);
 });
 
