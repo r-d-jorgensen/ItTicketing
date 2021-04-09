@@ -5,22 +5,9 @@ import HistoryView from 'components/HistoryView';
 import Input from 'components/Input';
 
 import { useAuth } from '../../services/auth';
+import request from '../../services/api';
 
 import './CustomerDashboard.css';
-
-import my_tkts from './mock';
-
-function getTickets() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(my_tkts);
-    }, 188);
-  });
-}
-
-function historyFromTicket(ticket) {
-  return ticket;
-}
 
 function LoadingView() {
   return (
@@ -33,6 +20,28 @@ function LoadingView() {
 }
 
 function TicketDetailView({ ticket }) {
+  const { token } = useAuth();
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    if (ticket) {
+      const getTicketMessages = async () => {
+        const resp = await request(`/api/ticket/${ticket.id}/messages`, {
+          method: 'GET',
+          headers: new Headers({ Authorization: `Bearer ${token}` }),
+        });
+        if (process.env.NODE_ENV === 'development') {
+          console.groupCollapsed(`[api] /api/ticket/${ticket.id}/messages`);
+          console.log(resp);
+          console.groupEnd(`[api] /api/ticket/${ticket.id}/messages`);
+        }
+        setMessages(resp);
+      };
+
+      getTicketMessages();
+    }
+  }, [ticket, token]);
+
   return (
     <div className="it-ticket-detail-view">
       <div className="it-tdv-extra">
@@ -63,7 +72,7 @@ function TicketDetailView({ ticket }) {
         </div>
       </div>
       <div className="it-tdv-content">
-        <HistoryView history={historyFromTicket(ticket)} />
+        <HistoryView messages={messages} />
         <Input
           name="Message"
           placeholder="Send Message"
@@ -118,22 +127,31 @@ function CustomerDashboardView({ user, tickets }) {
 }
 
 function CustomerDashboard({ user }) {
+  const { token } = useAuth();
   const [tickets, setTickets] = useState([]);
-  const [isLoading, setLoading] = useState(!(tickets && tickets.length > 0));
+  const [isTicketsLoading, setTicketsLoading] = useState(!(tickets && tickets.length > 0));
 
   useEffect(() => {
     const gt = async () => {
-      setLoading(true);
+      setTicketsLoading(true);
       // TODO: filter properties on tickets
-      const resp = await getTickets();
-      setTickets(resp.tickets);
-      setLoading(false);
+      const resp = await request('/api/tickets', {
+        method: 'GET',
+        headers: new Headers({ Authorization: `Bearer ${token}` }),
+      });
+      if (process.env.NODE_ENV === 'development') {
+        console.groupCollapsed('[api] /api/tickets');
+        console.log(resp);
+        console.groupEnd('[api] /api/tickets');
+      }
+      setTickets(resp);
+      setTicketsLoading(false);
     };
 
     gt();
-  }, [user]);
+  }, [user, token]);
 
-  if (isLoading) {
+  if (isTicketsLoading) {
     return <LoadingView />;
   }
   return <CustomerDashboardView user={user} tickets={tickets} />;
