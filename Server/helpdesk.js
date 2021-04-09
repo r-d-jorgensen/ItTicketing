@@ -49,7 +49,7 @@ app.get('/protected', validateAuth, function(req, res) {
 
 app.get('/api/tickets', validateAuth, function(req, res) {
 	console.log(`Getting tickets for userid: ${req.user.id}`)
-	
+
 	let filters = Object.create(null);
 	if (req.query.filters) {
 		try {
@@ -72,8 +72,8 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 		} catch (_) {
 			return res.status(400).send({ message: 'Bad Request'});
 		}
-		}
-		
+	}
+
 	const userId = connection.escape(req.user.id);
 	const query = `
 		select
@@ -143,7 +143,7 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 		)
 		order by created
 	`;
-			
+
 	connection.query(query, (err, tickets) => {
 		res.status(200).json(Array.from(tickets, (t) => {
 			t.assigned = JSON.parse(t.assigned);
@@ -151,27 +151,71 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 		}));
 	});
 });
-		
-		if(filters.closed !== undefined)
-		{
-			string += ' AND `status` = ?'
-			params.push(filters.closed)
+
+app.get('/api/ticket/:id/messages', validateAuth, function (req, res) {
+	const ticket_id = req.params.id;
+	console.log(`Getting ticket with ticket_id: ${ticket_id}`)
+
+	if (!(req.user.user_type === 'employee' || req.user.user_type === 'customer')) {
+		console.log('not employee or customer');
+		return res.status(401).send({ message: 'Unauthorized' });
+	}
+
+	const query = 'select user_id from `ticket` where `ticket_id` = ?';
+	connection.query(query, [ticket_id], (err, [ticket]) => {
+		const detailQuery = `
+			select
+				tm.message_id as id,
+				tm.message,
+				tm.created,
+				tm.modified,
+				tm.ticket_id,
+				JSON_OBJECT(
+					'first_name', u.first_name,
+					'last_name', u.last_name,
+					'phone_number', u.phone_number,
+					'email', u.email
+				) as author
+			from ticket_messages tm join user u using(user_id)
+			where \`ticket_id\` = ?
+			order by tm.created
+		`;
+
+		if (req.user.id === ticket.user_id) {
+			connection.query(detailQuery, [ticket_id], (err, details) => {
+				res.status(200).json(Array.from(details, (detail) => {
+					detail.author = JSON.parse(detail.author);
+					return detail;
+				}));
+			});
+		} else if (req.user.user_type === 'employee') {
+			console.log('check if assigned to ticket');
+			const checkAssigned = `
+				select
+					ticket_id,
+					end
+				from ticket_assigned ta
+				where (
+					end is null and
+					ticket_id = ? and
+					employee_id = ?
+				)
+			`;
+			console.log(req.user, ticket_id);
+			connection.query(checkAssigned, [ticket_id, req.user.id], (err, assignments) => {
+				console.log(assignments);
+				if (Array.from(assignments).length > 0) {
+					connection.query(detailQuery, [ticket_id], (err, details) => {
+						res.status(200).json(Array.from(details, (detail) => {
+							detail.author = JSON.parse(detail.author);
+							return detail;
+						}));
+					});
+				}
+			});
+		} else {
+			return res.status(401).send({ message: 'Unauthorized' });
 		}
-		
-		if(filters.Date !== undefined)
-		{
-			//Date format must be YYYY-MM-DD HH:MM:SS
-			//A simple way to get a date in this format is the following: ( new Date().toISOString().replace('T', ' ').split('.')[0] )
-			string += ' AND `created` BETWEEN ? AND ?'
-			params.push(filters.Date.start)
-			params.push(filters.Date.end)
-		}
-		
-		return ({'query':string, 'params':params})
-	}(JSON.parse(req.query.filters)))
-	
-	connection.query(queryOptions.query, queryOptions.params, (err, tickets) => {
-		res.status(200).json(tickets)
 	});
 });
 
