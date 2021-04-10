@@ -149,7 +149,7 @@ app.post('/api/auth', function apiAuth(req, res) {
 //Only need the TICKET_ID to be sent in order to view the ticket and its details
 //THIS IS ONLY FOR VIEWING ONE TICKET
 
-app.post('/api/selectticket', validateAuth,function(req, res) {
+app.get('/api/selectticket', validateAuth,function(req, res) {
 	
 	if (!req.is('application/json')) {
 		return res.status(400).send({ message: 'Bad Request'});
