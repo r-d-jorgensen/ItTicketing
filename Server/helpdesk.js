@@ -145,11 +145,11 @@ app.post('/api/auth', function apiAuth(req, res) {
 	});
 });
 
-//----------------------------------------------------------------View Selected Tickets------------------------------------------------
-//Only need the TICKET_ID to be sent in order to view the ticket and its details
-//THIS IS ONLY FOR VIEWING ONE TICKET
+//----------------------------------------------------------------View Ticket Notes------------------------------------------------
+//Will return ticket notes from a specific ticket.
+//Need ticket_id
 
-app.get('/api/selectticket', validateAuth,function(req, res) {
+app.get('/api/ticketnotes', validateAuth,function(req, res) {
 	
 	if (!req.is('application/json')) {
 		return res.status(400).send({ message: 'Bad Request'});
@@ -158,14 +158,8 @@ app.get('/api/selectticket', validateAuth,function(req, res) {
 	let ticketID;
 
 	try {
-		ticketID = req.body.hasOwnProperty('ticketID') && req.body.ticketID;
+		ticketID = req.body.ticketID;
 	} catch (_) {
-		return res.status(400).send({ message: 'Bad Request' });
-	}
-
-	// validate that the incoming ticket ID is an int
-	// so it can be used to query the correct ticket
-	if (typeof ticketID !== 'int') {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
 
@@ -174,7 +168,7 @@ app.get('/api/selectticket', validateAuth,function(req, res) {
 	//select * from ticket left join ticket_notes on ticket.ticket_id = ticket_notes.ticket_id where ticket.ticket_id = <ticket_id>
 	//Only problems is it pulls the ticket info multiple times if there are multiple notes
 
-	connection.query('SELECT * FROM  `ticket` WHERE `ticket_id` = ?', [ticketID], (err, result) => {
+	connection.query('SELECT * FROM  `ticket_notes` WHERE `ticket_id` = ?', [ticketID], (err, result) => {
 		res.status(200).json(result)
 	});
 });
