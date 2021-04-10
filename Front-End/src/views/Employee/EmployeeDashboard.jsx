@@ -1,11 +1,13 @@
 import React, { useState, Fragment, useEffect } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import Navbar from 'components/Navbar';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { useAuth } from '../../services/auth';
-import { getTicketsCall, getTicketDetailsCall } from './ticketCalls';
 import './EmployeeDashboard.css';
+
+const TICKET_API_URL = 'http://localhost:8082'; //need to change to process.env.TICKET_API_URL once connected
 
 const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
   const [userPage, setUserPage] = useState(1);
@@ -49,7 +51,7 @@ const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
           onClick={handlePageEvent}
         >GO
         </button>
-        {userPageError ? <p className="page-error" ><b>{userPageError}</b></p> : ''}
+        {userPageError ? <p className="error" ><b>{userPageError}</b></p> : ''}
       </div>
     </div>
   );
@@ -98,7 +100,7 @@ const SortView = ({tickets, setProcessedTickets}) => {
 
   const handlePrioityChange = ({ target: {value} }) => {
     setProcessedTickets(
-      tickets
+      tickets,
       //sort systems
     );
   };
@@ -179,7 +181,8 @@ const TicketView = ({tickets, user}) => {
 };
 
 const TicketDetailsView = ({user, ticketID, setActiveDetails, handleDetails}) => {
-  const [loadingDetails, setLoadingDetails] = useState(true);
+  const [isLoadingDetails, setisLoadingDetails] = useState(true);
+  const [detailsError, setDetailsError] = useState('');
   const [ticketDetails, setTicketDetails] = useState([]);
   const [ticketChange, setTicketChange] = useState('');
 
@@ -200,18 +203,29 @@ const TicketDetailsView = ({user, ticketID, setActiveDetails, handleDetails}) =>
   };
 
   useEffect(() => {
-    const getTickets = async () => {
-      setLoadingDetails(true);
-      const resp = await getTicketDetailsCall();
-      setTicketDetails(resp.ticketDetails);
-      setLoadingDetails(false);
-    };
-
-    getTickets();
+    axios(TICKET_API_URL + '/api/details')
+    .then((response) => {
+      setTicketDetails(response.data.details);
+    })
+    .catch((error) =>{
+      setDetailsError(error);
+    })
+    .finally(() => {
+      setisLoadingDetails(false);
+    });
   }, [user]);
 
-  if (loadingDetails) {
+  if (isLoadingDetails) {
     return <h3>Loading Details</h3>;
+  }
+
+  if (detailsError) {
+    return (
+      <div>
+        <h3>Error Calling Server</h3>
+        <p className="error">{`${detailsError}`}</p>
+      </div>
+    );
   }
 
   return (
@@ -242,21 +256,44 @@ const TicketDetailsView = ({user, ticketID, setActiveDetails, handleDetails}) =>
 function EmployeeDashboard() {
   const { user } = useAuth();
   const ticketsPerPage = 4;
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [activePage, setPage] = useState(1);
   const [tickets, setTickets] = useState([]);
   const [processedTickets, setProcessedTickets] = useState([]);
+  const [ticketError, setTicketError] = useState(null);
 
   useEffect(() => {
-    const getTickets = async () => {
-      setLoading(true);
-      const resp = await getTicketsCall();
-      setTickets(resp.tickets);
-      setProcessedTickets(resp.tickets);
-      setLoading(false);
-    };
-    getTickets();
+    axios(TICKET_API_URL + '/api/tickets')
+    .then((response) => {
+      setTickets(response.data.tickets);
+      setProcessedTickets(response.data.tickets);
+    })
+    .catch((error) =>{
+      setTicketError(error);
+    })
+    .finally(() => {
+      setIsLoading(false);
+    });
   }, [user]);
+
+  const MainDisplay = () => {
+    if (isLoading) {
+      return <h1>Loading Tickets</h1>;
+    } 
+    if (ticketError) {
+      return (
+        <div>
+          <h1>An Error Occoured when calling Server</h1>
+          <h4 className="error">{`${ticketError}`}</h4>
+        </div>
+      );
+    }
+    return(
+      <TicketView
+        tickets={processedTickets.slice((activePage-1)*ticketsPerPage, activePage*ticketsPerPage)}
+        user={user}/>
+    );
+  };
 
   return (
     <Fragment>
@@ -278,10 +315,7 @@ function EmployeeDashboard() {
             ticketsPerPage={ticketsPerPage}
             tickets={processedTickets}/>
         </div>
-        {loading ? <h1>Loading Tickets</h1> : 
-        <TicketView
-          tickets={processedTickets.slice((activePage-1)*ticketsPerPage, activePage*ticketsPerPage)}
-          user={user}/>}
+        <MainDisplay />
       </main>
     </Fragment>
   );
@@ -307,6 +341,11 @@ FilterView.propTypes = {
   setProcessedTickets: PropTypes.func.isRequired,
 };
 
+SortView.propTypes = {
+  tickets: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setProcessedTickets: PropTypes.func.isRequired,
+};
+
 TicketView.propTypes = {
   tickets: PropTypes.arrayOf(PropTypes.object).isRequired,
   user: PropTypes.shape(userShape).isRequired,
@@ -320,3 +359,41 @@ TicketDetailsView.propTypes = {
 };
 
 export default EmployeeDashboard;
+
+/*
+mockoon data for tickets at http://localhost:8082/api/tickets
+{
+  "tickets": [
+    {{#repeat 50}}
+    {
+      "ticketID": {{ faker 'random.number' min=10000 max=100000 }},
+      "ticketOwner": "{{ faker 'name.firstName' }} {{ faker 'name.lastName' }}",
+      "company": "{{ faker 'company.bs' }}",
+      "title": "{{ faker 'lorem.words' }}",
+      "priority": "{{ oneOf (array 'Low' 'Mid' 'High' 'Urgent' ) }}",
+      "details": {
+        "userID": {{ faker 'random.number' min=10000 max=100000 }},
+        "userTitle": "{{ oneOf (array 'Admin' 'Tech' 'Customer' ) }}",
+        "userFullName": "{{ faker 'name.firstName' }} {{ faker 'name.lastName' }}",
+        "detail": "{{ faker 'lorem.paragraph' }}"
+      }
+    }
+    {{/repeat}}
+  ]
+}
+
+mockoon data for tickets at http://localhost:8082/api/details
+{
+  "details": [
+    {{#repeat 5}}
+    {
+      "detailID": {{ faker 'random.number' min=10000 max=100000 }},
+      "userID": {{ faker 'random.number' min=10000 max=100000 }},
+      "userTitle": "{{ oneOf (array 'Admin' 'Tech' 'Customer' ) }}",
+      "userFullName": "{{ faker 'name.firstName' }} {{ faker 'name.lastName' }}",
+      "detail": "{{ faker 'lorem.paragraph' }}"
+    }
+    {{/repeat}}
+  ]
+}
+*/
