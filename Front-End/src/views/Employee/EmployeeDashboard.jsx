@@ -65,10 +65,8 @@ const FilterView = ({tickets, setProcessedTickets}) => {
   const handlePrioityChange = ({ target: {value} }) => {
     setProcessedTickets(
       tickets.filter((ticket) => {
-        if (value === 'All') {
-          return ticket;
-        }
-        return ticket.priority === value;
+        if (value === 'All') return ticket; 
+        return ticket.ticket_severity === value;
       }),
     );
   };
@@ -98,7 +96,7 @@ const SortView = ({tickets, setProcessedTickets}) => {
     { name: 'Title', values: ['A --> Z', 'Z --> A'] },
   ];
 
-  const handlePrioityChange = ({ target: {value} }) => {
+  const handlePrioityChange = () => {
     setProcessedTickets(
       tickets,
       //sort systems
@@ -128,62 +126,58 @@ const SortView = ({tickets, setProcessedTickets}) => {
 const TicketView = ({tickets, user}) => {
   const [activeDetails, setActiveDetails] = useState(null);
   const handleDetails = ({ target }) => {
-    if (activeDetails === target.id) {
-      setActiveDetails(null);
-    } else {
-      setActiveDetails(target.id);
-    }
+    if (activeDetails === target.id) setActiveDetails(null); 
+    else setActiveDetails(target.id);
   };
 
   return (
     <div className="tickets-container">
       <h1 id="main-title">Tickets</h1>
-      {tickets.map(({
-        ticketID,
-        title,
-        ticketOwner,
-        company,
-        priority,
-        details: { userID, userTitle, userFullName, detail } }) =>
-        <div key={ticketID} className="active-ticket">
-          <h3 className="main-details" id="ticket-title" >{title}</h3>
-          <div className="ticket-body">
-            <h4 className="main-details" >Ticket ID - {ticketID}</h4>
-            <p className="main-details" ><b>Priority - </b>{priority}</p>
-            <p className="main-details" ><b>{company}</b> - {ticketOwner}</p>
-            {parseInt(activeDetails, 10) === ticketID
-            ?
-            <TicketDetailsView
-              user={user}
-              ticketID={ticketID}
-              setActiveDetails={setActiveDetails}
-              handleDetails={handleDetails}
-            />
-            :
-            <div>
-              <div className="ticket-detail">
-                <h5>{userTitle}: {userID} - {userFullName}</h5>
-                <p>&emsp;{detail}</p>
-              </div>
-              <button
-                className="ticket-button details-button"
-                type="button"
-                id={ticketID}
-                onClick={handleDetails}>
-                  Expand Details
-              </button>
-            </div>}
+      {tickets.map((ticket) => {
+        const ticketNote = ticket.ticket_note;
+        return (
+          <div key={ticket.ticket_id} className="active-ticket">
+            <h3 className="main-info" id="ticket-title" >{ticket.ticketTitle}</h3>
+            <div className="ticket-body">
+              <h4 className="main-info" >Ticket ID - {ticket.ticket_id}</h4>
+              <p className="main-info" ><b>Priority - </b>{ticket.ticket_severity}</p>
+              <p className="main-info" ><b>{ticket.company}</b>: 
+                {ticket.ticketOwnerID} - 
+                {ticket.first_name} {ticket.last_name}</p>
+              {parseInt(activeDetails, 10) === ticket.ticket_id
+              ? <TicketNotesView
+                user={user}
+                ticketID={ticket.ticket_id}
+                setActiveDetails={setActiveDetails}
+                handleDetails={handleDetails}
+              />
+              : <div key={ticketNote.note_id}>
+                <div className="ticket-detail">
+                  <h5>{ticketNote.title}: 
+                    {ticketNote.user_id} - 
+                    {ticketNote.first_name} {ticketNote.last_name}</h5>
+                  <p>&emsp;{ticketNote.body}</p>
+                </div>
+                <button
+                  className="ticket-button details-button"
+                  type="button"
+                  id={ticket.ticket_id}
+                  onClick={handleDetails}>
+                    Expand Details
+                </button>
+              </div>}
+            </div>
           </div>
-        </div>,
-      )}
+        );
+      })}
     </div>
   );
 };
 
-const TicketDetailsView = ({user, ticketID, setActiveDetails, handleDetails}) => {
-  const [isLoadingDetails, setisLoadingDetails] = useState(true);
-  const [detailsError, setDetailsError] = useState('');
-  const [ticketDetails, setTicketDetails] = useState([]);
+const TicketNotesView = ({user, ticketID, setActiveDetails, handleDetails}) => {
+  const [isLoadingNotes, setisLoadingNotes] = useState(true);
+  const [notesError, setNotesError] = useState('');
+  const [ticketNotes, setTicketNotes] = useState([]);
   const [ticketChange, setTicketChange] = useState('');
 
   const handleTicketChange = ({ target }) => {
@@ -203,37 +197,37 @@ const TicketDetailsView = ({user, ticketID, setActiveDetails, handleDetails}) =>
   };
 
   useEffect(() => {
-    axios(TICKET_API_URL + '/api/details')
+    axios(`${TICKET_API_URL}/api/ticket/notes`)
     .then((response) => {
-      setTicketDetails(response.data.details);
+      setTicketNotes(response.data.ticket_notes);
     })
     .catch((error) =>{
-      setDetailsError(error);
+      setNotesError(error);
     })
     .finally(() => {
-      setisLoadingDetails(false);
+      setisLoadingNotes(false);
     });
   }, [user]);
 
-  if (isLoadingDetails) {
-    return <h3>Loading Details</h3>;
+  if (isLoadingNotes) {
+    return <h3>Loading Notes</h3>;
   }
 
-  if (detailsError) {
+  if (notesError) {
     return (
       <div>
         <h3>Error Calling Server</h3>
-        <p className="error">{`${detailsError}`}</p>
+        <p className="error">{`${notesError}`}</p>
       </div>
     );
   }
 
   return (
     <div >
-      {ticketDetails.map(({ detailID, userID, userTitle, userFullName, detail }) =>
-        <div key={detailID} className="ticket-detail" >
-          <h5>{userTitle}: {userID} - {userFullName}</h5>
-          <p>&emsp;{detail}</p>
+      {ticketNotes.map((note) =>
+        <div key={note.note_id} className="ticket-detail" >
+          <h5>{note.title}: {note.user_id} - {note.first_name} {note.last_name}</h5>
+          <p>&emsp;{note.body}</p>
         </div>,
       )}
       <Button className="ticket-button details-button" id={ticketID} onClick={handleDetails}>Collapse Details</Button>
@@ -263,7 +257,7 @@ function EmployeeDashboard() {
   const [ticketError, setTicketError] = useState(null);
 
   useEffect(() => {
-    axios(TICKET_API_URL + '/api/tickets')
+    axios(`${TICKET_API_URL}/api/tickets`)
     .then((response) => {
       setTickets(response.data.tickets);
       setProcessedTickets(response.data.tickets);
@@ -351,7 +345,7 @@ TicketView.propTypes = {
   user: PropTypes.shape(userShape).isRequired,
 };
 
-TicketDetailsView.propTypes = {
+TicketNotesView.propTypes = {
   user: PropTypes.shape(userShape).isRequired,
   ticketID: PropTypes.number.isRequired,
   setActiveDetails: PropTypes.func.isRequired,
@@ -366,16 +360,19 @@ mockoon data for tickets at http://localhost:8082/api/tickets
   "tickets": [
     {{#repeat 50}}
     {
-      "ticketID": {{ faker 'random.number' min=10000 max=100000 }},
-      "ticketOwner": "{{ faker 'name.firstName' }} {{ faker 'name.lastName' }}",
-      "company": "{{ faker 'company.bs' }}",
+      "ticket_id": {{ faker 'random.number' min=10000 max=100000 }},
       "title": "{{ faker 'lorem.words' }}",
-      "priority": "{{ oneOf (array 'Low' 'Mid' 'High' 'Urgent' ) }}",
-      "details": {
-        "userID": {{ faker 'random.number' min=10000 max=100000 }},
-        "userTitle": "{{ oneOf (array 'Admin' 'Tech' 'Customer' ) }}",
-        "userFullName": "{{ faker 'name.firstName' }} {{ faker 'name.lastName' }}",
-        "detail": "{{ faker 'lorem.paragraph' }}"
+      "first_name": "{{ faker 'name.firstName' }}",
+      "last_name": "{{ faker 'name.lastName' }}",
+      "company": "{{ faker 'company.bs' }}",
+      "ticket_severity": "{{ oneOf (array 'Low' 'Mid' 'High' 'Urgent' ) }}",
+      "ticket_notes": {
+        "note_id": {{ faker 'random.number' min=10000 max=100000 }},
+        "user_id": {{ faker 'random.number' min=10000 max=100000 }},
+        "title": "{{ oneOf (array 'Admin' 'Tech' 'Customer' ) }}",
+        "first_name": "{{ faker 'name.firstName' }}",
+        "last_name": "{{ faker 'name.lastName' }}",
+        "body": "{{ faker 'lorem.paragraph' }}"
       }
     }
     {{/repeat}}
@@ -384,15 +381,16 @@ mockoon data for tickets at http://localhost:8082/api/tickets
 
 mockoon data for tickets at http://localhost:8082/api/details
 {
-  "details": [
+  "ticket_notes": [
     {{#repeat 5}}
     {
-      "detailID": {{ faker 'random.number' min=10000 max=100000 }},
-      "userID": {{ faker 'random.number' min=10000 max=100000 }},
-      "userTitle": "{{ oneOf (array 'Admin' 'Tech' 'Customer' ) }}",
-      "userFullName": "{{ faker 'name.firstName' }} {{ faker 'name.lastName' }}",
-      "detail": "{{ faker 'lorem.paragraph' }}"
-    }
+      "note_id": {{ faker 'random.number' min=10000 max=100000 }},
+      "user_id": {{ faker 'random.number' min=10000 max=100000 }},
+      "title": "{{ oneOf (array 'Admin' 'Tech' 'Customer' ) }}",
+      "first_name": "{{ faker 'name.firstName' }}",
+      "last_name": "{{ faker 'name.lastName' }}",
+      "body": "{{ faker 'lorem.paragraph' }}"
+      }
     {{/repeat}}
   ]
 }
