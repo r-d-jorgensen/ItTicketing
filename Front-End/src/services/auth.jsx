@@ -1,7 +1,10 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import request from './api';
+import JWTDecode from 'jwt-decode';
 import PropTypes from 'prop-types';
+
+import request from './api';
+import useStorage from './useStorage';
 
 const context = createContext();
 
@@ -19,20 +22,30 @@ async function authLogin(username, password) {
 }
 
 function useProviderAuth() {
+  const [storedSessionToken, setStoredSessionToken] = useStorage('itticketing:token', 'session');
   const history = useHistory();
   const location = useLocation();
   const from = (location.state && location.state.from) || { pathname: '/dashboard' };
 
+  let user = null;
+  try {
+    user = jwt_decode(storedSessionToken);
+  } catch (_) {
+    //
+  }
+
   const [providerAuth, setProviderAuth] = useState({
-    state: 'unauthorized',
-    user: null,
+    state: user ? 'authorized' : 'unauthorized',
+    user,
     errorMsg: '',
+    token: storedSessionToken,
   });
 
   return {
     state: providerAuth.state,
     message: providerAuth.errorMsg,
     user: providerAuth.user,
+    token: providerAuth.token,
 
     async login(username, password) {
       setProviderAuth((oldState) => ({
@@ -43,27 +56,33 @@ function useProviderAuth() {
         // TODO: create storage module to store token
         const { success, data } = await authLogin(username, password);
         const { token, user } = data;
+        setStoredSessionToken(token);
         setProviderAuth({
           state: 'authorized',
           user,
           errorMsg: '',
+          token,
         });
 
         history.replace(from);
       } catch (e) {
+        setStoredSessionToken(null);
         setProviderAuth({
           state: 'unauthorized',
           user: null,
           errorMsg: e.message,
+          token: null,
         });
       }
     },
 
     logout() {
+      setStoredSessionToken(null);
       setProviderAuth({
         state: 'unauthorized',
         user: null,
         errorMsg: '',
+        token: null, // token must be invalidated on server
       });
     },
   };
