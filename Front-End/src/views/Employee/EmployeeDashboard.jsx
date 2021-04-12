@@ -57,18 +57,29 @@ const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
   );
 };
 
-const FilterView = ({tickets, setProcessedTickets}) => {
+const FilterView = ({setIsLoading, setTickets, setTicketError}) => {
   const filters = [
     { name: 'Priority', values: ['All', 'Low', 'Mid', 'High', 'Urgent'] },
   ];
 
   const handlePrioityChange = ({ target: {value} }) => {
-    setProcessedTickets(
-      tickets.filter((ticket) => {
-        if (value === 'All') return ticket; 
-        return ticket.ticket_severity === value;
-      }),
-    );
+    setIsLoading(true);
+    axios(`${TICKET_API_URL}/api/tickets`)
+    .then((response) => {
+      setTickets(
+        response.data.tickets.filter((ticket) => {
+          if (value === 'All') return ticket; 
+          return ticket.ticket_severity === value;
+        }),
+      );
+    })
+    .catch((error) =>{
+      setTicketError(error);
+    })
+    .finally(() => {
+      setIsLoading(false);
+    });
+    
   };
 
   return (
@@ -91,16 +102,13 @@ const FilterView = ({tickets, setProcessedTickets}) => {
   );
 };
 
-const SortView = ({tickets, setProcessedTickets}) => {
+const SortView = ({setSorters}) => {
   const sorters = [
-    { name: 'Title', values: ['A --> Z', 'Z --> A'] },
+    { name: 'Title', values: ['A --> Z', 'Z --> A']},
   ];
 
-  const handlePrioityChange = () => {
-    setProcessedTickets(
-      tickets,
-      //sort systems
-    );
+  const handlePrioityChange = ({ target: {value} }) => {
+    setSorters(value);
   };
 
   return (
@@ -137,7 +145,7 @@ const TicketView = ({tickets, user}) => {
         const ticketNote = ticket.ticket_note;
         return (
           <div key={ticket.ticket_id} className="active-ticket">
-            <h3 className="main-info" id="ticket-title" >{ticket.ticketTitle}</h3>
+            <h3 className="main-info" id="ticket-title" >{ticket.title}</h3>
             <div className="ticket-body">
               <h4 className="main-info" >Ticket ID - {ticket.ticket_id}</h4>
               <p className="main-info" ><b>Priority - </b>{ticket.ticket_severity}</p>
@@ -253,14 +261,13 @@ function EmployeeDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [activePage, setPage] = useState(1);
   const [tickets, setTickets] = useState([]);
-  const [processedTickets, setProcessedTickets] = useState([]);
+  const [sorters, setSorters] = useState('');
   const [ticketError, setTicketError] = useState(null);
 
   useEffect(() => {
     axios(`${TICKET_API_URL}/api/tickets`)
     .then((response) => {
       setTickets(response.data.tickets);
-      setProcessedTickets(response.data.tickets);
     })
     .catch((error) =>{
       setTicketError(error);
@@ -269,6 +276,28 @@ function EmployeeDashboard() {
       setIsLoading(false);
     });
   }, [user]);
+
+  const sortedTickets = () => {
+    if (sorters === 'A --> Z') {
+      return tickets.sort((a, b) => {
+        const fa = a.title.toLowerCase();
+        const fb = b.title.toLowerCase();
+        if (fa < fb) { return -1; }
+        if (fa > fb) { return 1; }
+        return 0;
+      });
+    }
+    if (sorters === 'Z --> A') {
+      return tickets.sort((b, a) => {
+        const fa = a.title.toLowerCase();
+        const fb = b.title.toLowerCase();
+        if (fa < fb) { return -1; }
+        if (fa > fb) { return 1; }
+        return 0;
+      });
+    }
+    return tickets;
+  };
 
   const MainDisplay = () => {
     if (isLoading) {
@@ -284,7 +313,7 @@ function EmployeeDashboard() {
     }
     return(
       <TicketView
-        tickets={processedTickets.slice((activePage-1)*ticketsPerPage, activePage*ticketsPerPage)}
+        tickets={sortedTickets().slice((activePage-1)*ticketsPerPage, activePage*ticketsPerPage)}
         user={user}/>
     );
   };
@@ -297,17 +326,17 @@ function EmployeeDashboard() {
           <PageButtons
             setPage={setPage}
             ticketsPerPage={ticketsPerPage}
-            tickets={processedTickets}/>
+            tickets={tickets}/>
           <FilterView
-            tickets={tickets}
-            setProcessedTickets={setProcessedTickets}/>
+            setIsLoading={setIsLoading}
+            setTickets={setTickets}
+            setTicketError={setTicketError}/>
           <SortView
-            tickets={tickets}
-            setProcessedTickets={setProcessedTickets}/>
+            setSorters={setSorters}/>
           <PageButtons
             setPage={setPage}
             ticketsPerPage={ticketsPerPage}
-            tickets={processedTickets}/>
+            tickets={tickets}/>
         </div>
         <MainDisplay />
       </main>
@@ -331,13 +360,13 @@ PageButtons.propTypes = {
 };
 
 FilterView.propTypes = {
-  tickets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setProcessedTickets: PropTypes.func.isRequired,
+  setIsLoading: PropTypes.func.isRequired,
+  setTickets: PropTypes.func.isRequired,
+  setTicketError: PropTypes.func.isRequired,
 };
 
 SortView.propTypes = {
-  tickets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setProcessedTickets: PropTypes.func.isRequired,
+  setSorters: PropTypes.func.isRequired,
 };
 
 TicketView.propTypes = {
