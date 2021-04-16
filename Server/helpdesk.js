@@ -70,13 +70,13 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 			params.push(filters.closed)
 		}
 		
-		if(filters.Date !== undefined)
+		if(filters.date !== undefined)
 		{
 			//Date format must be YYYY-MM-DD HH:MM:SS
 			//A simple way to get a date in this format is the following: ( new Date().toISOString().replace('T', ' ').split('.')[0] )
 			string += ' AND `created` BETWEEN ? AND ?'
-			params.push(filters.Date.start)
-			params.push(filters.Date.end)
+			params.push(filters.date.start)
+			params.push(filters.date.end)
 		}
 		
 		return ({'query':string, 'params':params})
