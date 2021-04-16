@@ -2,9 +2,10 @@ import React, { createContext, useContext, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 
+import PropTypes from 'prop-types';
+
 import request from './api';
 import useStorage from './useStorage';
-import PropTypes from 'prop-types';
 
 const context = createContext();
 

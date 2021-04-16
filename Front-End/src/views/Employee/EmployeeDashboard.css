@@ -11,6 +11,10 @@
   padding-top: auto;
 }
 
+.error {
+  color: rgb(163, 10, 10);
+}
+
 .controls-container {
   border-radius: 3px;
   background-color: rgba(152, 192, 168, 0.4);
@@ -66,10 +70,6 @@
   box-shadow: 0 0 3px rgba(4, 4, 4, 0.35);
 }
 
-.page-error {
-  color: rgb(163, 10, 10);
-}
-
 .grid-display {
   display: grid;
   grid-template-columns: 40% 40%;
@@ -92,8 +92,8 @@
 .grid-input {
   margin-right: 10px;
   -ms-transform: scale(1.5); /* IE 9 */
-    -webkit-transform: scale(1.5); /* Chrome, Safari, Opera */
-    transform: scale(1.5);
+  -webkit-transform: scale(1.5); /* Chrome, Safari, Opera */
+  transform: scale(1.5);
 }
 
 .grid-label {
@@ -118,7 +118,7 @@
   padding-top: 10px;
 }
 
-.main-details {
+.main-info {
   margin: 5px;
   text-transform: capitalize;
 }

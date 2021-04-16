@@ -1,11 +1,13 @@
 import React, { useState, Fragment, useEffect } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import Navbar from 'components/Navbar';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { useAuth } from '../../services/auth';
-import { getTicketsCall, getTicketDetailsCall } from './ticketCalls';
 import './EmployeeDashboard.css';
+
+const TICKET_API_URL = 'http://localhost:8082'; //need to change to process.env.TICKET_API_URL once connected
 
 const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
   const [userPage, setUserPage] = useState(1);
@@ -49,26 +51,35 @@ const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
           onClick={handlePageEvent}
         >GO
         </button>
-        {userPageError ? <p className="page-error" ><b>{userPageError}</b></p> : ''}
+        {userPageError ? <p className="error" ><b>{userPageError}</b></p> : ''}
       </div>
     </div>
   );
 };
 
-const FilterView = ({tickets, setProcessedTickets}) => {
+const FilterView = ({setIsLoading, setTickets, setTicketError}) => {
   const filters = [
     { name: 'Priority', values: ['All', 'Low', 'Mid', 'High', 'Urgent'] },
   ];
 
   const handlePrioityChange = ({ target: {value} }) => {
-    setProcessedTickets(
-      tickets.filter((ticket) => {
-        if (value === 'All') {
-          return ticket;
-        }
-        return ticket.priority === value;
-      }),
-    );
+    setIsLoading(true);
+    axios(`${TICKET_API_URL}/api/tickets`)
+    .then((response) => {
+      setTickets(
+        response.data.tickets.filter((ticket) => {
+          if (value === 'All') return ticket; 
+          return ticket.ticket_severity === value;
+        }),
+      );
+    })
+    .catch((error) =>{
+      setTicketError(error);
+    })
+    .finally(() => {
+      setIsLoading(false);
+    });
+    
   };
 
   return (
@@ -91,16 +102,13 @@ const FilterView = ({tickets, setProcessedTickets}) => {
   );
 };
 
-const SortView = ({tickets, setProcessedTickets}) => {
+const SortView = ({setSorters}) => {
   const sorters = [
-    { name: 'Title', values: ['A --> Z', 'Z --> A'] },
+    { name: 'Title', values: ['A --> Z', 'Z --> A']},
   ];
 
   const handlePrioityChange = ({ target: {value} }) => {
-    setProcessedTickets(
-      tickets
-      //sort systems
-    );
+    setSorters(value);
   };
 
   return (
@@ -126,61 +134,58 @@ const SortView = ({tickets, setProcessedTickets}) => {
 const TicketView = ({tickets, user}) => {
   const [activeDetails, setActiveDetails] = useState(null);
   const handleDetails = ({ target }) => {
-    if (activeDetails === target.id) {
-      setActiveDetails(null);
-    } else {
-      setActiveDetails(target.id);
-    }
+    if (activeDetails === target.id) setActiveDetails(null); 
+    else setActiveDetails(target.id);
   };
 
   return (
     <div className="tickets-container">
       <h1 id="main-title">Tickets</h1>
-      {tickets.map(({
-        ticketID,
-        title,
-        ticketOwner,
-        company,
-        priority,
-        details: { userID, userTitle, userFullName, detail } }) =>
-        <div key={ticketID} className="active-ticket">
-          <h3 className="main-details" id="ticket-title" >{title}</h3>
-          <div className="ticket-body">
-            <h4 className="main-details" >Ticket ID - {ticketID}</h4>
-            <p className="main-details" ><b>Priority - </b>{priority}</p>
-            <p className="main-details" ><b>{company}</b> - {ticketOwner}</p>
-            {parseInt(activeDetails, 10) === ticketID
-            ?
-            <TicketDetailsView
-              user={user}
-              ticketID={ticketID}
-              setActiveDetails={setActiveDetails}
-              handleDetails={handleDetails}
-            />
-            :
-            <div>
-              <div className="ticket-detail">
-                <h5>{userTitle}: {userID} - {userFullName}</h5>
-                <p>&emsp;{detail}</p>
-              </div>
-              <button
-                className="ticket-button details-button"
-                type="button"
-                id={ticketID}
-                onClick={handleDetails}>
-                  Expand Details
-              </button>
-            </div>}
+      {tickets.map((ticket) => {
+        const ticketNote = ticket.ticket_note;
+        return (
+          <div key={ticket.ticket_id} className="active-ticket">
+            <h3 className="main-info" id="ticket-title" >{ticket.title}</h3>
+            <div className="ticket-body">
+              <h4 className="main-info" >Ticket ID - {ticket.ticket_id}</h4>
+              <p className="main-info" ><b>Priority - </b>{ticket.ticket_severity}</p>
+              <p className="main-info" ><b>{ticket.company}</b>: 
+                {ticket.ticketOwnerID} - 
+                {ticket.first_name} {ticket.last_name}</p>
+              {parseInt(activeDetails, 10) === ticket.ticket_id
+              ? <TicketNotesView
+                user={user}
+                ticketID={ticket.ticket_id}
+                setActiveDetails={setActiveDetails}
+                handleDetails={handleDetails}
+              />
+              : <div key={ticketNote.note_id}>
+                <div className="ticket-detail">
+                  <h5>{ticketNote.title}: 
+                    {ticketNote.user_id} - 
+                    {ticketNote.first_name} {ticketNote.last_name}</h5>
+                  <p>&emsp;{ticketNote.body}</p>
+                </div>
+                <button
+                  className="ticket-button details-button"
+                  type="button"
+                  id={ticket.ticket_id}
+                  onClick={handleDetails}>
+                    Expand Details
+                </button>
+              </div>}
+            </div>
           </div>
-        </div>,
-      )}
+        );
+      })}
     </div>
   );
 };
 
-const TicketDetailsView = ({user, ticketID, setActiveDetails, handleDetails}) => {
-  const [loadingDetails, setLoadingDetails] = useState(true);
-  const [ticketDetails, setTicketDetails] = useState([]);
+const TicketNotesView = ({user, ticketID, setActiveDetails, handleDetails}) => {
+  const [isLoadingNotes, setisLoadingNotes] = useState(true);
+  const [notesError, setNotesError] = useState('');
+  const [ticketNotes, setTicketNotes] = useState([]);
   const [ticketChange, setTicketChange] = useState('');
 
   const handleTicketChange = ({ target }) => {
@@ -200,26 +205,37 @@ const TicketDetailsView = ({user, ticketID, setActiveDetails, handleDetails}) =>
   };
 
   useEffect(() => {
-    const getTickets = async () => {
-      setLoadingDetails(true);
-      const resp = await getTicketDetailsCall();
-      setTicketDetails(resp.ticketDetails);
-      setLoadingDetails(false);
-    };
-
-    getTickets();
+    axios(`${TICKET_API_URL}/api/ticket/notes`)
+    .then((response) => {
+      setTicketNotes(response.data.ticket_notes);
+    })
+    .catch((error) =>{
+      setNotesError(error);
+    })
+    .finally(() => {
+      setisLoadingNotes(false);
+    });
   }, [user]);
 
-  if (loadingDetails) {
-    return <h3>Loading Details</h3>;
+  if (isLoadingNotes) {
+    return <h3>Loading Notes</h3>;
+  }
+
+  if (notesError) {
+    return (
+      <div>
+        <h3>Error Calling Server</h3>
+        <p className="error">{`${notesError}`}</p>
+      </div>
+    );
   }
 
   return (
     <div >
-      {ticketDetails.map(({ detailID, userID, userTitle, userFullName, detail }) =>
-        <div key={detailID} className="ticket-detail" >
-          <h5>{userTitle}: {userID} - {userFullName}</h5>
-          <p>&emsp;{detail}</p>
+      {ticketNotes.map((note) =>
+        <div key={note.note_id} className="ticket-detail" >
+          <h5>{note.title}: {note.user_id} - {note.first_name} {note.last_name}</h5>
+          <p>&emsp;{note.body}</p>
         </div>,
       )}
       <Button className="ticket-button details-button" id={ticketID} onClick={handleDetails}>Collapse Details</Button>
@@ -242,21 +258,65 @@ const TicketDetailsView = ({user, ticketID, setActiveDetails, handleDetails}) =>
 function EmployeeDashboard() {
   const { user } = useAuth();
   const ticketsPerPage = 4;
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [activePage, setPage] = useState(1);
   const [tickets, setTickets] = useState([]);
-  const [processedTickets, setProcessedTickets] = useState([]);
+  const [sorters, setSorters] = useState('');
+  const [ticketError, setTicketError] = useState(null);
 
   useEffect(() => {
-    const getTickets = async () => {
-      setLoading(true);
-      const resp = await getTicketsCall();
-      setTickets(resp.tickets);
-      setProcessedTickets(resp.tickets);
-      setLoading(false);
-    };
-    getTickets();
+    axios(`${TICKET_API_URL}/api/tickets`)
+    .then((response) => {
+      setTickets(response.data.tickets);
+    })
+    .catch((error) =>{
+      setTicketError(error);
+    })
+    .finally(() => {
+      setIsLoading(false);
+    });
   }, [user]);
+
+  const sortedTickets = () => {
+    if (sorters === 'A --> Z') {
+      return tickets.sort((a, b) => {
+        const fa = a.title.toLowerCase();
+        const fb = b.title.toLowerCase();
+        if (fa < fb) { return -1; }
+        if (fa > fb) { return 1; }
+        return 0;
+      });
+    }
+    if (sorters === 'Z --> A') {
+      return tickets.sort((b, a) => {
+        const fa = a.title.toLowerCase();
+        const fb = b.title.toLowerCase();
+        if (fa < fb) { return -1; }
+        if (fa > fb) { return 1; }
+        return 0;
+      });
+    }
+    return tickets;
+  };
+
+  const MainDisplay = () => {
+    if (isLoading) {
+      return <h1>Loading Tickets</h1>;
+    } 
+    if (ticketError) {
+      return (
+        <div>
+          <h1>An Error Occoured when calling Server</h1>
+          <h4 className="error">{`${ticketError}`}</h4>
+        </div>
+      );
+    }
+    return(
+      <TicketView
+        tickets={sortedTickets().slice((activePage-1)*ticketsPerPage, activePage*ticketsPerPage)}
+        user={user}/>
+    );
+  };
 
   return (
     <Fragment>
@@ -266,22 +326,19 @@ function EmployeeDashboard() {
           <PageButtons
             setPage={setPage}
             ticketsPerPage={ticketsPerPage}
-            tickets={processedTickets}/>
+            tickets={tickets}/>
           <FilterView
-            tickets={tickets}
-            setProcessedTickets={setProcessedTickets}/>
+            setIsLoading={setIsLoading}
+            setTickets={setTickets}
+            setTicketError={setTicketError}/>
           <SortView
-            tickets={tickets}
-            setProcessedTickets={setProcessedTickets}/>
+            setSorters={setSorters}/>
           <PageButtons
             setPage={setPage}
             ticketsPerPage={ticketsPerPage}
-            tickets={processedTickets}/>
+            tickets={tickets}/>
         </div>
-        {loading ? <h1>Loading Tickets</h1> : 
-        <TicketView
-          tickets={processedTickets.slice((activePage-1)*ticketsPerPage, activePage*ticketsPerPage)}
-          user={user}/>}
+        <MainDisplay />
       </main>
     </Fragment>
   );
@@ -303,8 +360,13 @@ PageButtons.propTypes = {
 };
 
 FilterView.propTypes = {
-  tickets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setProcessedTickets: PropTypes.func.isRequired,
+  setIsLoading: PropTypes.func.isRequired,
+  setTickets: PropTypes.func.isRequired,
+  setTicketError: PropTypes.func.isRequired,
+};
+
+SortView.propTypes = {
+  setSorters: PropTypes.func.isRequired,
 };
 
 TicketView.propTypes = {
@@ -312,7 +374,7 @@ TicketView.propTypes = {
   user: PropTypes.shape(userShape).isRequired,
 };
 
-TicketDetailsView.propTypes = {
+TicketNotesView.propTypes = {
   user: PropTypes.shape(userShape).isRequired,
   ticketID: PropTypes.number.isRequired,
   setActiveDetails: PropTypes.func.isRequired,
@@ -320,3 +382,45 @@ TicketDetailsView.propTypes = {
 };
 
 export default EmployeeDashboard;
+
+/*
+mockoon data for tickets at http://localhost:8082/api/tickets
+{
+  "tickets": [
+    {{#repeat 50}}
+    {
+      "ticket_id": {{ faker 'random.number' min=10000 max=100000 }},
+      "title": "{{ faker 'lorem.words' }}",
+      "first_name": "{{ faker 'name.firstName' }}",
+      "last_name": "{{ faker 'name.lastName' }}",
+      "company": "{{ faker 'company.bs' }}",
+      "ticket_severity": "{{ oneOf (array 'Low' 'Mid' 'High' 'Urgent' ) }}",
+      "ticket_notes": {
+        "note_id": {{ faker 'random.number' min=10000 max=100000 }},
+        "user_id": {{ faker 'random.number' min=10000 max=100000 }},
+        "title": "{{ oneOf (array 'Admin' 'Tech' 'Customer' ) }}",
+        "first_name": "{{ faker 'name.firstName' }}",
+        "last_name": "{{ faker 'name.lastName' }}",
+        "body": "{{ faker 'lorem.paragraph' }}"
+      }
+    }
+    {{/repeat}}
+  ]
+}
+
+mockoon data for tickets at http://localhost:8082/api/details
+{
+  "ticket_notes": [
+    {{#repeat 5}}
+    {
+      "note_id": {{ faker 'random.number' min=10000 max=100000 }},
+      "user_id": {{ faker 'random.number' min=10000 max=100000 }},
+      "title": "{{ oneOf (array 'Admin' 'Tech' 'Customer' ) }}",
+      "first_name": "{{ faker 'name.firstName' }}",
+      "last_name": "{{ faker 'name.lastName' }}",
+      "body": "{{ faker 'lorem.paragraph' }}"
+      }
+    {{/repeat}}
+  ]
+}
+*/

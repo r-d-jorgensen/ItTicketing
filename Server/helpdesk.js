@@ -369,6 +369,145 @@ app.post('/api/auth', function apiAuth(req, res) {
 	});
 });
 
+//----------------------------------------------------------------View Ticket Notes------------------------------------------------
+//Will return ticket notes from a specific ticket.
+//Need ticket_id
+
+app.get('/api/ticketnotes', validateAuth,function(req, res) {
+	
+	if (!req.is('application/json')) {
+		return res.status(400).send({ message: 'Bad Request'});
+	}
+
+	let ticketID;
+
+	try {
+		ticketID = req.body.ticketID;
+	} catch (_) {
+		return res.status(400).send({ message: 'Bad Request' });
+	}
+
+	//Trying to figure out how to get the notes to send with the ticket.
+	//Current sql call that pulls the ticket and the notes is
+	//select * from ticket left join ticket_notes on ticket.ticket_id = ticket_notes.ticket_id where ticket.ticket_id = <ticket_id>
+	//Only problems is it pulls the ticket info multiple times if there are multiple notes
+
+	connection.query('SELECT * FROM  `ticket_notes` WHERE `ticket_id` = ?', [ticketID], (err, result) => {
+		res.status(200).json(result)
+	});
+});
+//----------------------------------------------------------------Create Ticket - Client------------------------------------------
+//This is for the Client to create a ticket and insert it into the database
+//Will need the info below
+//User_id, Title, Body, status(1), ticket_severity 
+app.post('/api/clientcreate', validateAuth,function(req, res) {
+	
+	if (!req.is('application/json')) {
+		return res.status(400).send({ message: 'Bad Request'});
+	}
+
+	let userID;
+	let title;
+	let body;
+	let status;
+	let ticket_severity;
+
+	try {
+		userID 			= req.body.ticketID;
+		title  			= req.body.title;
+		body   			= req.body.body;
+		status 			= req.body.status;
+		ticket_severity = req.body.ticket_severity;
+	} catch (_) {
+		return res.status(400).send({ message: 'Bad Request' });
+	}
+
+
+	var sql = "INSERT INTO ticket (title, body, status, user_id, ticket_severity) VALUES ?";
+	var values = [title, body, status, userID, ticket_severity];
+
+	connection.query(sql, [values], function(err,result) {
+		if(err) throw err;
+		
+		res.status(200).json(result);
+	})
+
+});
+//----------------------------------------------------------------Create Ticket - Tech--------------------------------------------
+
+//----------------------------------------------------------------Add Notes To Ticket---------------------------------------------
+//Insert Notes for a ticket. Info needed below
+//Need TICKET_ID, TITLE, BODY
+app.post('/api/addnote', validateAuth,function(req, res) {
+	
+	if (!req.is('application/json')) {
+		return res.status(400).send({ message: 'Bad Request'});
+	}
+
+	let ticketID;
+	let title;
+	let body;
+
+	try {
+		ticketID 		= req.body.ticketID;
+		title  			= req.body.title;
+		body   			= req.body.body;
+	} catch (_) {
+		return res.status(400).send({ message: 'Bad Request' });
+	}
+
+	var sql    = "INSERT INTO ticket_notes (title, body, ticket_id) VALUES ?";
+	var values = [title, body, ticketID];
+
+	connection.query(sql, [values], function(err,result) {
+		if(err) throw err;
+		
+		res.status(200).json(result)
+	})
+
+});
+
+//----------------------------------------------------------------Add User---------------------------------------------
+//Insert User for a ticket. Info needed below
+//Need email, first_name, last_name, password, phone_number, user_id, user_type, username
+app.post('/api/adduser', validateAuth,function(req, res) {
+	
+	if (!req.is('application/json')) {
+		return res.status(400).send({ message: 'Bad Request'});
+	}
+
+	let email;
+	let first_name;
+	let last_name;
+	let password;
+	let phone_number;
+	let user_id;
+	let user_type = "customer";
+	let username;
+
+	try {
+		email			= req.body.email;
+		first_name		= req.body.first_name;
+		last_name		= req.body.last_name;
+		password		= req.body.password;
+		phone_number	= req.body.phone_number;
+		user_id			= req.body.user_id;
+		username		= req.body.username;
+	} catch (_) {
+		return res.status(400).send({ message: 'Bad Request' });
+	}
+
+	var sql    = "INSERT INTO user (email, first_name, last_name, password, phone_number, user_type, username) VALUES ?";
+	var values = [email, first_name, last_name, password, phone_number, user_type, username];
+
+	connection.query(sql, [values], function(err,result) {
+		if(err) throw err;
+		
+		res.status(200).json(result)
+	})
+
+});
+
 app.use(function(err, req, res, next){
 	if (err.name === 'SyntaxError') {
 		return res.status(400).send({ message: 'Bad Request' });
