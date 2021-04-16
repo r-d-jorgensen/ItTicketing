@@ -62,7 +62,6 @@ function useProviderAuth() {
           user,
           token: token,
           errorMsg: '',
-          token,
         });
 
         history.replace(from);
