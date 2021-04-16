@@ -14,16 +14,17 @@ const app = express();
 const httpServer = require('http').createServer(app);
 
 const corsOpts = {
-	cors: {
-		origin: '*',
-		methods: ['GET', 'POST'],
-		preflightContinue: false,
-		optionsSuccessStatus: 204,
-	},
+	// TODO: dont use wildcard origin
+	origin: '*',
+	methods: ['GET', 'POST'],
+	preflightContinue: false,
+	optionsSuccessStatus: 204,
 };
 Object.freeze(corsOpts);
 
-const io = require('socket.io')(httpServer, corsOpts);
+const io = require('socket.io')(httpServer, {
+	cors: corsOpts,
+});
 
 const validateAuth = expressjwt({
 	secret: process.env.TICKET_SECRET,
