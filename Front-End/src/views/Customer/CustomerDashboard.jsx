@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, {
+  Fragment,
+  useEffect,
+  useState,
+  useRef,
+} from 'react';
+import { io } from 'socket.io-client';
 
 import Navbar from 'components/Navbar';
 import HistoryView from 'components/HistoryView';
@@ -131,6 +137,26 @@ function CustomerDashboard({ user }) {
   const [tickets, setTickets] = useState([]);
   const [isTicketsLoading, setTicketsLoading] = useState(!(tickets && tickets.length > 0));
 
+  const socketRef = useRef(null);
+
+  useEffect(() => {
+    const socket = io(process.env.TICKET_WEBSOCKET_URL, {
+      rememberUpgrade: true,
+      transports: ['websocket'],
+      auth: {
+        token: `Bearer ${token}`,
+      },
+    });
+    socket.onAny((ename, ...args) => { console.log(ename, args); });
+    if (process.env.NODE_ENV === 'development') {
+      socket.on('connect', () => { console.log('[ws] opened'); });
+      socket.on('disconnect', () => { console.log('[ws] closed'); });
+    }
+
+    socketRef.current = socket;
+    return () => { socketRef.current.close(); };
+  }, [token]);
+
   useEffect(() => {
     const gt = async () => {
       setTicketsLoading(true);
@@ -154,7 +180,13 @@ function CustomerDashboard({ user }) {
   if (isTicketsLoading) {
     return <LoadingView />;
   }
-  return <CustomerDashboardView user={user} tickets={tickets} />;
+  return (
+    <CustomerDashboardView
+      user={user}
+      tickets={tickets}
+      socket={socketRef.current}
+    />
+  );
 }
 
 export default () => {

@@ -59,6 +59,49 @@ io.use(async (socket, next) => {
 });
 
 io.on('connection', async (socket) => {
+	// TODO: sanitize inputs
+	// TODO: add room for each ticket?
+	// TODO: check permissions
+
+	socket.on('new_message', ({ message, user_id, ticket_id }) => {
+		const query = `
+			INSERT INTO \`ticket_messages\`
+			(message, user_id, ticket_id)
+			VALUES
+			?
+		`;
+		connection.query(query, [[[message, user_id, ticket_id]]], (err, { insertId }) => {
+			if (err) {
+				// TODO: better error handling
+				socket.emit('new_message_fail', {
+					ticket_id,
+					user_id,
+				})
+			} else {
+				const detailQuery = `
+					select
+						tm.message_id as id,
+						tm.message,
+						tm.created,
+						tm.modified,
+						tm.ticket_id,
+						JSON_OBJECT(
+							'first_name', u.first_name,
+							'last_name', u.last_name,
+							'phone_number', u.phone_number,
+							'email', u.email
+						) as author
+					from ticket_messages tm join user u using(user_id)
+					where tm.message_id = ?
+				`;
+				connection.query(detailQuery, [insertId], (err, [msg]) => {
+					msg.author = JSON.parse(msg.author);
+					socket.emit('new_message_success', msg);
+				});
+			}
+		})
+	});
+
 	socket.onAny((name, data) => {
 		console.log(name, data);
 	});
@@ -226,7 +269,7 @@ app.get('/api/ticket/:id/messages', validateAuth, function (req, res) {
 				) as author
 			from ticket_messages tm join user u using(user_id)
 			where \`ticket_id\` = ?
-			order by tm.created
+			order by tm.created desc
 		`;
 
 		if (req.user.id === ticket.user_id) {
