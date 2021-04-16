@@ -82,7 +82,6 @@ function useProviderAuth() {
       setProviderAuth({
         state: 'unauthorized',
         user: null,
-        token: null,
         errorMsg: '',
         token: null, // token must be invalidated on server
       });
