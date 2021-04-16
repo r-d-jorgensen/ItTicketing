@@ -26,6 +26,7 @@ function useProviderAuth() {
   const [providerAuth, setProviderAuth] = useState({
     state: 'unauthorized',
     user: null,
+    token: null,
     errorMsg: '',
   });
 
@@ -33,6 +34,7 @@ function useProviderAuth() {
     state: providerAuth.state,
     message: providerAuth.errorMsg,
     user: providerAuth.user,
+    token: providerAuth.token,
 
     async login(username, password) {
       setProviderAuth((oldState) => ({
@@ -46,6 +48,7 @@ function useProviderAuth() {
         setProviderAuth({
           state: 'authorized',
           user,
+          token: token,
           errorMsg: '',
         });
 
@@ -54,6 +57,7 @@ function useProviderAuth() {
         setProviderAuth({
           state: 'unauthorized',
           user: null,
+          token: null,
           errorMsg: e.message,
         });
       }
@@ -63,6 +67,7 @@ function useProviderAuth() {
       setProviderAuth({
         state: 'unauthorized',
         user: null,
+        token: null,
         errorMsg: '',
       });
     },

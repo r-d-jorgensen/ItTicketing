@@ -7,7 +7,18 @@ import Input from '../../components/Input';
 import { useAuth } from '../../services/auth';
 import './EmployeeDashboard.css';
 
-const TICKET_API_URL = 'http://localhost:8082'; //need to change to process.env.TICKET_API_URL once connected
+const TICKET_API_URL = `${process.env.TICKET_API_URL}/api`;
+
+function severityTraslation(value) {
+  switch(value) {
+    case 0: return 'All';
+    case 1: return 'Low';
+    case 2: return 'Mild';
+    case 3: return 'High';
+    case 4: return 'Urgent';
+    default: return 'Error in database storage of ticket severity';
+  }
+}
 
 const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
   const [userPage, setUserPage] = useState(1);
@@ -57,21 +68,19 @@ const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
   );
 };
 
-const FilterView = ({setIsLoading, setTickets, setTicketError}) => {
+const FilterView = ({token, setIsLoading, setTickets, setTicketError}) => {
   const filters = [
-    { name: 'Priority', values: ['All', 'Low', 'Mid', 'High', 'Urgent'] },
+    { name: 'Priority', values: [0, 1, 2, 3, 4] },
   ];
 
   const handlePrioityChange = ({ target: {value} }) => {
     setIsLoading(true);
-    axios(`${TICKET_API_URL}/api/tickets`)
+    axios.get(`${TICKET_API_URL}/tickets`, {
+      params: {priority: value},
+      headers: {Authorization: `Bearer ${token}`,},
+    })
     .then((response) => {
-      setTickets(
-        response.data.tickets.filter((ticket) => {
-          if (value === 'All') return ticket; 
-          return ticket.ticket_severity === value;
-        }),
-      );
+      setTickets(response.data);
     })
     .catch((error) =>{
       setTicketError(error);
@@ -79,7 +88,6 @@ const FilterView = ({setIsLoading, setTickets, setTicketError}) => {
     .finally(() => {
       setIsLoading(false);
     });
-    
   };
 
   return (
@@ -92,7 +100,7 @@ const FilterView = ({setIsLoading, setTickets, setTicketError}) => {
             {values.map((value) =>
               <div key={value} className="grid-values">
                 <input className="grid-input" type="radio" name={name} value={value} onClick={handlePrioityChange} />
-                <label className="grid-lable" htmlFor={value}>{value}&nbsp;</label>
+                <label className="grid-lable" htmlFor={value}>{severityTraslation(value)}&nbsp;</label>
               </div>,
             )}
           </div>,
@@ -138,20 +146,29 @@ const TicketView = ({tickets, user}) => {
     else setActiveDetails(target.id);
   };
 
+  function stringToDate(str) {
+    return new Date().toISOString(str).replace('T', ' ')
+      .replace('-', '/').replace('-', '/').split('.')[0];
+  }
+
   return (
     <div className="tickets-container">
       <h1 id="main-title">Tickets</h1>
       {tickets.map((ticket) => {
-        const ticketNote = ticket.ticket_note;
+        const ticketOwner = {user_id: 1234, company: 'Big Tech', first_name: 'Bob', last_name: 'Bill'};
         return (
           <div key={ticket.ticket_id} className="active-ticket">
             <h3 className="main-info" id="ticket-title" >{ticket.title}</h3>
             <div className="ticket-body">
               <h4 className="main-info" >Ticket ID - {ticket.ticket_id}</h4>
-              <p className="main-info" ><b>Priority - </b>{ticket.ticket_severity}</p>
-              <p className="main-info" ><b>{ticket.company}</b>: 
-                {ticket.ticketOwnerID} - 
-                {ticket.first_name} {ticket.last_name}</p>
+              <p className="main-info" >
+                <b>Status - </b> {ticket.status === 0 ? 'Closed' : 'Open' }
+                &nbsp;<b>Priority - </b>{severityTraslation(ticket.ticket_severity)}
+              </p>
+              <p className="main-info"><b>Date Created - </b> {stringToDate(ticket.created)}</p>
+              <p className="main-info" ><b>{ticketOwner.company}</b>: 
+                {ticketOwner.user_id} - {ticketOwner.first_name} {ticketOwner.last_name}</p>
+              <p className="ticket-detail" >{ticket.body}</p>
               {parseInt(activeDetails, 10) === ticket.ticket_id
               ? <TicketNotesView
                 user={user}
@@ -159,21 +176,13 @@ const TicketView = ({tickets, user}) => {
                 setActiveDetails={setActiveDetails}
                 handleDetails={handleDetails}
               />
-              : <div key={ticketNote.note_id}>
-                <div className="ticket-detail">
-                  <h5>{ticketNote.title}: 
-                    {ticketNote.user_id} - 
-                    {ticketNote.first_name} {ticketNote.last_name}</h5>
-                  <p>&emsp;{ticketNote.body}</p>
-                </div>
-                <button
-                  className="ticket-button details-button"
-                  type="button"
-                  id={ticket.ticket_id}
-                  onClick={handleDetails}>
-                    Expand Details
-                </button>
-              </div>}
+              : <button
+                className="ticket-button details-button"
+                type="button"
+                id={ticket.ticket_id}
+                onClick={handleDetails}>
+                  Expand Details
+              </button>}
             </div>
           </div>
         );
@@ -205,7 +214,9 @@ const TicketNotesView = ({user, ticketID, setActiveDetails, handleDetails}) => {
   };
 
   useEffect(() => {
-    axios(`${TICKET_API_URL}/api/ticket/notes`)
+    //TODO: needs to be changed when api is made
+    //`${TICKET_API_URL}/tickets/notes`
+    axios('http://localhost:8082/api/ticket/notes')
     .then((response) => {
       setTicketNotes(response.data.ticket_notes);
     })
@@ -256,7 +267,7 @@ const TicketNotesView = ({user, ticketID, setActiveDetails, handleDetails}) => {
 };
 
 function EmployeeDashboard() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const ticketsPerPage = 4;
   const [isLoading, setIsLoading] = useState(true);
   const [activePage, setPage] = useState(1);
@@ -265,9 +276,13 @@ function EmployeeDashboard() {
   const [ticketError, setTicketError] = useState(null);
 
   useEffect(() => {
-    axios(`${TICKET_API_URL}/api/tickets`)
+    axios.get(`${TICKET_API_URL}/tickets`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     .then((response) => {
-      setTickets(response.data.tickets);
+      setTickets(response.data);
     })
     .catch((error) =>{
       setTicketError(error);
@@ -275,7 +290,7 @@ function EmployeeDashboard() {
     .finally(() => {
       setIsLoading(false);
     });
-  }, [user]);
+  }, [token]);
 
   const sortedTickets = () => {
     if (sorters === 'A --> Z') {
@@ -328,6 +343,7 @@ function EmployeeDashboard() {
             ticketsPerPage={ticketsPerPage}
             tickets={tickets}/>
           <FilterView
+            token={token}
             setIsLoading={setIsLoading}
             setTickets={setTickets}
             setTicketError={setTicketError}/>
@@ -360,6 +376,7 @@ PageButtons.propTypes = {
 };
 
 FilterView.propTypes = {
+  token: PropTypes.string.isRequired,
   setIsLoading: PropTypes.func.isRequired,
   setTickets: PropTypes.func.isRequired,
   setTicketError: PropTypes.func.isRequired,
@@ -384,30 +401,6 @@ TicketNotesView.propTypes = {
 export default EmployeeDashboard;
 
 /*
-mockoon data for tickets at http://localhost:8082/api/tickets
-{
-  "tickets": [
-    {{#repeat 50}}
-    {
-      "ticket_id": {{ faker 'random.number' min=10000 max=100000 }},
-      "title": "{{ faker 'lorem.words' }}",
-      "first_name": "{{ faker 'name.firstName' }}",
-      "last_name": "{{ faker 'name.lastName' }}",
-      "company": "{{ faker 'company.bs' }}",
-      "ticket_severity": "{{ oneOf (array 'Low' 'Mid' 'High' 'Urgent' ) }}",
-      "ticket_notes": {
-        "note_id": {{ faker 'random.number' min=10000 max=100000 }},
-        "user_id": {{ faker 'random.number' min=10000 max=100000 }},
-        "title": "{{ oneOf (array 'Admin' 'Tech' 'Customer' ) }}",
-        "first_name": "{{ faker 'name.firstName' }}",
-        "last_name": "{{ faker 'name.lastName' }}",
-        "body": "{{ faker 'lorem.paragraph' }}"
-      }
-    }
-    {{/repeat}}
-  ]
-}
-
 mockoon data for tickets at http://localhost:8082/api/details
 {
   "ticket_notes": [
@@ -415,7 +408,7 @@ mockoon data for tickets at http://localhost:8082/api/details
     {
       "note_id": {{ faker 'random.number' min=10000 max=100000 }},
       "user_id": {{ faker 'random.number' min=10000 max=100000 }},
-      "title": "{{ oneOf (array 'Admin' 'Tech' 'Customer' ) }}",
+      "user_title": "{{ oneOf (array 'Admin' 'Tech' 'Customer' ) }}",
       "first_name": "{{ faker 'name.firstName' }}",
       "last_name": "{{ faker 'name.lastName' }}",
       "body": "{{ faker 'lorem.paragraph' }}"
