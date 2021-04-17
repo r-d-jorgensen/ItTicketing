@@ -13,6 +13,8 @@ import request from '../../services/api';
 
 import './CustomerDashboard.css';
 
+const isDEV = process.env.NODE_ENV === 'development';
+
 function LoadingView() {
   return (
     <div className="it-loading-view">
@@ -24,9 +26,14 @@ function LoadingView() {
 }
 
 function CustomerDashboardView({ user, tickets, socket }) {
-  const ticketsArr = Array.from(tickets);
+  const [ticketViewType, setTicketViewType] = useState('open');
+  const [openTickets, closedTickets] = tickets;
+  let currentTickets = openTickets;
+  if (ticketViewType === 'closed') {
+    currentTickets = closedTickets;
+  }
 
-  const aa = ticketsArr.map((ticket) => {
+  const ticketElements = currentTickets.map((ticket) => {
     const odate = new Date(ticket.created);
     const displayDate = `Opened: ${odate.toLocaleDateString()}`;
     return (
@@ -66,13 +73,15 @@ function CustomerDashboardView({ user, tickets, socket }) {
           <div className="it-cdv-tk-filters">
             <div className="it-cdv-filters-left">
               <button
-                className="it-cdv-tk-btn it-cdv-tk-btn--active"
+                onClick={() => { setTicketViewType('open') }}
+                className={'it-cdv-tk-btn'.concat([ticketViewType === 'open' ? ' it-cdv-tk-btn--active' : ''])}
                 type="button"
               >
                 Open
               </button>
               <button
-                className="it-cdv-tk-btn"
+                onClick={() => { setTicketViewType('closed') }}
+                className={'it-cdv-tk-btn'.concat([ticketViewType === 'closed' ? ' it-cdv-tk-btn--active' : ''])}
                 type="button"
               >
                 Closed
@@ -81,7 +90,7 @@ function CustomerDashboardView({ user, tickets, socket }) {
             <div className="it-cdv-filters-right" />
           </div>
           <ul className="it-cdv-tk-list">
-            {aa}
+            {ticketElements}
           </ul>
         </div>
       </div>
@@ -93,6 +102,7 @@ function CustomerDashboard({ user }) {
   const { token } = useAuth();
   const [tickets, setTickets] = useState([]);
   const [isTicketsLoading, setTicketsLoading] = useState(!(tickets && tickets.length > 0));
+  const [error, setError] = useState(null);
 
   const socketRef = useRef(null);
 
@@ -116,27 +126,35 @@ function CustomerDashboard({ user }) {
 
   useEffect(() => {
     const gt = async () => {
+      isDEV && console.groupCollapsed('[api] /api/tickets');
       setTicketsLoading(true);
       // TODO: filter properties on tickets
-      const resp = await request('/api/tickets', {
-        method: 'GET',
-        headers: new Headers({ Authorization: `Bearer ${token}` }),
-      });
-      if (process.env.NODE_ENV === 'development') {
-        console.groupCollapsed('[api] /api/tickets');
-        console.log(resp);
-        console.groupEnd('[api] /api/tickets');
+      let resp = [];
+      try {
+        resp = await request('/api/tickets', {
+          method: 'GET',
+          headers: new Headers({ Authorization: `Bearer ${token}` }),
+        });
+        resp = Array.from(resp).reduce((acc, tk) => {
+          acc[tk.status === 1 ? 0 : 1].push(tk);
+          return acc;
+        }, [[], []]);
+        isDEV && console.log(resp);
+      } catch (err) {
+        isDEV && console.error(err);
+        setError(err);
       }
-      setTickets(resp);
+
+      isDEV && console.groupEnd('[api] /api/tickets');
+      error === null && setTickets(resp);
       setTicketsLoading(false);
     };
 
     gt();
-  }, [user, token]);
+  }, [user, token, error]);
 
-  if (isTicketsLoading) {
-    return <LoadingView />;
-  }
+  if (isTicketsLoading) { return <LoadingView />; }
+
   return (
     <CustomerDashboardView
       user={user}

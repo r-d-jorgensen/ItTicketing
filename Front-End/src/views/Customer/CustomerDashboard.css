@@ -13,8 +13,8 @@
   display: flex;
   padding: 8px;
 
-  background-color: #F0F0F0;
-  border-bottom: 1px solid #E5E5E5;
+  background-color: #F6F8F7;
+  border-bottom: 1px solid #DEDEDE;
 }
 
 .it-cdv-filters-left {
@@ -27,8 +27,10 @@
 
 .it-cdv-tk-container {
   background-color: #FAFAFA;
+  border: 1px solid #B5CABD;
   border-radius: 3px;
   box-shadow: 0 3px 3px rgba(16, 16, 16, 0.1);
+  overflow: hidden;
 }
 
 .it-cdv-tk-list {
@@ -46,7 +48,7 @@
 }
 
 .it-cdv-tk-item:hover {
-  background-color: #F0F0F0;
+  background-color: #EAF0ED;
 }
 
 .it-cdv-tk-btn {
@@ -64,6 +66,10 @@
   transition-timing-function: ease-out;
 
   cursor: pointer;
+}
+
+.it-cdv-tk-btn:focus-visible {
+  outline: none;
 }
 
 .it-cdv-tk-btn:hover {
