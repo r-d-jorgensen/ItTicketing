@@ -1,26 +1,26 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, {
+  Fragment,
+  useEffect,
+  useState,
+  useRef,
+} from 'react';
+import {
+  Route,
+  Switch,
+  Link,
+  useRouteMatch,
+} from 'react-router-dom';
+import { io } from 'socket.io-client';
 
 import Navbar from 'components/Navbar';
-import HistoryView from 'components/HistoryView';
-import Input from 'components/Input';
+import TicketDetailView from 'views/Customer/TicketDetailView';
 
 import { useAuth } from '../../services/auth';
+import request from '../../services/api';
 
 import './CustomerDashboard.css';
 
-import my_tkts from './mock';
-
-function getTickets() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(my_tkts);
-    }, 188);
-  });
-}
-
-function historyFromTicket(ticket) {
-  return ticket;
-}
+const isDEV = process.env.NODE_ENV === 'development';
 
 function LoadingView() {
   return (
@@ -32,111 +32,172 @@ function LoadingView() {
   );
 }
 
-function TicketDetailView({ ticket }) {
-  return (
-    <div className="it-ticket-detail-view">
-      <div className="it-tdv-extra">
-        <div className="it-tdv-detail-item">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
-          </svg>
-          <span>{ticket.id}</span>
-        </div>
-        <div className="it-tdv-detail-item">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span
-            className="it-tdv-detail-text"
-            title={ticket.created}
-          >
-            {ticket.created}
-          </span>
-        </div>
-        <div className="it-tdv-contact">
-          <span>Contact</span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
-          </svg>
-          <span className="it-tdv-name">John Doe</span>
-          <span className="it-tdv-email">j.doe@domain</span>
-        </div>
-      </div>
-      <div className="it-tdv-content">
-        <HistoryView history={historyFromTicket(ticket)} />
-        <Input
-          name="Message"
-          placeholder="Send Message"
-        />
-      </div>
-    </div>
-  );
-}
+function CustomerDashboardView({
+  user,
+  ticketInstances,
+  ticketSplitIds,
+  socket,
+}) {
+  const { url } = useRouteMatch();
+  const [ticketViewType, setTicketViewType] = useState('open');
+  const [openTicketIds, closedTicketIds] = ticketSplitIds;
 
-function CustomerDashboardView({ user, tickets }) {
-  const ticketsArr = Array.from(tickets);
-  const mostRecent = ticketsArr.length > 0 ? ticketsArr[0] : null;
-  const [selectedTicket, setSelectedTicket] = useState((
-    mostRecent === null
-      ? { id: '', instance: null }
-      : { id: mostRecent.id, instance: mostRecent }
-  ));
+  let currentTickets = openTicketIds;
+  if (ticketViewType === 'closed') {
+    currentTickets = closedTicketIds;
+  }
 
-  const aa = ticketsArr.map((ticket) => (
-    <li
-      className="it-cdv-tk-item"
-      key={ticket.id}
-    >
-      <button
-        className={'it-cdv-tk-btn'.concat(selectedTicket.id === ticket.id ? ' it-cdv-tk-btn--selected' : '')}
-        type="button"
-        onClick={() => {
-          if (selectedTicket.id !== ticket.id) {
-            setSelectedTicket({ id: ticket.id, instance: ticket });
-          }
-        }}
+  const ticketElements = currentTickets.map((id) => {
+    const ticket = ticketInstances[id];
+    const odate = new Date(ticket.created);
+    const displayDate = `Opened: ${odate.toLocaleDateString()}`;
+    return (
+      <li
+        key={ticket.id}
+        className="it-cdv-tk-item"
       >
-        {ticket.title}
-      </button>
-    </li>
-  ));
+        <div className="cdv-tk-item-prim-line">
+          <Link
+            className="cdv-tk-item-title"
+            to={`${url}/ticket/${ticket.id}`}
+          >
+            {ticket.title}
+          </Link>
+          <span className="cdv-tk-item-id">{ticket.id}</span>
+        </div>
+        <div className="cdv-tk-item-sec-line">
+          <span className="cdv-tk-item-odate">{displayDate}</span>
+        </div>
+      </li>
+    );
+  });
 
   return (
     <Fragment>
-      <div className="it-cdv-tk-list-container">
-        <ul className="it-cdv-tk-list">
-          {aa}
-        </ul>
+      <div className="it-cdv-wrapper">
+        <div className="cdv-tk-action-line">
+          <button
+            type="button"
+            className="cdv-tk-new-btn"
+          >
+            Open New Ticket
+          </button>
+          <input
+            name="tk-search"
+            className="cdv-tk-search"
+            placeholder="Search Open Tickets"
+            type="text"
+          />
+        </div>
+        <div className="it-cdv-tk-container">
+          <div className="it-cdv-tk-filters">
+            <div className="it-cdv-filters-left">
+              <button
+                onClick={() => { setTicketViewType('open'); }}
+                className={'it-cdv-tk-btn'.concat([ticketViewType === 'open' ? ' it-cdv-tk-btn--active' : ''])}
+                type="button"
+              >
+                Open
+              </button>
+              <button
+                onClick={() => { setTicketViewType('closed'); }}
+                className={'it-cdv-tk-btn'.concat([ticketViewType === 'closed' ? ' it-cdv-tk-btn--active' : ''])}
+                type="button"
+              >
+                Closed
+              </button>
+            </div>
+            <div className="it-cdv-filters-right" />
+          </div>
+          <ul className="it-cdv-tk-list">
+            {ticketElements}
+          </ul>
+        </div>
       </div>
-      {
-        selectedTicket.id && selectedTicket.instance !== null
-          ? <TicketDetailView ticket={selectedTicket.instance} />
-          : <div className="it-cdv-tk-view-empty" />
-      }
     </Fragment>
   );
 }
 
 function CustomerDashboard({ user }) {
+  const { path } = useRouteMatch();
+
+  const { token } = useAuth();
+  const [tkInstances, setTkInstances] = useState({});
   const [tickets, setTickets] = useState([]);
-  const [isLoading, setLoading] = useState(!(tickets && tickets.length > 0));
+  const [isTicketsLoading, setTicketsLoading] = useState(Object.keys(tkInstances).length === 0);
+  const [error, setError] = useState(null);
+
+  const socketRef = useRef(null);
+
+  useEffect(() => {
+    const socket = io(process.env.TICKET_WEBSOCKET_URL, {
+      rememberUpgrade: true,
+      transports: ['websocket'],
+      auth: {
+        token: `Bearer ${token}`,
+      },
+    });
+    socket.onAny((ename, ...args) => { console.log(ename, args); });
+    if (isDEV) {
+      socket.on('connect', () => { console.log('[ws] opened'); });
+      socket.on('disconnect', () => { console.log('[ws] closed'); });
+    }
+
+    socketRef.current = socket;
+    return () => { socketRef.current.close(); };
+  }, [token]);
 
   useEffect(() => {
     const gt = async () => {
-      setLoading(true);
+      isDEV && console.groupCollapsed('[api] /api/tickets');
+      setTicketsLoading(true);
       // TODO: filter properties on tickets
-      const resp = await getTickets();
-      setTickets(resp.tickets);
-      setLoading(false);
+      let resp = [];
+      try {
+        resp = await request('/api/tickets', {
+          method: 'GET',
+          headers: new Headers({ Authorization: `Bearer ${token}` }),
+        });
+        resp = Array.from(resp).reduce((acc, tk) => {
+          acc[tk.status === 1 ? 0 : 1].push(tk.id);
+          setTkInstances((prev) => ({ ...prev, [tk.id]: tk }));
+          return acc;
+        }, [[], []]);
+        isDEV && console.log(resp);
+      } catch (err) {
+        isDEV && console.error(err);
+        setError(err);
+      }
+
+      isDEV && console.groupEnd('[api] /api/tickets');
+      error === null && setTickets(resp);
+      setTicketsLoading(false);
     };
 
     gt();
-  }, [user]);
+  }, [user, token, error]);
 
-  if (isLoading) {
-    return <LoadingView />;
-  }
-  return <CustomerDashboardView user={user} tickets={tickets} />;
+  if (isTicketsLoading) { return <LoadingView />; }
+
+  // TODO: don't pass instances to detail view probably
+  return (
+    <Switch>
+      <Route exact path={path}>
+        <CustomerDashboardView
+          user={user}
+          ticketSplitIds={tickets}
+          ticketInstances={tkInstances}
+          socket={socketRef.current}
+        />
+      </Route>
+      <Route path={`${path}/ticket/:ticketId`}>
+        <TicketDetailView
+          ticketInstances={tkInstances}
+          socket={socketRef.current}
+        />
+      </Route>
+    </Switch>
+  );
 }
 
 export default () => {
