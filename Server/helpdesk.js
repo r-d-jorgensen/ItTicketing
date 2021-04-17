@@ -445,19 +445,17 @@ app.post('/api/addnote', validateAuth,function(req, res) {
 	}
 
 	let ticketID;
-	let title;
 	let body;
 
 	try {
 		ticketID 		= req.body.ticketID;
-		title  			= req.body.title;
 		body   			= req.body.body;
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
 
-	var sql    = "INSERT INTO ticket_notes (title, body, ticket_id) VALUES ?";
-	var values = [title, body, ticketID];
+	var sql    = "INSERT INTO ticket_notes (body, ticket_id) VALUES ?";
+	var values = [body, ticketID];
 
 	connection.query(sql, [values], function(err,result) {
 		if(err) throw err;
