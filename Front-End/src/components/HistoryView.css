@@ -5,4 +5,24 @@
   background-color: #bdbdbd0e;
   border: 1px solid #BDBDBD;
   border-radius: 3px;
+
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.it-hv-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 8px;
+}
+
+.hv-cell-name {
+  font-weight: bold;
+}
+
+.hv-cell-date {
+  color: #808080;
+  margin-left: 4px;
+  font-size: 0.8rem;
 }

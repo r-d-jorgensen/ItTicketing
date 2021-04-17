@@ -14,9 +14,14 @@
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.7",
-    "prexit": "^0.0.5"
+    "prexit": "^0.0.5",
+    "socket.io": "^4.0.1"
   },
   "scripts": {
     "start": "nodemon helpdesk.js"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.3",
+    "utf-8-validate": "^5.0.4"
   }
 }

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import JWTDecode from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
+
 import PropTypes from 'prop-types';
 
 import request from './api';
