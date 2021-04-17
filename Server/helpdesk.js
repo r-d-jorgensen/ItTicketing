@@ -277,6 +277,132 @@ app.post('/api/adduser', validateAuth,function(req, res) {
 	})
 
 });
+//----------------------------------------------------------------Update Note on Ticket---------------------------------------------
+//Update ticket description
+//Need TICKET_ID, NOTE_ID,BODY
+
+app.post('/api/updatenote', validateAuth,function(req, res) {
+	
+	if (!req.is('application/json')) {
+		return res.status(400).send({ message: 'Bad Request'});
+	}
+
+	let ticketID;
+	let noteID;
+	let body;
+
+	try {
+		ticketID 		= req.body.ticketID;
+		noteID			= req.body.noteID;
+		body   			= req.body.body;
+	} catch (_) {
+		return res.status(400).send({ message: 'Bad Request' });
+	}
+
+	var sql    = "UPDATE ticket_notes SET body = ? WHERE note_id = ? AND ticket_id = ?";
+	var values = [body, note_id, ticketID];
+
+	connection.query(sql, [values], function(err,result) {
+		if(err) throw err;
+		
+		res.status(200).json(result)
+	})
+
+});
+
+//----------------------------------------------------------------Update Status on Ticket---------------------------------------------
+//Update ticket description
+//Need TICKET_ID, New Status. 0=closed, 1=open
+
+app.post('/api/updatestatus', validateAuth,function(req, res) {
+	
+	if (!req.is('application/json')) {
+		return res.status(400).send({ message: 'Bad Request'});
+	}
+
+	let ticketID;
+	let status;
+
+	try {
+		ticketID 		= req.body.ticketID;
+		status			= req.body.status;
+	} catch (_) {
+		return res.status(400).send({ message: 'Bad Request' });
+	}
+
+	var sql    = "UPDATE ticket SET status = ? WHERE ticket_id = ?";
+	var values = [status, ticketID];
+
+	connection.query(sql, [values], function(err,result) {
+		if(err) throw err;
+		
+		res.status(200).json(result)
+	})
+
+});
+
+//----------------------------------------------------------------Delete Ticket Note---------------------------------------------
+//Update ticket description
+//Need TICKET_ID, NOTE_ID
+
+app.post('/api/deletenote', validateAuth,function(req, res) {
+	
+	if (!req.is('application/json')) {
+		return res.status(400).send({ message: 'Bad Request'});
+	}
+
+	let ticketID;
+	let noteID;
+
+	try {
+		ticketID 		= req.body.ticketID;
+		noteID			= req.body.noteID;
+	} catch (_) {
+		return res.status(400).send({ message: 'Bad Request' });
+	}
+
+	var sql    = "DELETE FROM ticket_notes WHERE ticket_id = ? and note_id = ?";
+	var values = [ticketID, noteID];
+
+	connection.query(sql, [values], function(err,result) {
+		if(err) throw err;
+		
+		res.status(200).json(result)
+	})
+
+});
+
+//----------------------------------------------------------------Update Severity on Ticket---------------------------------------------
+//Update ticket description
+//Need TICKET_ID, New Severity
+
+app.post('/api/updateseverity', validateAuth,function(req, res) {
+	
+	if (!req.is('application/json')) {
+		return res.status(400).send({ message: 'Bad Request'});
+	}
+
+	let ticketID;
+	let severity;
+
+	try {
+		ticketID 		= req.body.ticketID;
+		severity		= req.body.severity;
+	} catch (_) {
+		return res.status(400).send({ message: 'Bad Request' });
+	}
+
+	var sql    = "UPDATE ticket SET ticket_severity = ? WHERE ticket_id = ?";
+	var values = [severity, ticketID];
+
+	connection.query(sql, [values], function(err,result) {
+		if(err) throw err;
+		
+		res.status(200).json(result)
+	})
+
+});
+
 
 app.use(function(err, req, res, next){
 	if (err.name === 'SyntaxError') {
