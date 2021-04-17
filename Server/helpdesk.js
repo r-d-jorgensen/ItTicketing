@@ -146,7 +146,7 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 	if (req.query.filters) {
 		try {
 			const parsedFilters = JSON.parse(req.query.filters);
-			['priority', 'closed', 'date'].map((key) => {
+			['priority', 'closed', 'status', 'date'].map((key) => {
 				if (key in Object.keys(parsedFilters)) {
 					if (key === 'date') {
 						const { start, end } = parsedFilters.date;
@@ -201,7 +201,7 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 		where (
 			${filters.date ? `\`created\` BETWEEN ${filters.date.start} and ${filters.date.end} and` : ''}
 			${filters.priority ? '`t.ticket_severity` = ' + filters.priority + ' and' : ''}
-			${filters.status ? '`t.status` = ' + filters.status + ' and' : ''}
+			${(filters.status || filters.closed) ? '`t.status` = ' + (filters.status || filters.closed) + ' and' : ''}
 			(t.user_id = ${userId} or uta.employee_id = ${userId}) and
 			((t.date_closed <= now() and (uta.assign_end is null or uta.assign_end = t.date_closed)) or
 			(t.date_closed is null and (uta.assign_end is null or not uta.assign_end < now())))
@@ -230,7 +230,7 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 		where (
 			${filters.date ? `\`created\` BETWEEN ${filters.date.start} and ${filters.date.end} and` : ''}
 			${filters.priority ? '`t2.ticket_severity` = ' + filters.priority + ' and' : ''}
-			${filters.status ? '`t2.status` = ' + filters.status + ' and' : ''}
+			${(filters.status || filters.closed) ? '`t2.status` = ' + (filters.status || filters.closed) + ' and' : ''}
 			t2.user_id = ${userId}
 		)
 		order by created
