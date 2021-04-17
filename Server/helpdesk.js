@@ -147,7 +147,7 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 		try {
 			const parsedFilters = JSON.parse(req.query.filters);
 			const objKeys = new Set(Object.keys(parsedFilters));
-			['priority', 'closed', 'status', 'date'].map((key) => {
+			['priority', 'status', 'date'].map((key) => {
 				if (objKeys.has(key)) {
 					if (key === 'date') {
 						const { start, end } = parsedFilters.date;
@@ -200,9 +200,9 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 				join user on ta.employee_id = user.user_id
 			) uta using(ticket_id)
 		where (
-			${filters.date ? `\`created\` BETWEEN ${filters.date.start} and ${filters.date.end} and` : ''}
-			${filters.priority ? '`t.ticket_severity` = ' + filters.priority + ' and' : ''}
-			${(filters.status || filters.closed) ? '`t.status` = ' + (filters.status || filters.closed) + ' and' : ''}
+			${filters.date ? `created BETWEEN ${filters.date.start} and ${filters.date.end} and` : ''}
+			${filters.priority ? 't.ticket_severity = ' + filters.priority + ' and' : ''}
+			${filters.status ? 't.status = ' + filters.status + ' and' : ''}
 			(t.user_id = ${userId} or uta.employee_id = ${userId}) and
 			((t.date_closed <= now() and (uta.assign_end is null or uta.assign_end = t.date_closed)) or
 			(t.date_closed is null and (uta.assign_end is null or not uta.assign_end < now())))
@@ -229,9 +229,9 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 				having assigned = 0
 			) unassigned using(ticket_id)
 		where (
-			${filters.date ? `\`created\` BETWEEN ${filters.date.start} and ${filters.date.end} and` : ''}
-			${filters.priority ? '`t2.ticket_severity` = ' + filters.priority + ' and' : ''}
-			${(filters.status || filters.closed) ? '`t2.status` = ' + (filters.status || filters.closed) + ' and' : ''}
+			${filters.date ? `created BETWEEN ${filters.date.start} and ${filters.date.end} and` : ''}
+			${filters.priority ? 't2.ticket_severity = ' + filters.priority + ' and' : ''}
+			${filters.status ? 't2.status = ' + filters.status + ' and' : ''}
 			t2.user_id = ${userId}
 		)
 		order by created
