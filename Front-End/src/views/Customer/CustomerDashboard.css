@@ -178,3 +178,12 @@
   appearance: none;
   border-radius: 3px;
 }
+
+.cdv-tk-item-title {
+  text-decoration: none;
+  color: currentColor;
+}
+
+.cdv-tk-item-title:hover {
+  color: #498D64;
+}

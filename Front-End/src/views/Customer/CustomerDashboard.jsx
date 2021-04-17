@@ -4,9 +4,16 @@ import React, {
   useState,
   useRef,
 } from 'react';
+import {
+  Route,
+  Switch,
+  Link,
+  useRouteMatch,
+} from 'react-router-dom';
 import { io } from 'socket.io-client';
 
 import Navbar from 'components/Navbar';
+import TicketDetailView from 'views/Customer/TicketDetailView';
 
 import { useAuth } from '../../services/auth';
 import request from '../../services/api';
@@ -25,15 +32,23 @@ function LoadingView() {
   );
 }
 
-function CustomerDashboardView({ user, tickets, socket }) {
+function CustomerDashboardView({
+  user,
+  ticketInstances,
+  ticketSplitIds,
+  socket,
+}) {
+  const { url } = useRouteMatch();
   const [ticketViewType, setTicketViewType] = useState('open');
-  const [openTickets, closedTickets] = tickets;
-  let currentTickets = openTickets;
+  const [openTicketIds, closedTicketIds] = ticketSplitIds;
+
+  let currentTickets = openTicketIds;
   if (ticketViewType === 'closed') {
-    currentTickets = closedTickets;
+    currentTickets = closedTicketIds;
   }
 
-  const ticketElements = currentTickets.map((ticket) => {
+  const ticketElements = currentTickets.map((id) => {
+    const ticket = ticketInstances[id];
     const odate = new Date(ticket.created);
     const displayDate = `Opened: ${odate.toLocaleDateString()}`;
     return (
@@ -42,7 +57,12 @@ function CustomerDashboardView({ user, tickets, socket }) {
         className="it-cdv-tk-item"
       >
         <div className="cdv-tk-item-prim-line">
-          <span className="cdv-tk-item-title">{ticket.title}</span>
+          <Link
+            className="cdv-tk-item-title"
+            to={`${url}/ticket/${ticket.id}`}
+          >
+            {ticket.title}
+          </Link>
           <span className="cdv-tk-item-id">{ticket.id}</span>
         </div>
         <div className="cdv-tk-item-sec-line">
@@ -73,14 +93,14 @@ function CustomerDashboardView({ user, tickets, socket }) {
           <div className="it-cdv-tk-filters">
             <div className="it-cdv-filters-left">
               <button
-                onClick={() => { setTicketViewType('open') }}
+                onClick={() => { setTicketViewType('open'); }}
                 className={'it-cdv-tk-btn'.concat([ticketViewType === 'open' ? ' it-cdv-tk-btn--active' : ''])}
                 type="button"
               >
                 Open
               </button>
               <button
-                onClick={() => { setTicketViewType('closed') }}
+                onClick={() => { setTicketViewType('closed'); }}
                 className={'it-cdv-tk-btn'.concat([ticketViewType === 'closed' ? ' it-cdv-tk-btn--active' : ''])}
                 type="button"
               >
@@ -99,9 +119,12 @@ function CustomerDashboardView({ user, tickets, socket }) {
 }
 
 function CustomerDashboard({ user }) {
+  const { path } = useRouteMatch();
+
   const { token } = useAuth();
+  const [tkInstances, setTkInstances] = useState({});
   const [tickets, setTickets] = useState([]);
-  const [isTicketsLoading, setTicketsLoading] = useState(!(tickets && tickets.length > 0));
+  const [isTicketsLoading, setTicketsLoading] = useState(Object.keys(tkInstances).length === 0);
   const [error, setError] = useState(null);
 
   const socketRef = useRef(null);
@@ -115,7 +138,7 @@ function CustomerDashboard({ user }) {
       },
     });
     socket.onAny((ename, ...args) => { console.log(ename, args); });
-    if (process.env.NODE_ENV === 'development') {
+    if (isDEV) {
       socket.on('connect', () => { console.log('[ws] opened'); });
       socket.on('disconnect', () => { console.log('[ws] closed'); });
     }
@@ -136,7 +159,8 @@ function CustomerDashboard({ user }) {
           headers: new Headers({ Authorization: `Bearer ${token}` }),
         });
         resp = Array.from(resp).reduce((acc, tk) => {
-          acc[tk.status === 1 ? 0 : 1].push(tk);
+          acc[tk.status === 1 ? 0 : 1].push(tk.id);
+          setTkInstances((prev) => ({ ...prev, [tk.id]: tk }));
           return acc;
         }, [[], []]);
         isDEV && console.log(resp);
@@ -155,12 +179,24 @@ function CustomerDashboard({ user }) {
 
   if (isTicketsLoading) { return <LoadingView />; }
 
+  // TODO: don't pass instances to detail view probably
   return (
-    <CustomerDashboardView
-      user={user}
-      tickets={tickets}
-      socket={socketRef.current}
-    />
+    <Switch>
+      <Route exact path={path}>
+        <CustomerDashboardView
+          user={user}
+          ticketSplitIds={tickets}
+          ticketInstances={tkInstances}
+          socket={socketRef.current}
+        />
+      </Route>
+      <Route path={`${path}/ticket/:ticketId`}>
+        <TicketDetailView
+          ticketInstances={tkInstances}
+          socket={socketRef.current}
+        />
+      </Route>
+    </Switch>
   );
 }
 

@@ -3,13 +3,15 @@ import React, {
   useState,
   useEffect,
 } from 'react';
+import { useParams } from 'react-router-dom';
 
 import HistoryView from '../../components/HistoryView';
 
 import { useAuth } from '../../services/auth';
 import request from '../../services/api';
 
-export default function TicketDetailView({ ticket, socket }) {
+export default function TicketDetailView({ ticketInstances, socket }) {
+  const { ticketId } = useParams();
   const { token, user } = useAuth();
   const [messages, setMessages] = useState([]);
   const inputEl = useRef(null);
@@ -19,6 +21,8 @@ export default function TicketDetailView({ ticket, socket }) {
       setMessages((all) => [message, ...all]);
     });
   }, [socket]);
+
+  const ticket = ticketInstances[ticketId];
 
   useEffect(() => {
     if (ticket) {
