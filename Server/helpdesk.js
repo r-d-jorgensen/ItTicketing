@@ -149,16 +149,10 @@ app.post('/api/auth', function apiAuth(req, res) {
 //Will return ticket notes from a specific ticket.
 //Need ticket_id
 
-app.get('/api/ticketnotes', validateAuth,function(req, res) {
-	
-	if (!req.is('application/json')) {
-		return res.status(400).send({ message: 'Bad Request'});
-	}
-
+app.get('/api/ticketnotes', validateAuth, function(req, res) {
 	let ticketID;
-
 	try {
-		ticketID = req.body.ticketID;
+		ticketID = req.query.ticketID;
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}

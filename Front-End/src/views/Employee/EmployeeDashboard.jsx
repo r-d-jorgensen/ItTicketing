@@ -58,11 +58,14 @@ const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
 };
 
 const FilterView = ({token, setIsLoading, setTickets, setTicketError}) => {
-  const defalutFilters = { priority: undefined, closed: 1, date: undefined };
-  const [filters, setfilters] = useState(defalutFilters);
+  const defaultFilters = {
+    priority: undefined,
+    closed: 1,
+  };
+  const [filters, setfilters] = useState(defaultFilters);
   const filterRadioSets = [
     { name: 'priority', values: ['Low', 'Mild', 'High', 'Urgent', 'All'] },
-    { name: 'status', values: ['Open', 'Closed', 'Both']},
+    { name: 'status', values: ['Open', 'Closed']},
   ];
 
   function filterRadioTraslation(value) {
@@ -83,7 +86,10 @@ const FilterView = ({token, setIsLoading, setTickets, setTicketError}) => {
 
   const handleParamChange = ({ target: {name, value} }) => {
     const changedFilters = filters;
-    changedFilters[name] = filterRadioTraslation(value);
+
+    if (name === 'priority' || name === 'status') {
+      changedFilters[name] = filterRadioTraslation(value);
+    } else { changedFilters[name] = value; }
     setfilters(changedFilters);
     setIsLoading(true);
     axios.get(`${TICKET_API_URL}/tickets`, {
@@ -96,11 +102,10 @@ const FilterView = ({token, setIsLoading, setTickets, setTicketError}) => {
   };
 
   const resetFilters = () => {
-    //reset the radio buttons
-    setfilters(defalutFilters);
+    setfilters(defaultFilters);
     setIsLoading(true);
     axios.get(`${TICKET_API_URL}/tickets`, {
-      params: { filters: defalutFilters },
+      params: { filters: defaultFilters },
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((response) => { setTickets(response.data); })
@@ -122,9 +127,9 @@ const FilterView = ({token, setIsLoading, setTickets, setTicketError}) => {
                   type="radio"
                   name={name}
                   value={value}
-                  defaultChecked={value === 'All' || value === 'Open' ? true : false}
+                  defaultChecked={value === 'All' || value === 'Open'}
                   onClick={handleParamChange} />
-                <label className="grid-lable" htmlFor={value}>{value}&nbsp;</label>
+                <label className="grid-label" htmlFor={value}>{value}&nbsp;</label>
               </div>,
             )}
           </div>,
@@ -135,14 +140,48 @@ const FilterView = ({token, setIsLoading, setTickets, setTicketError}) => {
   );
 };
 
+/*
+  const handleFilterTextChange = ({ target: {name, value} }) => {
+
+  };
+<div className="grid-set" >
+          <h5 className="grid-setname">Company</h5>
+          <div className="grid-values">
+            <Input
+              className="grid-input"
+              type="text"
+              name="company"
+              value={filters.company}
+              onChange={handleFilterTextChange} />
+            <Button>Filter by Company
+            </Button>
+          </div>
+        </div>
+<div className="grid-set" >
+          <h5 className="grid-setname">Date</h5>
+            <div className="grid-values">
+              <input
+                className="grid-input"
+                type="text"
+                name="dateStart"
+                value={filters.date.start}
+                onClick={handleParamChange} />
+              <input
+                className="grid-input"
+                type="text"
+                name="dateEnd"
+                value={filters.date.end}
+                onClick={handleParamChange} />
+            </div>
+        </div>
+*/
+
 const SortView = ({setSorters}) => {
   const sorters = [
     { name: 'Title', values: ['A --> Z', 'Z --> A']},
   ];
 
-  const handlePrioityChange = ({ target: {value} }) => {
-    setSorters(value);
-  };
+  const handlePrioityChange = ({ target: {value} }) => { setSorters(value); };
 
   return (
     <div className="control-section">
@@ -249,11 +288,12 @@ const TicketNotesView = ({token, ticketID, setActiveDetails, handleDetails}) => 
   };
 
   useEffect(() => {
-    //TODO: needs to be changed when api is made
-    //`${TICKET_API_URL}/tickets/notes`
-    axios('http://localhost:8082/api/ticket/notes')
+    axios(`${TICKET_API_URL}/ticketnotes`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { ticketID },
+    })
     .then((response) => {
-      setTicketNotes(response.data.ticket_notes);
+      setTicketNotes(response.data);
     })
     .catch((error) =>{
       setNotesError(error);
@@ -261,7 +301,7 @@ const TicketNotesView = ({token, ticketID, setActiveDetails, handleDetails}) => 
     .finally(() => {
       setisLoadingNotes(false);
     });
-  }, [token]);
+  }, [token, ticketID]);
 
   if (isLoadingNotes) {
     return <h3>Loading Notes</h3>;
