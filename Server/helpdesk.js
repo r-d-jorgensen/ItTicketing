@@ -146,8 +146,9 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 	if (req.query.filters) {
 		try {
 			const parsedFilters = JSON.parse(req.query.filters);
+			const objKeys = new Set(Object.keys(parsedFilters));
 			['priority', 'closed', 'status', 'date'].map((key) => {
-				if (key in Object.keys(parsedFilters)) {
+				if (objKeys.has(key)) {
 					if (key === 'date') {
 						const { start, end } = parsedFilters.date;
 						// TODO: verify start, end are actual dates.
@@ -237,7 +238,7 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 	`;
 
 	connection.query(query, (err, tickets) => {
-		res.status(200).json(Array.from(tickets, (t) => {
+		res.status(200).json(Array.from(tickets || [], (t) => {
 			t.assigned = JSON.parse(t.assigned);
 			return t;
 		}));
