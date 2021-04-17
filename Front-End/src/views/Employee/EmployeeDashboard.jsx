@@ -60,12 +60,12 @@ const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
 const FilterView = ({token, setIsLoading, setTickets, setTicketError}) => {
   const defaultFilters = {
     priority: undefined,
-    closed: 1,
+    status: 1,
   };
   const [filters, setfilters] = useState(defaultFilters);
   const filterRadioSets = [
     { name: 'priority', values: ['Low', 'Mild', 'High', 'Urgent', 'All'] },
-    { name: 'status', values: ['Open', 'Closed']},
+    { name: 'status', values: ['Open', 'Closed', 'Both']},
   ];
 
   function filterRadioTraslation(value) {
@@ -92,6 +92,7 @@ const FilterView = ({token, setIsLoading, setTickets, setTicketError}) => {
     } else { changedFilters[name] = value; }
     setfilters(changedFilters);
     setIsLoading(true);
+    
     axios.get(`${TICKET_API_URL}/tickets`, {
       params: { filters: changedFilters },
       headers: { Authorization: `Bearer ${token}` },
@@ -139,42 +140,6 @@ const FilterView = ({token, setIsLoading, setTickets, setTicketError}) => {
     </div>
   );
 };
-
-/*
-  const handleFilterTextChange = ({ target: {name, value} }) => {
-
-  };
-<div className="grid-set" >
-          <h5 className="grid-setname">Company</h5>
-          <div className="grid-values">
-            <Input
-              className="grid-input"
-              type="text"
-              name="company"
-              value={filters.company}
-              onChange={handleFilterTextChange} />
-            <Button>Filter by Company
-            </Button>
-          </div>
-        </div>
-<div className="grid-set" >
-          <h5 className="grid-setname">Date</h5>
-            <div className="grid-values">
-              <input
-                className="grid-input"
-                type="text"
-                name="dateStart"
-                value={filters.date.start}
-                onClick={handleParamChange} />
-              <input
-                className="grid-input"
-                type="text"
-                name="dateEnd"
-                value={filters.date.end}
-                onClick={handleParamChange} />
-            </div>
-        </div>
-*/
 
 const SortView = ({setSorters}) => {
   const sorters = [
@@ -231,10 +196,10 @@ const TicketView = ({tickets, token}) => {
       {tickets.map((ticket) => {
         const ticketOwner = {user_id: 1234, company: 'Big Tech', first_name: 'Bob', last_name: 'Bill'};
         return (
-          <div key={ticket.ticket_id} className="active-ticket">
+          <div key={ticket.id} className="active-ticket">
             <h3 className="main-info" id="ticket-title" >{ticket.title}</h3>
             <div className="ticket-body">
-              <h4 className="main-info" >Ticket ID - {ticket.ticket_id}</h4>
+              <h4 className="main-info" >Ticket ID - {ticket.id}</h4>
               <p className="main-info" >
                 <b>Status - </b> {ticket.status === 0 ? 'Closed' : 'Open' }
                 &nbsp;<b>Priority - </b>{severityTraslation(ticket.ticket_severity)}
@@ -243,17 +208,17 @@ const TicketView = ({tickets, token}) => {
               <p className="main-info" ><b>{ticketOwner.company}</b>: 
                 {ticketOwner.user_id} - {ticketOwner.first_name} {ticketOwner.last_name}</p>
               <p className="ticket-detail" >{ticket.body}</p>
-              {parseInt(activeDetails, 10) === ticket.ticket_id
+              {parseInt(activeDetails, 10) === ticket.id
               ? <TicketNotesView
                 token={token}
-                ticketID={ticket.ticket_id}
+                ticketID={ticket.id}
                 setActiveDetails={setActiveDetails}
                 handleDetails={handleDetails}
               />
               : <button
                 className="ticket-button details-button"
                 type="button"
-                id={ticket.ticket_id}
+                id={ticket.id}
                 onClick={handleDetails}>
                   Expand Details
               </button>}
@@ -267,46 +232,57 @@ const TicketView = ({tickets, token}) => {
 
 const TicketNotesView = ({token, ticketID, setActiveDetails, handleDetails}) => {
   const [isLoadingNotes, setisLoadingNotes] = useState(true);
+  const [isSendingDetails, setIsSendingDetails] = useState(false);
   const [notesError, setNotesError] = useState('');
   const [ticketNotes, setTicketNotes] = useState([]);
-  const [ticketChange, setTicketChange] = useState('');
-
-  const handleTicketChange = ({ target }) => {
-    setTicketChange(target.value);
-  };
-
-  const handleRequest = () => {
-    setActiveDetails(null);
-  };
+  const [noteInfo, setNoteInfo] = useState('');
+  const handleNoteInfo = ({ target }) => { setNoteInfo(target.value); };
 
   const handleUpdate = () => {
-    setActiveDetails(null);
+    setIsSendingDetails(true);
+    axios.post(`${TICKET_API_URL}/addnote`, 
+      {params: { ticketID, body: noteInfo }}, 
+      {headers: { Authorization: `Bearer ${token}` }},
+    )
+    .catch((err) => { setNotesError(err); })
+    .finally(() => {
+      setActiveDetails(null);
+      setIsSendingDetails(false);
+    });
   };
 
   const handleClose = () => {
-    setActiveDetails(null);
+    setIsSendingDetails(true);
+    axios.post(`${TICKET_API_URL}/addnote`,
+      {params: { ticketID, body: noteInfo }}, 
+      {headers: { Authorization: `Bearer ${token}` }},
+    )
+    .catch((err) => { setNotesError(err); })
+    .finally(() => { setActiveDetails(null); });
+
+    axios.post(`${TICKET_API_URL}/updatestatus`,
+      {params: { ticketID, status: 0 }}, 
+      {headers: { Authorization: `Bearer ${token}` }},
+    )
+    .catch((err) => { setNotesError(err); })
+    .finally(() => {
+      setActiveDetails(null);
+      setIsSendingDetails(false);
+    });
   };
 
   useEffect(() => {
-    axios(`${TICKET_API_URL}/ticketnotes`, {
+    axios.get(`${TICKET_API_URL}/ticketnotes`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { ticketID },
     })
-    .then((response) => {
-      setTicketNotes(response.data);
-    })
-    .catch((error) =>{
-      setNotesError(error);
-    })
-    .finally(() => {
-      setisLoadingNotes(false);
-    });
+    .then((response) => { setTicketNotes(response.data); })
+    .catch((error) =>{ setNotesError(error); })
+    .finally(() => { setisLoadingNotes(false); });
   }, [token, ticketID]);
 
-  if (isLoadingNotes) {
-    return <h3>Loading Notes</h3>;
-  }
-
+  if (isLoadingNotes) { return <h3>Loading Notes</h3>; }
+  if (isSendingDetails) { return <h3>Sending Update to Database</h3>; }
   if (notesError) {
     return (
       <div>
@@ -326,16 +302,14 @@ const TicketNotesView = ({token, ticketID, setActiveDetails, handleDetails}) => 
       )}
       <Button className="ticket-button details-button" id={ticketID} onClick={handleDetails}>Collapse Details</Button>
       <textarea
-        name="ticketChange"
         id="ticket-input"
         className="textarea"
-        value={ticketChange}
-        onChange={handleTicketChange}
+        value={noteInfo}
+        onChange={handleNoteInfo}
       />
       <div className="button-container" >
-        <button id={ticketID} className="ticket-button change-button" type="button" onClick={handleRequest}>Request</button>
-        <button id={ticketID} className="ticket-button change-button" type="button" onClick={handleUpdate}>Update</button>
-        <button id={ticketID} className="ticket-button change-button" type="button" onClick={handleClose}>Close</button>
+        <button className="ticket-button change-button" type="button" onClick={handleUpdate}>Update</button>
+        <button className="ticket-button change-button" type="button" onClick={handleClose}>Close</button>
       </div>
     </div>
   );
@@ -443,38 +417,25 @@ function EmployeeDashboard() {
     </Fragment>
   );
 }
-/*
-const userShape = {
-  id: PropTypes.number.isRequired,
-  user_type: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
-  first_name: PropTypes.string,
-  last_name: PropTypes.string,
-  phone_number: PropTypes.string,
-};
-*/
+
 PageButtons.propTypes = {
   tickets: PropTypes.arrayOf(PropTypes.object).isRequired,
   setPage: PropTypes.func.isRequired,
   ticketsPerPage: PropTypes.number.isRequired,
 };
-
 FilterView.propTypes = {
   token: PropTypes.string.isRequired,
   setIsLoading: PropTypes.func.isRequired,
   setTickets: PropTypes.func.isRequired,
   setTicketError: PropTypes.func.isRequired,
 };
-
 SortView.propTypes = {
   setSorters: PropTypes.func.isRequired,
 };
-
 TicketView.propTypes = {
   tickets: PropTypes.arrayOf(PropTypes.object).isRequired,
   token: PropTypes.string.isRequired,
 };
-
 TicketNotesView.propTypes = {
   token: PropTypes.string.isRequired,
   ticketID: PropTypes.number.isRequired,
@@ -483,21 +444,3 @@ TicketNotesView.propTypes = {
 };
 
 export default EmployeeDashboard;
-
-/*
-mockoon data for tickets at http://localhost:8082/api/details
-{
-  "ticket_notes": [
-    {{#repeat 5}}
-    {
-      "note_id": {{ faker 'random.number' min=10000 max=100000 }},
-      "user_id": {{ faker 'random.number' min=10000 max=100000 }},
-      "user_title": "{{ oneOf (array 'Admin' 'Tech' 'Customer' ) }}",
-      "first_name": "{{ faker 'name.firstName' }}",
-      "last_name": "{{ faker 'name.lastName' }}",
-      "body": "{{ faker 'lorem.paragraph' }}"
-      }
-    {{/repeat}}
-  ]
-}
-*/

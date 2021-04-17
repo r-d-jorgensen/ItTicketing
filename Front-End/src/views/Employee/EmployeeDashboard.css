@@ -162,7 +162,7 @@
 
 .button-container {
   display: grid;
-  grid: 30% / auto auto auto;
+  grid: 30% / auto auto;
 }
 
 .ticket-button {
