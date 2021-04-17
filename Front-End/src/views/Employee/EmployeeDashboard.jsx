@@ -9,17 +9,6 @@ import './EmployeeDashboard.css';
 
 const TICKET_API_URL = `${process.env.TICKET_API_URL}/api`;
 
-function severityTraslation(value) {
-  switch(value) {
-    case 0: return 'All';
-    case 1: return 'Low';
-    case 2: return 'Mild';
-    case 3: return 'High';
-    case 4: return 'Urgent';
-    default: return 'Error in database storage of ticket severity';
-  }
-}
-
 const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
   const [userPage, setUserPage] = useState(1);
   const [userPageError, setUserPageError] = useState(null);
@@ -69,43 +58,79 @@ const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
 };
 
 const FilterView = ({token, setIsLoading, setTickets, setTicketError}) => {
-  const filters = [
-    { name: 'Priority', values: [0, 1, 2, 3, 4] },
+  const defalutFilters = { priority: undefined, closed: 1, date: undefined };
+  const [filters, setfilters] = useState(defalutFilters);
+  const filterRadioSets = [
+    { name: 'priority', values: ['Low', 'Mild', 'High', 'Urgent', 'All'] },
+    { name: 'status', values: ['Open', 'Closed', 'Both']},
   ];
 
-  const handlePrioityChange = ({ target: {value} }) => {
+  function filterRadioTraslation(value) {
+    switch(value) {
+      //priority
+      case 'Low': return 1;
+      case 'Mild': return 2;
+      case 'High': return 3;
+      case 'Urgent': return 4;
+      case 'All' : return undefined;
+      //status
+      case 'Closed': return 0;
+      case 'Open': return 1;
+      case 'Both' : return undefined;
+      default: return 'Bad filter value';
+    }
+  }
+
+  const handleParamChange = ({ target: {name, value} }) => {
+    const changedFilters = filters;
+    changedFilters[name] = filterRadioTraslation(value);
+    setfilters(changedFilters);
     setIsLoading(true);
     axios.get(`${TICKET_API_URL}/tickets`, {
-      params: {priority: value},
-      headers: {Authorization: `Bearer ${token}`,},
+      params: { filters: changedFilters },
+      headers: { Authorization: `Bearer ${token}` },
     })
-    .then((response) => {
-      setTickets(response.data);
+    .then((response) => { setTickets(response.data); })
+    .catch((error) =>{ setTicketError(error); })
+    .finally(() => { setIsLoading(false); });
+  };
+
+  const resetFilters = () => {
+    //reset the radio buttons
+    setfilters(defalutFilters);
+    setIsLoading(true);
+    axios.get(`${TICKET_API_URL}/tickets`, {
+      params: { filters: defalutFilters },
+      headers: { Authorization: `Bearer ${token}` },
     })
-    .catch((error) =>{
-      setTicketError(error);
-    })
-    .finally(() => {
-      setIsLoading(false);
-    });
+    .then((response) => { setTickets(response.data); })
+    .catch((error) =>{ setTicketError(error); })
+    .finally(() => { setIsLoading(false); });
   };
 
   return (
     <div className="control-section">
       <h2 className="control-header" >Filters</h2>
       <div className="grid-display">
-        {filters.map(({ name, values }) =>
+        {filterRadioSets.map(({ name, values }) =>
           <div key={name} className="grid-set" >
             <h5 className="grid-setname">{name}</h5>
             {values.map((value) =>
               <div key={value} className="grid-values">
-                <input className="grid-input" type="radio" name={name} value={value} onClick={handlePrioityChange} />
-                <label className="grid-lable" htmlFor={value}>{severityTraslation(value)}&nbsp;</label>
+                <input
+                  className="grid-input"
+                  type="radio"
+                  name={name}
+                  value={value}
+                  defaultChecked={value === 'All' || value === 'Open' ? true : false}
+                  onClick={handleParamChange} />
+                <label className="grid-lable" htmlFor={value}>{value}&nbsp;</label>
               </div>,
             )}
           </div>,
         )}
       </div>
+      <button type="button" className="ticket-button details-button" onClick={resetFilters} >RESET FILTERS</button>
     </div>
   );
 };
@@ -139,7 +164,7 @@ const SortView = ({setSorters}) => {
   );
 };
 
-const TicketView = ({tickets, user}) => {
+const TicketView = ({tickets, token}) => {
   const [activeDetails, setActiveDetails] = useState(null);
   const handleDetails = ({ target }) => {
     if (activeDetails === target.id) setActiveDetails(null); 
@@ -149,6 +174,16 @@ const TicketView = ({tickets, user}) => {
   function stringToDate(str) {
     return new Date().toISOString(str).replace('T', ' ')
       .replace('-', '/').replace('-', '/').split('.')[0];
+  }
+
+  function severityTraslation(value) {
+    switch(value) {
+      case 1: return 'Low';
+      case 2: return 'Mild';
+      case 3: return 'High';
+      case 4: return 'Urgent';
+      default: return 'Error in database storage of ticket severity';
+    }
   }
 
   return (
@@ -171,7 +206,7 @@ const TicketView = ({tickets, user}) => {
               <p className="ticket-detail" >{ticket.body}</p>
               {parseInt(activeDetails, 10) === ticket.ticket_id
               ? <TicketNotesView
-                user={user}
+                token={token}
                 ticketID={ticket.ticket_id}
                 setActiveDetails={setActiveDetails}
                 handleDetails={handleDetails}
@@ -191,7 +226,7 @@ const TicketView = ({tickets, user}) => {
   );
 };
 
-const TicketNotesView = ({user, ticketID, setActiveDetails, handleDetails}) => {
+const TicketNotesView = ({token, ticketID, setActiveDetails, handleDetails}) => {
   const [isLoadingNotes, setisLoadingNotes] = useState(true);
   const [notesError, setNotesError] = useState('');
   const [ticketNotes, setTicketNotes] = useState([]);
@@ -226,7 +261,7 @@ const TicketNotesView = ({user, ticketID, setActiveDetails, handleDetails}) => {
     .finally(() => {
       setisLoadingNotes(false);
     });
-  }, [user]);
+  }, [token]);
 
   if (isLoadingNotes) {
     return <h3>Loading Notes</h3>;
@@ -267,8 +302,8 @@ const TicketNotesView = ({user, ticketID, setActiveDetails, handleDetails}) => {
 };
 
 function EmployeeDashboard() {
-  const { user, token } = useAuth();
   const ticketsPerPage = 4;
+  const { token } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [activePage, setPage] = useState(1);
   const [tickets, setTickets] = useState([]);
@@ -316,20 +351,29 @@ function EmployeeDashboard() {
 
   const MainDisplay = () => {
     if (isLoading) {
-      return <h1>Loading Tickets</h1>;
+      return <h1 className="nonTicket-display">Loading Tickets</h1>;
     } 
     if (ticketError) {
       return (
-        <div>
+        <div className="nonTicket-display">
           <h1>An Error Occoured when calling Server</h1>
           <h4 className="error">{`${ticketError}`}</h4>
+        </div>
+      );
+    }
+    if (tickets.length === 0){
+      return (
+        <div className="nonTicket-display">
+          <h1 className="error">There are no Tickets that match those filters</h1>
+          <h2>Or</h2>
+          <h1 className="success">There are no more tickets assigned to You</h1>
         </div>
       );
     }
     return(
       <TicketView
         tickets={sortedTickets().slice((activePage-1)*ticketsPerPage, activePage*ticketsPerPage)}
-        user={user}/>
+        token={token}/>
     );
   };
 
@@ -359,7 +403,7 @@ function EmployeeDashboard() {
     </Fragment>
   );
 }
-
+/*
 const userShape = {
   id: PropTypes.number.isRequired,
   user_type: PropTypes.string.isRequired,
@@ -368,7 +412,7 @@ const userShape = {
   last_name: PropTypes.string,
   phone_number: PropTypes.string,
 };
-
+*/
 PageButtons.propTypes = {
   tickets: PropTypes.arrayOf(PropTypes.object).isRequired,
   setPage: PropTypes.func.isRequired,
@@ -388,11 +432,11 @@ SortView.propTypes = {
 
 TicketView.propTypes = {
   tickets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  user: PropTypes.shape(userShape).isRequired,
+  token: PropTypes.string.isRequired,
 };
 
 TicketNotesView.propTypes = {
-  user: PropTypes.shape(userShape).isRequired,
+  token: PropTypes.string.isRequired,
   ticketID: PropTypes.number.isRequired,
   setActiveDetails: PropTypes.func.isRequired,
   handleDetails: PropTypes.func.isRequired,

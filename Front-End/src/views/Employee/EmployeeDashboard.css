@@ -11,8 +11,16 @@
   padding-top: auto;
 }
 
+.nonTicket-display {
+  margin: auto;
+}
+
 .error {
   color: rgb(163, 10, 10);
+}
+
+.success {
+  color: #57A85F;
 }
 
 .controls-container {
@@ -81,6 +89,7 @@
 }
 
 .grid-setname {
+  text-transform: capitalize;
   font-size: 20px;
   margin: 0;
 }
