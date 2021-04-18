@@ -416,7 +416,11 @@ app.post('/api/clientcreate', validateAuth,function(req, res) {
 	const sql = 'INSERT INTO ticket (title, body, status, user_id, ticket_severity) VALUES ?';
 	connection.query(sql, [[[title, body, 1, req.user.id, ticket_severity]]], function(err, { insertId }) {
 		if(err) throw err;
-		res.status(201).json({ id: insertId });
+		connection.query(
+			'INSERT INTO ticket_assigned (ticket_id) VALUES ?',
+			[[[insertId]]],
+			() => { res.status(201).json({ id: insertId }); },
+		);
 	})
 });
 //----------------------------------------------------------------Create Ticket - Tech--------------------------------------------
