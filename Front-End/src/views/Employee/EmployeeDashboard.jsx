@@ -120,49 +120,50 @@ const FilterView = ({setIsLoading, setTickets, setTicketError}) => {
       <h2 className="control-header" >Filters</h2>
       <div className="grid-display">
         {filterRadioSets.map(({ name, values }) =>
-          <div key={name} className="grid-set" >
-            <h5 className="grid-setname">{name}</h5>
-            {values.map((value) =>
-              <div key={value} className="grid-values">
-                <input
-                  className="grid-input"
-                  type="radio"
-                  name={name}
-                  value={value}
-                  defaultChecked={value === 'All' || value === 'Open'}
-                  onClick={handleParamChange} />
-                <label className="grid-label" htmlFor={value}>{value}&nbsp;</label>
-              </div>,
-            )}
+        <div key={name} className="grid-set" >
+          <h5 className="grid-setname">{name}</h5>
+          {values.map((value) =>
+          <div key={value} className="grid-values">
+            <input
+              className="grid-input"
+              type="radio"
+              name={name}
+              value={value}
+              defaultChecked={value === 'All' || value === 'Open'}
+              onClick={handleParamChange} />
+            <label className="grid-label" htmlFor={value}>{value}&nbsp;</label>
           </div>,
+          )}
+        </div>,
         )}
       </div>
-      <button type="button" className="ticket-button details-button" onClick={resetFilters} >RESET FILTERS</button>
+      <button type="button" className="control-button" onClick={resetFilters} >RESET FILTERS</button>
     </div>
   );
 };
 
-const SortView = ({setSorters}) => {
-  const sorters = [
-    { name: 'Title', values: ['A --> Z', 'Z --> A']},
+const SortView = ({setSorter}) => {
+  const sorterSets = [
+    { name: 'title', values: ['A --> Z', 'Z --> A'] },
+    { name: 'date', values: ['Youngest', 'Oldest'] },
   ];
 
-  const handlePrioityChange = ({ target: {value} }) => { setSorters(value); };
+  const handlePrioityChange = ({ target: { value } }) => { setSorter(value); };
 
   return (
     <div className="control-section">
       <h2 className="control-header" >Sorters</h2>
       <div className="grid-display">
-        {sorters.map(({ name, values }) =>
-          <div key={name} className="grid-set" >
-            <h5 className="grid-setname">{name}</h5>
-            {values.map((value) =>
-              <div key={value} className="grid-values">
-                <input className="grid-input" type="radio" name={name} value={value} onClick={handlePrioityChange} />
-                <label className="grid-lable" htmlFor={value}>{value}&nbsp;</label>
-              </div>,
-            )}
+        {sorterSets.map(({ name, values }) =>
+        <div key={name} className="grid-set" >
+          <h5 className="grid-setname">{name}</h5>
+          {values.map((value) =>
+          <div key={value} className="grid-values">
+            <input className="grid-input" type="radio" name={name} value={value} onClick={handlePrioityChange} />
+            <label className="grid-lable" htmlFor={value}>{value}&nbsp;</label>
           </div>,
+          )}
+        </div>,
         )}
       </div>
     </div>
@@ -175,13 +176,11 @@ const EmployeeDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activePage, setPage] = useState(1);
   const [tickets, setTickets] = useState([]);
-  const [sorters, setSorters] = useState('');
+  const [sorter, setSorter] = useState('');
   const [ticketError, setTicketError] = useState(null);
 
   useEffect(() => {
-    axios.get(`${TICKET_API_URL}/tickets`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    axios.get(`${TICKET_API_URL}/tickets`, { headers: { Authorization: `Bearer ${token}` } })
     .then((response) => { setTickets(response.data); })
     .catch((error) =>{ setTicketError(error); })
     .finally(() => { setIsLoading(false); });
@@ -190,45 +189,45 @@ const EmployeeDashboard = () => {
   const MainDisplay = () => {
     if (isLoading) { return <h1 className="nonTicket-display">Loading Tickets</h1>; } 
     if (ticketError) {
-        return (
+      return (
         <div className="nonTicket-display">
-            <h1>An Error Occoured when calling Server</h1>
-            <h4 className="error">{`${ticketError}`}</h4>
+          <h1>An Error Occoured when calling Server</h1>
+          <h4 className="error">{`${ticketError}`}</h4>
         </div>
-        );
+      );
     }
-    if (tickets.length === 0){
-        return (
+    if (tickets.length === 0) {
+      return (
         <div className="nonTicket-display">
-            <h1 className="error">There are no Tickets that match those filters</h1>
-            <h2>Or</h2>
-            <h1 className="success">There are no more tickets assigned to You</h1>
+          <h1 className="error">There are no Tickets that match those filters</h1>
+          <h2>Or</h2>
+          <h1 className="success">There are no more tickets assigned to You</h1>
         </div>
-        );
+      );
     }
     return (
       <TicketDisplay
-          isLoading={isLoading}
-          ticketError={ticketError}
-          tickets={tickets}
-          sorters={sorters}
-          activePage={activePage}
-          ticketsPerPage={ticketsPerPage} />
+        isLoading={isLoading}
+        ticketError={ticketError}
+        tickets={tickets}
+        sorter={sorter}
+        activePage={activePage}
+        ticketsPerPage={ticketsPerPage} />
     );
-  }
+  };
 
   return (
     <Fragment>
       <Navbar />
       <main className="employee-dashboard">
         <div className="controls-container">
-        <PageButtons setpage={setPage} ticketsPerPage={ticketsPerPage} tickets={tickets}/>
+          <PageButtons setPage={setPage} ticketsPerPage={ticketsPerPage} tickets={tickets}/>
           <FilterView
             setIsLoading={setIsLoading}
             setTickets={setTickets}
             setTicketError={setTicketError}/>
-          <SortView setSorters={setSorters}/>
-          <PageButtons setpage={setPage} ticketsPerPage={ticketsPerPage} tickets={tickets}/>
+          <SortView setSorter={setSorter}/>
+          <PageButtons setPage={setPage} ticketsPerPage={ticketsPerPage} tickets={tickets}/>
         </div>
         <MainDisplay />
       </main>
@@ -247,7 +246,7 @@ FilterView.propTypes = {
   setTicketError: PropTypes.func.isRequired,
 };
 SortView.propTypes = {
-  setSorters: PropTypes.func.isRequired,
+  setSorter: PropTypes.func.isRequired,
 };
 
 export default EmployeeDashboard;
