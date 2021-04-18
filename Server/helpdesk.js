@@ -428,6 +428,31 @@ app.post('/api/clientcreate', validateAuth,function(req, res) {
 		);
 	})
 });
+
+
+// Client Delete
+app.post('/api/clientdelete/:id', validateAuth, function(req, res) {
+	const user_id = connection.escape(req.user.id);
+	const ticket_id = connection.escape(req.params.id);
+	connection.query(
+		`SELECT user_id FROM ticket WHERE (user_id = ${user_id} AND ticket_id = ${ticket_id})`,
+		(err, [result]) => {
+			if (err || !(result && result.user_id === req.user.id)) {
+				res.status(401).json('Unauthorized');
+			}
+			connection.query(
+				`DELETE FROM ticket WHERE ticket_id = ${ticket_id}`,
+				(delErr, resp) => {
+					if (delErr) {
+						res.status(500).json('Internal Server Error');
+					}
+					res.status(202).json({ id: ticket_id });
+				},
+			);
+		}
+	);
+});
+
 //----------------------------------------------------------------Create Ticket - Tech--------------------------------------------
 
 //----------------------------------------------------------------Add Notes To Ticket---------------------------------------------
