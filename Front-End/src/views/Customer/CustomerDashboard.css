@@ -1,6 +1,7 @@
 .it-customer-dashboard {
   font-family: acumin-pro, sans-serif;
-  margin-top: 2rem;
+  height: calc(100% - 70px);
+  padding-top: 2rem;
 }
 
 .it-cdv-wrapper {
@@ -120,6 +121,10 @@
 }
 
 .cdv-tk-action-line {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+
   gap: 8px;
   display: flex;
   flex-direction: row;

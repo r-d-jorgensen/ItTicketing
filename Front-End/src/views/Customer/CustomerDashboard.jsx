@@ -15,6 +15,7 @@ import { io } from 'socket.io-client';
 import PropTypes from 'prop-types';
 
 import Navbar from 'components/Navbar';
+import NewFormModal from 'views/Customer/NewFormModal';
 import TicketDetailView from 'views/Customer/TicketDetailView';
 
 import { useAuth } from '../../services/auth';
@@ -38,7 +39,6 @@ function CustomerDashboardView({
   ticketInstances,
   ticketSplitIds,
 }) {
-  const { url } = useRouteMatch();
   const [ticketViewType, setTicketViewType] = useState('open');
   const [openTicketIds, closedTicketIds] = ticketSplitIds;
 
@@ -59,7 +59,7 @@ function CustomerDashboardView({
         <div className="cdv-tk-item-prim-line">
           <Link
             className="cdv-tk-item-title"
-            to={`${url}/ticket/${ticket.id}`}
+            to={`/dashboard/ticket/${ticket.id}`}
           >
             {ticket.title}
           </Link>
@@ -75,20 +75,6 @@ function CustomerDashboardView({
   return (
     <Fragment>
       <div className="it-cdv-wrapper">
-        <div className="cdv-tk-action-line">
-          <button
-            type="button"
-            className="cdv-tk-new-btn"
-          >
-            Open New Ticket
-          </button>
-          <input
-            name="tk-search"
-            className="cdv-tk-search"
-            placeholder="Search Open Tickets"
-            type="text"
-          />
-        </div>
         <div className="it-cdv-tk-container">
           <div className="it-cdv-tk-filters">
             <div className="it-cdv-filters-left">
@@ -118,7 +104,7 @@ function CustomerDashboardView({
   );
 }
 
-function CustomerDashboard() {
+function CustomerDashboard({ setShowModal }) {
   const { path } = useRouteMatch();
 
   const { token } = useAuth();
@@ -183,36 +169,63 @@ function CustomerDashboard() {
 
   // TODO: don't pass instances to detail view probably
   return (
-    <Switch>
-      <Route exact path={path}>
-        <CustomerDashboardView
-          ticketSplitIds={tickets}
-          ticketInstances={tkInstances}
+    <Fragment>
+      <div className="cdv-tk-action-line">
+        <button
+          type="button"
+          className="cdv-tk-new-btn"
+          onClick={() => { setShowModal(true); }}
+        >
+          Open New Ticket
+        </button>
+        <input
+          name="tk-search"
+          className="cdv-tk-search"
+          placeholder="Search Open Tickets"
+          type="text"
         />
-      </Route>
-      <Route path={`${path}/ticket/:ticketId`}>
-        <TicketDetailView
-          ticketInstances={tkInstances}
-          socket={socketRef.current}
-        />
-      </Route>
-    </Switch>
+      </div>
+      <Switch>
+        <Route exact path={path}>
+          <CustomerDashboardView
+            ticketSplitIds={tickets}
+            ticketInstances={tkInstances}
+          />
+        </Route>
+        <Route path={`${path}/ticket/:ticketId`}>
+          <TicketDetailView
+            ticketInstances={tkInstances}
+            socket={socketRef.current}
+          />
+        </Route>
+      </Switch>
+    </Fragment>
   );
 }
 
 export default () => {
   const { user } = useAuth();
 
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <Fragment>
       <Navbar />
       <main className="it-customer-dashboard">
         { user && (
-          <CustomerDashboard />
+          <CustomerDashboard setShowModal={setShowModal} />
         )}
+        <NewFormModal
+          show={showModal}
+          setShow={setShowModal}
+        />
       </main>
     </Fragment>
   );
+};
+
+CustomerDashboard.propTypes = {
+  setShowModal: PropTypes.func.isRequired,
 };
 
 /* eslint-disable react/no-unused-prop-types */
