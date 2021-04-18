@@ -109,11 +109,23 @@ export default function TicketDetailView({ ticketInstances, socket }) {
   );
 }
 
+/* eslint-disable react/no-unused-prop-types */
 TicketDetailView.propTypes = {
-  ticketInstances: PropTypes.arrayOf(PropTypes.exact({
+  ticketInstances: PropTypes.objectOf(PropTypes.exact({
     id: PropTypes.number.isRequired,
     created: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
+    body: PropTypes.string.isRequired,
+    status: PropTypes.number.isRequired,
+    date_closed: PropTypes.string,
+    user_id: PropTypes.number.isRequired,
+    ticket_severity: PropTypes.number.isRequired,
+    assigned: PropTypes.arrayOf(PropTypes.exact({
+      first_name: PropTypes.string.isRequired,
+      last_name: PropTypes.string.isRequired,
+      phone_number: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+    })),
   })).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   socket: PropTypes.object.isRequired,
