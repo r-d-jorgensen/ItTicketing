@@ -177,6 +177,7 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 			t.status,
 			t.date_closed,
 			t.user_id,
+			t.company,
 			t.ticket_severity,
 			JSON_ARRAYAGG(JSON_OBJECT(
 				'first_name', uta.first_name,
@@ -216,6 +217,7 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 			t2.status,
 			t2.date_closed,
 			t2.user_id,
+			t2.company,
 			t2.ticket_severity,
 			null
 		from
@@ -238,10 +240,13 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 	`;
 
 	connection.query(query, (err, tickets) => {
-		res.status(200).json(Array.from(tickets || [], (t) => {
-			t.assigned = JSON.parse(t.assigned);
-			return t;
-		}));
+		connection.query(`SELECT * FROM user WHERE user_id = ${userId}`, (error, userInfo) => {	
+			res.status(200).json(Array.from(tickets || [], (t) => {
+				t.assigned = {'user_id':userId, 'company':t.company, 'first_name':userInfo[0].first_name, 'last_name':userInfo[0].last_name};
+				delete t.company;
+				return t;
+			}));
+		});	
 	});
 });
 
