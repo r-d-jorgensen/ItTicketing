@@ -41,7 +41,9 @@
 }
 
 .it-cdv-tk-item {
+  position: relative;
   padding: 12px 16px;
+  padding-right: 64px;
 }
 
 .it-cdv-tk-item + .it-cdv-tk-item {
@@ -50,6 +52,39 @@
 
 .it-cdv-tk-item:hover {
   background-color: #EAF0ED;
+}
+
+.tk-item-delete {
+  opacity: 0;
+  top: 18px;
+  right: 18px;
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+
+  color: #808080;
+  background-color: rgba(128, 128, 128, 0.2);
+  border-radius: 3px;
+  border: 1px solid currentColor;
+
+  cursor: pointer;
+
+  transition-property: opacity;
+  transition-duration: 100ms;
+  transition-timing-function: ease-out;
+}
+
+.tk--item-want-delete,
+.tk-item-delete:hover {
+  color: #E23C3C;
+  background-color: rgba(226, 60, 60, 0.2);
+}
+
+.tk--item-want-delete,
+.tk-item-delete:hover,
+.it-cdv-tk-item:hover .tk-item-delete {
+  opacity: 1;
 }
 
 .it-cdv-tk-btn {

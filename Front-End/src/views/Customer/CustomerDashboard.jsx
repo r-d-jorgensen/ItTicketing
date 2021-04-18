@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useState,
   useRef,
+  createRef,
 } from 'react';
 import {
   Route,
@@ -38,14 +39,53 @@ function LoadingView() {
 function CustomerDashboardView({
   ticketInstances,
   ticketSplitIds,
+  removeId,
 }) {
+  const { token } = useAuth();
   const [ticketViewType, setTicketViewType] = useState('open');
   const [openTicketIds, closedTicketIds] = ticketSplitIds;
+  const [deleteId, setDeleteId] = useState(null);
+  const wantDeleteEl = createRef();
 
   let currentTickets = openTicketIds;
   if (ticketViewType === 'closed') {
     currentTickets = closedTicketIds;
   }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', ({ target }) => {
+      if (wantDeleteEl.current === target || deleteId === null) {
+        return;
+      }
+      setDeleteId(null);
+    }, false);
+  }, []);
+
+  const wantDelete = async (id, target) => {
+    if (deleteId === id) {
+      const headers = new Headers();
+      headers.set('Content-Type', 'application/json');
+      headers.set('Authorization', `Bearer ${token}`);
+
+      const reqOpts = {
+        headers,
+        method: 'POST',
+      };
+
+      try {
+        await request(`/api/clientdelete/${id}`, reqOpts);
+        removeId(id);
+      } catch (_) {
+        //
+      } finally {
+        setDeleteId(null);
+        wantDeleteEl.current = null;
+      }
+    } else {
+      setDeleteId(id);
+      wantDeleteEl.current = target;
+    }
+  };
 
   const ticketElements = currentTickets.map((id) => {
     const ticket = ticketInstances[id];
@@ -68,6 +108,16 @@ function CustomerDashboardView({
         <div className="cdv-tk-item-sec-line">
           <span className="cdv-tk-item-odate">{displayDate}</span>
         </div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={'tk-item-delete'.concat([(deleteId && deleteId === id) ? ' tk--item-want-delete' : ''])}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          onClick={({ target }) => { wantDelete(ticket.id, target); }}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
       </li>
     );
   });
@@ -114,6 +164,25 @@ function CustomerDashboard({ setShowModal }) {
   const [error, setError] = useState(null);
 
   const socketRef = useRef(null);
+
+  const removeId = (id) => {
+    const ticket = tkInstances[id];
+    if (!ticket) {
+      return;
+    }
+
+    if (ticket.status === 0) {
+      setTickets(([open, closed]) => ([
+        open,
+        closed.filter((closedIds) => closedIds !== id),
+      ]));
+    } else if (ticket.status === 1) {
+      setTickets(([open, closed]) => ([
+        open.filter((openIds) => openIds !== id),
+        closed,
+      ]));
+    }
+  };
 
   useEffect(() => {
     const socket = io(process.env.TICKET_WEBSOCKET_URL, {
@@ -190,12 +259,14 @@ function CustomerDashboard({ setShowModal }) {
           <CustomerDashboardView
             ticketSplitIds={tickets}
             ticketInstances={tkInstances}
+            removeId={removeId}
           />
         </Route>
         <Route path={`${path}/ticket/:ticketId`}>
           <TicketDetailView
             ticketInstances={tkInstances}
             socket={socketRef.current}
+            removeId={removeId}
           />
         </Route>
       </Switch>
@@ -247,4 +318,5 @@ CustomerDashboardView.propTypes = {
     })),
   })).isRequired,
   ticketSplitIds: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+  removeId: PropTypes.func.isRequired,
 };

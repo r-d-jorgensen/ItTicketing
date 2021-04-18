@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events,
+                  jsx-a11y/no-static-element-interactions */
+
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -31,7 +34,7 @@ export default function NewFormModal({ show, setShow }) {
     try {
       const { id } = await request('/api/clientcreate', reqOpts);
       history.push(`/dashboard/ticket/${id}`);
-    } catch (e) {
+    } catch (_) {
       //
     }
   }

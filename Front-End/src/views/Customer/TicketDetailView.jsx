@@ -129,4 +129,5 @@ TicketDetailView.propTypes = {
   })).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   socket: PropTypes.object.isRequired,
+  removeId: PropTypes.func.isRequired,
 };
