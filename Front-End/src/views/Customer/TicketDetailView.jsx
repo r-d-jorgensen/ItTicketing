@@ -1,9 +1,11 @@
+/* eslint-disable  no-console */
 import React, {
   useRef,
   useState,
   useEffect,
 } from 'react';
 import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import HistoryView from '../../components/HistoryView';
 
@@ -106,3 +108,13 @@ export default function TicketDetailView({ ticketInstances, socket }) {
     </div>
   );
 }
+
+TicketDetailView.propTypes = {
+  ticketInstances: PropTypes.arrayOf(PropTypes.exact({
+    id: PropTypes.number.isRequired,
+    created: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+  })).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  socket: PropTypes.object.isRequired,
+};

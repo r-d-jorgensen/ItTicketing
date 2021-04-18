@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, {
   Fragment,
   useEffect,
@@ -11,6 +12,7 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 import { io } from 'socket.io-client';
+import PropTypes from 'prop-types';
 
 import Navbar from 'components/Navbar';
 import TicketDetailView from 'views/Customer/TicketDetailView';
@@ -33,10 +35,8 @@ function LoadingView() {
 }
 
 function CustomerDashboardView({
-  user,
   ticketInstances,
   ticketSplitIds,
-  socket,
 }) {
   const { url } = useRouteMatch();
   const [ticketViewType, setTicketViewType] = useState('open');
@@ -118,7 +118,7 @@ function CustomerDashboardView({
   );
 }
 
-function CustomerDashboard({ user }) {
+function CustomerDashboard() {
   const { path } = useRouteMatch();
 
   const { token } = useAuth();
@@ -149,7 +149,7 @@ function CustomerDashboard({ user }) {
 
   useEffect(() => {
     const gt = async () => {
-      isDEV && console.groupCollapsed('[api] /api/tickets');
+      if (isDEV) { console.groupCollapsed('[api] /api/tickets'); }
       setTicketsLoading(true);
       // TODO: filter properties on tickets
       let resp = [];
@@ -163,19 +163,21 @@ function CustomerDashboard({ user }) {
           setTkInstances((prev) => ({ ...prev, [tk.id]: tk }));
           return acc;
         }, [[], []]);
-        isDEV && console.log(resp);
+        if (isDEV) { console.log(resp); }
       } catch (err) {
-        isDEV && console.error(err);
+        if (isDEV) { console.error(err); }
         setError(err);
       }
 
-      isDEV && console.groupEnd('[api] /api/tickets');
-      error === null && setTickets(resp);
+      if (isDEV) { console.groupEnd('[api] /api/tickets'); }
+      if (error === null) {
+        setTickets(resp);
+      }
       setTicketsLoading(false);
     };
 
     gt();
-  }, [user, token, error]);
+  }, [token, error]);
 
   if (isTicketsLoading) { return <LoadingView />; }
 
@@ -184,10 +186,8 @@ function CustomerDashboard({ user }) {
     <Switch>
       <Route exact path={path}>
         <CustomerDashboardView
-          user={user}
           ticketSplitIds={tickets}
           ticketInstances={tkInstances}
-          socket={socketRef.current}
         />
       </Route>
       <Route path={`${path}/ticket/:ticketId`}>
@@ -208,9 +208,18 @@ export default () => {
       <Navbar />
       <main className="it-customer-dashboard">
         { user && (
-          <CustomerDashboard user={user} />
+          <CustomerDashboard />
         )}
       </main>
     </Fragment>
   );
+};
+
+CustomerDashboardView.propTypes = {
+  ticketInstances: PropTypes.arrayOf(PropTypes.exact({
+    id: PropTypes.number.isRequired,
+    created: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+  })).isRequired,
+  ticketSplitIds: PropTypes.arrayOf(PropTypes.array).isRequired,
 };

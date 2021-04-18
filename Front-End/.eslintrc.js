@@ -29,12 +29,12 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error', {
       devDependencies: true,
     }],
-    "react/jsx-fragments": ['error', 'element'],
+    'react/jsx-fragments': ['error', 'element'],
     'react/jsx-props-no-spreading': ['error', {
       custom: 'ignore',
     }],
     'jsx-a11y/label-has-associated-control': ['error', {
-      'depth': 2,
+      depth: 2,
     }],
     'linebreak-style': 'off',
     'object-curly-newline': ['error', {

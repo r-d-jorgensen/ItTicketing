@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import jwt_decode from 'jwt-decode';
+import JWTDecode from 'jwt-decode';
 
 import PropTypes from 'prop-types';
 
@@ -30,7 +30,7 @@ function useProviderAuth() {
 
   let user = null;
   try {
-    user = jwt_decode(storedSessionToken);
+    user = JWTDecode(storedSessionToken);
   } catch (_) {
     //
   }
@@ -55,13 +55,13 @@ function useProviderAuth() {
       }));
       try {
         // TODO: create storage module to store token
-        const { success, data } = await authLogin(username, password);
-        const { token, user } = data;
+        const { data } = await authLogin(username, password);
+        const { token, user: respUser } = data;
         setStoredSessionToken(token);
         setProviderAuth({
           state: 'authorized',
-          user,
-          token: token,
+          user: respUser,
+          token,
           errorMsg: '',
         });
 
@@ -73,7 +73,6 @@ function useProviderAuth() {
           user: null,
           token: null,
           errorMsg: e.message,
-          token: null,
         });
       }
     },

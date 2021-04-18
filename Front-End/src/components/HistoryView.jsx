@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './HistoryView.css';
 
@@ -24,3 +25,7 @@ export default function HistoryView({ messages }) {
     </div>
   );
 }
+
+HistoryView.propTypes = {
+  messages: PropTypes.arrayOf(PropTypes.any).isRequired,
+};
