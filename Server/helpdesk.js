@@ -394,39 +394,30 @@ app.get('/api/ticketnotes', validateAuth, function(req, res) {
 //----------------------------------------------------------------Create Ticket - Client------------------------------------------
 //This is for the Client to create a ticket and insert it into the database
 //Will need the info below
-//User_id, Title, Body, status(1), ticket_severity 
+//User_id, Title, Body, status(1), ticket_severity
 app.post('/api/clientcreate', validateAuth,function(req, res) {
-	
 	if (!req.is('application/json')) {
 		return res.status(400).send({ message: 'Bad Request'});
 	}
 
-	let userID;
 	let title;
 	let body;
-	let status;
 	let ticket_severity;
 
 	try {
-		userID 			= req.body.ticketID;
 		title  			= req.body.title;
 		body   			= req.body.body;
-		status 			= req.body.status;
 		ticket_severity = req.body.ticket_severity;
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
 
 
-	var sql = "INSERT INTO ticket (title, body, status, user_id, ticket_severity) VALUES ?";
-	var values = [title, body, status, userID, ticket_severity];
-
-	connection.query(sql, [values], function(err,result) {
+	const sql = 'INSERT INTO ticket (title, body, status, user_id, ticket_severity) VALUES ?';
+	connection.query(sql, [[[title, body, 1, req.user.id, ticket_severity]]], function(err, { insertId }) {
 		if(err) throw err;
-		
-		res.status(200).json(result);
+		res.status(201).json({ id: insertId });
 	})
-
 });
 //----------------------------------------------------------------Create Ticket - Tech--------------------------------------------
 
