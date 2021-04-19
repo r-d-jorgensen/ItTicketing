@@ -123,34 +123,32 @@ function CustomerDashboardView({
   });
 
   return (
-    <Fragment>
-      <div className="it-cdv-wrapper">
-        <div className="it-cdv-tk-container">
-          <div className="it-cdv-tk-filters">
-            <div className="it-cdv-filters-left">
-              <button
-                onClick={() => { setTicketViewType('open'); }}
-                className={'it-cdv-tk-btn'.concat([ticketViewType === 'open' ? ' it-cdv-tk-btn--active' : ''])}
-                type="button"
-              >
-                Open
-              </button>
-              <button
-                onClick={() => { setTicketViewType('closed'); }}
-                className={'it-cdv-tk-btn'.concat([ticketViewType === 'closed' ? ' it-cdv-tk-btn--active' : ''])}
-                type="button"
-              >
-                Closed
-              </button>
-            </div>
-            <div className="it-cdv-filters-right" />
+    <div className="it-cdv-wrapper">
+      <div className="it-cdv-tk-container">
+        <div className="it-cdv-tk-filters">
+          <div className="it-cdv-filters-left">
+            <button
+              onClick={() => { setTicketViewType('open'); }}
+              className={'it-cdv-tk-btn'.concat([ticketViewType === 'open' ? ' it-cdv-tk-btn--active' : ''])}
+              type="button"
+            >
+              Open
+            </button>
+            <button
+              onClick={() => { setTicketViewType('closed'); }}
+              className={'it-cdv-tk-btn'.concat([ticketViewType === 'closed' ? ' it-cdv-tk-btn--active' : ''])}
+              type="button"
+            >
+              Closed
+            </button>
           </div>
-          <ul className="it-cdv-tk-list">
-            {ticketElements}
-          </ul>
+          <div className="it-cdv-filters-right" />
         </div>
+        <ul className="it-cdv-tk-list">
+          {ticketElements}
+        </ul>
       </div>
-    </Fragment>
+    </div>
   );
 }
 

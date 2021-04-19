@@ -1,0 +1,31 @@
+.it-ticket-detail-view svg {
+  width: 24px;
+  height: 24px;
+}
+
+.it-ticket-detail-view {
+  font-family: acumin-pro, sans-serif;
+
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.it-tdv-content {
+  background-color: #FAFAFA;
+  border: 1px solid #B5CABD;
+  border-radius: 3px;
+  box-shadow: 0 3px 3px rgba(16, 16, 16, 0.1);
+  overflow: hidden;
+}
+
+.it-tdv-title {
+  text-align: left;
+  margin: 1rem 1rem 0.9rem;
+}
+
+.it-tdv-id {
+  margin-left: 4px;
+  font-weight: lighter;
+  color: #808080;
+}
