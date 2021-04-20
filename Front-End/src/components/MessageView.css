@@ -1,6 +1,7 @@
 .it-message-view-wrapper {
   padding: 0;
-  height: calc(100% - 4rem);
+  height: calc(100% - 4rem - 8px);
+  max-height: none;
 }
 
 .it-message-view-content {
