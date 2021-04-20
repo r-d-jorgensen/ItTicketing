@@ -240,13 +240,12 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 	`;
 
 	connection.query(query, (err, tickets) => {
-		connection.query(`SELECT * FROM user WHERE user_id = ${userId}`, (error, userInfo) => {	
-			res.status(200).json(Array.from(tickets || [], (t) => {
-				t.assigned = {'user_id':userId, 'company':t.company, 'first_name':userInfo[0].first_name, 'last_name':userInfo[0].last_name};
-				delete t.company;
-				return t;
-			}));
-		});	
+		res.status(200).json(Array.from(tickets || [], (t) => {
+			t.assigned = JSON.parse(t.assigned);
+			t.assigned && t.assigned.forEach((emp) => { emp.company = t.company; });
+			delete t.company;
+			return t;
+		}));
 	});
 });
 
@@ -287,7 +286,6 @@ app.get('/api/ticket/:id/messages', validateAuth, function (req, res) {
 				}));
 			});
 		} else if (req.user.user_type === 'employee') {
-			console.log('check if assigned to ticket');
 			const checkAssigned = `
 				select
 					ticket_id,
@@ -299,10 +297,8 @@ app.get('/api/ticket/:id/messages', validateAuth, function (req, res) {
 					employee_id = ?
 				)
 			`;
-			console.log(req.user, ticket_id);
 			connection.query(checkAssigned, [ticket_id, req.user.id], (err, assignments) => {
-				console.log(assignments);
-				if (Array.from(assignments).length > 0) {
+				if (Array.from(assignments || []).length > 0) {
 					connection.query(detailQuery, [ticket_id], (err, details) => {
 						res.status(200).json(Array.from(details, (detail) => {
 							detail.author = JSON.parse(detail.author);
