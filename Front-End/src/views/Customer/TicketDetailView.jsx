@@ -22,7 +22,7 @@ export default function TicketDetailView({ ticketInstances, socket }) {
 
   useEffect(() => {
     socket.on('new_message_success', (message) => {
-      setMessages((all) => [message, ...all]);
+      setMessages((all) => [...all, message]);
     });
   }, [socket]);
 
@@ -40,7 +40,11 @@ export default function TicketDetailView({ ticketInstances, socket }) {
           console.log(resp);
           console.groupEnd(`[api] /api/ticket/${ticket.id}/messages`);
         }
-        setMessages(resp);
+        setMessages(resp.sort((a, b) => {
+          const aa = (new Date(a.created)).valueOf();
+          const bb = (new Date(b.created)).valueOf();
+          return (aa > bb) - (aa < bb);
+        }));
       };
 
       getTicketMessages();
@@ -65,6 +69,7 @@ export default function TicketDetailView({ ticketInstances, socket }) {
     inputEl.current.value = '';
   };
 
+  /* eslint-disable jsx-a11y/no-autofocus */
   return (
     <div className="it-ticket-detail-view">
       <div className="it-tdv-content">
@@ -79,6 +84,7 @@ export default function TicketDetailView({ ticketInstances, socket }) {
           <MessageView messages={messages} />
           <div className="it-tdv-bottom">
             <textarea
+              autoFocus
               placeholder="Enter Message"
               name="Message"
               className="it-tdv-message"
