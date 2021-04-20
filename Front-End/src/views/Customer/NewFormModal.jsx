@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 
 import request from '../../services/api';
 
-import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 import './NewFormModal.css';
@@ -85,13 +84,14 @@ export default function NewFormModal({ show, setShow }) {
               <select
                 id="nfmSeverity"
                 name="Severity"
+                defaultValue="1"
                 className="nfm-select"
                 onChange={({ target: { value } }) => { setSelectedSeverity(value); }}
               >
-                <option selected value={1}>Low</option>
-                <option value={2}>Mild</option>
-                <option value={3}>High</option>
-                <option value={4}>Urgent</option>
+                <option value="1">Low</option>
+                <option value="2">Mild</option>
+                <option value="3">High</option>
+                <option value="4">Urgent</option>
               </select>
             </div>
           </div>

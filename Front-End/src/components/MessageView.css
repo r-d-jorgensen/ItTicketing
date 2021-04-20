@@ -1,7 +1,8 @@
 .it-message-view-wrapper {
   padding: 0;
-  height: calc(100% - 4rem - 8px);
-  max-height: none;
+  height: calc(100% - 3.5rem);
+  min-height: 1px;
+  overflow-y: hidden;
 }
 
 .it-message-view-content {
@@ -36,4 +37,5 @@
 
 .it-tdv-bottom {
   display: flex;
+  height: 3.5rem;
 }
