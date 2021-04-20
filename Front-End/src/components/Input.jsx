@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import InputMask from 'react-input-mask';
-import './Input.css';
+import styles from './Input.css';
 
 const Input = ({
   name,
@@ -10,13 +10,13 @@ const Input = ({
 }) => (
   <Fragment>
     <InputMask
-      className="input"
+      className={styles.input}
       name={name}
       {...rest}
     />
     {
       error
-        ? <div className="input-error">{error}</div>
+        ? <div className={styles['input-error']}>{error}</div>
         : null
     }
   </Fragment>

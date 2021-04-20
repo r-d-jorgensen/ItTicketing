@@ -3,7 +3,9 @@ import { useHistory, Link } from 'react-router-dom';
 import Joi from 'joi';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import './Registration.css';
+
+import appStyles from '../../App.css';
+import styles from './Registration.css';
 
 function Registration() {
   const history = useHistory();
@@ -76,15 +78,15 @@ function Registration() {
   return (
     <Fragment>
       <header>
-        <h1 className="logo">
+        <h1 className={appStyles.logo}>
           <Link to="/">IT Ticketing Systems Inc.</Link>
         </h1>
       </header>
-      <main className="registration-page">
-        <div className="registration-container">
-          <span className="registration-header">Sign up for an Account</span>
-          <form className="registration-form" onSubmit={signUpUser}>
-            <label htmlFor="username" className="registration-label">Username</label>
+      <main className={styles['registration-page']}>
+        <div className={styles['registration-container']}>
+          <span className={styles['registration-header']}>Sign up for an Account</span>
+          <form className={styles['registration-form']} onSubmit={signUpUser}>
+            <label htmlFor="username" className={styles['registration-label']}>Username</label>
             <Input
               id="username"
               name="Username"
@@ -94,7 +96,7 @@ function Registration() {
               onChange={updateField}
               error={errors.username}
             />
-            <label htmlFor="firstName" className="registration-label">First name</label>
+            <label htmlFor="firstName" className={styles['registration-label']}>First name</label>
             <Input
               id="firstName"
               name="First Name"
@@ -104,7 +106,7 @@ function Registration() {
               onChange={updateField}
               error={errors.firstName}
             />
-            <label htmlFor="lastName" className="registration-label">Last name</label>
+            <label htmlFor="lastName" className={styles['registration-label']}>Last name</label>
             <Input
               id="lastName"
               name="Last Name"
@@ -114,7 +116,7 @@ function Registration() {
               onChange={updateField}
               error={errors.lastName}
             />
-            <label htmlFor="password" className="registration-label">Password</label>
+            <label htmlFor="password" className={styles['registration-label']}>Password</label>
             <Input
               type="password"
               id="password"
@@ -123,7 +125,7 @@ function Registration() {
               onChange={updateField}
               error={errors.password}
             />
-            <label htmlFor="passwordConfirm" className="registration-label">Confirm password</label>
+            <label htmlFor="passwordConfirm" className={styles['registration-label']}>Confirm password</label>
             <Input
               type="password"
               id="passwordConfirm"
@@ -132,7 +134,7 @@ function Registration() {
               onChange={updateField}
               error={errors.passwordConfirm}
             />
-            <label htmlFor="email" className="registration-label">Email</label>
+            <label htmlFor="email" className={styles['registration-label']}>Email</label>
             <Input
               type="email"
               id="email"
@@ -141,7 +143,7 @@ function Registration() {
               onChange={updateField}
               error={errors.email}
             />
-            <label htmlFor="emailConfirm" className="registration-label">Confirm Email</label>
+            <label htmlFor="emailConfirm" className={styles['registration-label']}>Confirm Email</label>
             <Input
               type="email"
               id="emailConfirm"
@@ -150,7 +152,7 @@ function Registration() {
               onChange={updateField}
               error={errors.emailConfirm}
             />
-            <label htmlFor="phone" className="registration-label">Phone number</label>
+            <label htmlFor="phone" className={styles['registration-label']}>Phone number</label>
             <Input
               type="tel"
               id="phone"

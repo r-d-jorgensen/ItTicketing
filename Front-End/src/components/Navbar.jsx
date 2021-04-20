@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../services/auth';
 
-import './Navbar.css';
+import styles from './Navbar.css';
+import appStyles from '../App.css';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
@@ -22,10 +23,14 @@ const Navbar = () => {
     }
 
     return (
-      <nav className="navbar-links">
+      <nav className={styles['navbar-links']}>
         {
           navLandinglinks.map((element) => (
-            <Link to={element.link} className="navbar-item" key={element.name}>
+            <Link
+              to={element.link}
+              className={styles['navbar-item']}
+              key={element.name}
+            >
               {element.name}
             </Link>
           ))
@@ -35,22 +40,29 @@ const Navbar = () => {
   };
 
   return (
-    <header className="header">
-      <div className="navbar">
-        <h1 className="logo logo-sm-margin">
+    <header className={styles.header}>
+      <div className={styles.navbar}>
+        <h1 className={`${appStyles.logo} ${appStyles['logo-sm-margin']}`}>
           <Link to="/">IT Ticketing Systems Inc.</Link>
         </h1>
         <NavLinks />
-        <div className="navbar-actions">
+        <div className={styles['navbar-actions']}>
           {
           auth.user
             ? (
-              <Link to="/" onClick={auth.logout} className="navbar-item">
+              <Link
+                to="/"
+                onClick={auth.logout}
+                className={styles['navbar-item']}
+              >
                 Logout
               </Link>
             )
             : (
-              <Link to="/login" className="navbar-item">
+              <Link
+                to="/login"
+                className={styles['navbar-item']}
+              >
                 Login
               </Link>
             )

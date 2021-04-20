@@ -1,57 +1,27 @@
 import React, { Fragment } from 'react';
 import Navbar from 'components/Navbar';
 
-import './Home.css';
-
+import styles from './Home.css';
+// The simpler solution to ticketing problems
 function Home() {
   return (
     <Fragment>
       <Navbar />
-      <main className="home-page">
-        <h2 className="home-title">About Us</h2>
-        <p className="home-body">
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
-          words about the company words about the company words about the company
+      <main className={styles['home-page']}>
+        <h2 className={styles['home-title']}>About Us</h2>
+        <p className={styles['home-body']}>
+          ItTicketing strives to provide a simpler and more pleasant
         </p>
 
-        <h2 className="home-title">How to Contact Us</h2>
-        <p id="contact-info" className="home-body">
-          contact information
-          <br />
-          contact information
-          <br />
-          contact information
-          <br />
-          contact information
-        </p>
+        <h2 className={styles['home-title']}>Contact</h2>
+        <form className={styles['home-body']}>
+          <input
+            className={styles['home-from']}
+          />
+          <textarea
+            className={styles['home-contact']}
+          />
+        </form>
       </main>
     </Fragment>
   );

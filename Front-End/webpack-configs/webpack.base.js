@@ -84,6 +84,11 @@ const base = {
             options: {
               sourceMap: true,
               importLoaders: 1,
+              modules: process.env.NODE_ENV === 'development' ? {
+                localIdentName: '[name]__[local]__[hash:base64:4]',
+              } : {
+                localIdentName: '[hash:base64]',
+              },
             },
           },
           PostCSSLoader,

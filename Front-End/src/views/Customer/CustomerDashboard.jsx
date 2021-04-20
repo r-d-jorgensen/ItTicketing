@@ -22,14 +22,14 @@ import TicketDetailView from 'views/Customer/TicketDetailView';
 import { useAuth } from '../../services/auth';
 import request from '../../services/api';
 
-import './CustomerDashboard.css';
+import styles from './CustomerDashboard.css';
 
 const isDEV = process.env.NODE_ENV === 'development';
 
 function LoadingView() {
   return (
-    <div className="it-loading-view">
-      <span className="it-lv-message">
+    <div className={styles['it-loading-view']}>
+      <span className={styles['it-lv-message']}>
         Loading...
       </span>
     </div>
@@ -59,6 +59,7 @@ function CustomerDashboardView({
       }
       setDeleteId(null);
     }, false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const wantDelete = async (id, target) => {
@@ -94,23 +95,26 @@ function CustomerDashboardView({
     return (
       <li
         key={ticket.id}
-        className="it-cdv-tk-item"
+        className={styles.ticket}
       >
-        <div className="cdv-tk-item-prim-line">
+        <div className={styles['cdv-tk-item-prim-line']}>
           <Link
-            className="cdv-tk-item-title"
+            className={styles['ticket-title']}
             to={`/dashboard/ticket/${ticket.id}`}
           >
             {ticket.title}
           </Link>
-          <span className="cdv-tk-item-id">{ticket.id}</span>
+          <span className={styles['ticket-id']}>{ticket.id}</span>
         </div>
-        <div className="cdv-tk-item-sec-line">
-          <span className="cdv-tk-item-odate">{displayDate}</span>
+        <div className={styles['cdv-tk-item-sec-line']}>
+          <span className={styles['ticket-date']}>{displayDate}</span>
         </div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={'tk-item-delete'.concat([(deleteId && deleteId === id) ? ' tk--item-want-delete' : ''])}
+          className={
+            styles['tk-item-delete']
+              .concat([(deleteId && deleteId === id) ? ` ${styles['tk--item-want-delete']}` : ''])
+          }
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -123,28 +127,34 @@ function CustomerDashboardView({
   });
 
   return (
-    <div className="it-cdv-wrapper">
-      <div className="it-cdv-tk-container">
-        <div className="it-cdv-tk-filters">
-          <div className="it-cdv-filters-left">
+    <div className={styles.view}>
+      <div className={styles.content}>
+        <div className={styles.filters}>
+          <div className={styles['filters-left']}>
             <button
               onClick={() => { setTicketViewType('open'); }}
-              className={'it-cdv-tk-btn'.concat([ticketViewType === 'open' ? ' it-cdv-tk-btn--active' : ''])}
+              className={
+                styles.button
+                  .concat([ticketViewType === 'open' ? ` ${styles['button--active']}` : ''])
+                }
               type="button"
             >
               Open
             </button>
             <button
               onClick={() => { setTicketViewType('closed'); }}
-              className={'it-cdv-tk-btn'.concat([ticketViewType === 'closed' ? ' it-cdv-tk-btn--active' : ''])}
+              className={
+                styles.button
+                  .concat([ticketViewType === 'closed' ? ` ${styles['button--active']}` : ''])
+              }
               type="button"
             >
               Closed
             </button>
           </div>
-          <div className="it-cdv-filters-right" />
+          <div className={styles['filters-right']} />
         </div>
-        <ul className="it-cdv-tk-list">
+        <ul className={styles['ticket-list']}>
           {ticketElements}
         </ul>
       </div>
@@ -237,17 +247,17 @@ function CustomerDashboard({ setShowModal }) {
   // TODO: don't pass instances to detail view probably
   return (
     <Fragment>
-      <div className="cdv-tk-action-line">
+      <div className={styles['cdv-tk-action-line']}>
         <button
           type="button"
-          className="cdv-tk-new-btn"
+          className={styles['new-ticket-btn']}
           onClick={() => { setShowModal(true); }}
         >
           Open New Ticket
         </button>
         <input
           name="tk-search"
-          className="cdv-tk-search"
+          className={styles['cdv-tk-search']}
           placeholder="Search Open Tickets"
           type="text"
         />
@@ -280,7 +290,7 @@ export default () => {
   return (
     <Fragment>
       <Navbar />
-      <main className="it-customer-dashboard">
+      <main className={styles.dashboard}>
         { user && (
           <CustomerDashboard setShowModal={setShowModal} />
         )}

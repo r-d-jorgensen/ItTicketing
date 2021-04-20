@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react';
 import Navbar from 'components/Navbar';
-import './AccountRetrival.css';
+import styles from './AccountRetrival.css';
 
 function AccountRetrival() {
   return (
     <Fragment>
       <Navbar />
-      <main className="account-retrival-page">
+      <main className={styles['account-retrival-page']}>
         <div>
           <h3>If Lost Password</h3>
           <p>

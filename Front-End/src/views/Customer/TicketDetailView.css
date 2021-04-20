@@ -1,19 +1,18 @@
-.it-ticket-detail-view svg {
+.view svg {
   width: 24px;
   height: 24px;
 }
 
-.it-ticket-detail-view {
-  position: relative;
+.view {
   font-family: acumin-pro, sans-serif;
   min-width: 400px;
   width: 60%;
   max-width: 1200px;
   padding: 0 32px;
-  height: calc(100% - 70px);
+  height: calc(100vh - 70px - 4rem - 3.5rem);
 }
 
-.it-tdv-content {
+.content {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -25,25 +24,30 @@
   min-height: 280px;
 }
 
-.it-tdv-title {
+.ticket-title {
   text-align: left;
   margin: 1rem 1rem 0.9rem;
 }
 
-.it-tdv-id {
+.ticket-id {
   margin-left: 4px;
   font-weight: lighter;
   color: #808080;
 }
 
-.it-tdv-hv {
+.ticket-description {
+  text-align: left;
+  margin: -0.25rem 1rem 1.3rem;
+}
+
+.message-area {
   flex-grow: 1;
   position: relative;
   margin: 0 1rem 1rem;
   overflow: hidden;
 }
 
-.it-tdv-message {
+.message-input {
   padding: 8px;
   flex-grow: 1;
   background-color: #bdbdbd0e;
@@ -56,14 +60,14 @@
   transition-timing-function: cubic-bezier(0.1, 0, 0.25, 1);
 }
 
-.it-tdv-message:focus {
+.message-input:focus {
   outline: 0;
   background-color: white;
   appearance: none;
   border-radius: 3px;
 }
 
-.it-tdv-btn {
+.message-send-btn {
   color: white;
   background-color: #498D64;
   border: 1px solid #3C7C55;
@@ -75,17 +79,17 @@
   transition-timing-function: ease-out;
 }
 
-.it-tdv-btn:hover {
+.message-send-btn:hover {
   background-color: #57A85F;
   box-shadow: 0 0 5px rgba(4, 4, 4, 0.33);
 }
 
-.it-tdv-btn:active {
+.message-send-btn:active {
   background-color: #3C7C55;
   box-shadow: 0 0 3px rgba(4, 4, 4, 0.35);
 }
 
-.it-tdv-btn:disabled {
+.message-send-btn:disabled {
   opacity: 95%;
   pointer-events: none;
   background-color: #E0E0E0;
@@ -94,7 +98,7 @@
   box-shadow: 0 0 0 rgba(8, 8, 8, 0.1);
 }
 
-.it-tdv-body {
-  text-align: left;
-  margin: -0.25rem 1rem 1.3rem;
+.message-controls {
+  display: flex;
+  height: 3.5rem;
 }

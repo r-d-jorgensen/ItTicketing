@@ -1,26 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './MessageView.css';
+import styles from './MessageView.css';
 
 export default function MessageView({ messages }) {
   return (
-    <div className="it-message-view-wrapper">
-      <div className="it-message-view-content">
+    <div className={styles.wrapper}>
+      <div className={styles.content}>
         {messages.map((msg) => {
           const { author } = msg;
           const fullName = `${author.first_name} ${author.last_name}`;
           const dispDate = new Date(msg.created);
           return (
             <div
-              className="it-msg-cell"
+              className={styles.cell}
               key={msg.id}
             >
-              <div className="msg-cell-header">
-                <span className="msg-cell-name">{fullName}</span>
-                <span className="msg-cell-date">{dispDate.toLocaleString()}</span>
+              <div className={styles['cell-header']}>
+                <span className={styles['cell-name']}>{fullName}</span>
+                <span className={styles['cell-date']}>{dispDate.toLocaleString()}</span>
               </div>
-              <div className="msg-cell-body">{msg.message}</div>
+              <div className={styles['cell-body']}>{msg.message}</div>
             </div>
           );
         })}

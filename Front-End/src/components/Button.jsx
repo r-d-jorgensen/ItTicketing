@@ -1,17 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './Button.css';
+import styles from './Button.css';
 
 function Button({ disabled = false, children, ...rest }) {
   // TODO: add better props
 
   /* eslint-disable react/button-has-type, react/jsx-props-no-spreading */
   return (
-    <div className={'it-btn-cntnr'.concat([disabled ? ' it-btn-cntnr-disabled' : ''])}>
+    <div
+      className={
+        styles['it-btn-cntnr']
+          .concat([disabled ? ` ${styles['it-btn-cntnr-disabled']}` : ''])
+      }
+    >
       <button
         disabled={disabled}
-        className="it-btn"
+        className={styles['it-btn']}
         {...rest}
       >
         {children}

@@ -5,12 +5,12 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import { useAuth } from '../../services/auth';
 import request from '../../services/api';
 
 import Button from '../../components/Button';
 
-import './NewFormModal.css';
-import { useAuth } from '../../services/auth';
+import styles from './NewFormModal.css';
 
 export default function NewFormModal({ show, setShow }) {
   const history = useHistory();
@@ -50,11 +50,11 @@ export default function NewFormModal({ show, setShow }) {
   }
 
   return (
-    <div className={'it-nfm'.concat([show ? ' nfm--active' : ''])}>
-      <div className="nfm-wrapper">
+    <div className={styles.nfm.concat([show ? ` ${styles['nfm--active']}` : ''])}>
+      <div className={styles.wrapper}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="nfm-close"
+          className={styles['nfm-close']}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -66,26 +66,26 @@ export default function NewFormModal({ show, setShow }) {
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
         </svg>
-        <span className="nfm-header">New Ticket</span>
-        <form className="nfm-form" onSubmit={submitTicket}>
-          <div className="nfm-group">
-            <div className="nfm-unit">
-              <label htmlFor="nfmTitle" className="nfm-label">Title</label>
+        <span className={styles['nfm-header']}>New Ticket</span>
+        <form className={styles['nfm-form']} onSubmit={submitTicket}>
+          <div className={styles['nfm-group']}>
+            <div className={styles['nfm-unit']}>
+              <label htmlFor="nfmTitle" className={styles['nfm-label']}>Title</label>
               <input
-                className="nfm-input"
+                className={styles['nfm-input']}
                 id="nfmTitle"
                 name="Title"
                 value={title}
                 onChange={(e) => { setTitle(e.target.value); }}
               />
             </div>
-            <div className="nfm-unit">
-              <label htmlFor="nfmSeverity" className="nfm-label">Severity</label>
+            <div className={styles['nfm-unit']}>
+              <label htmlFor="nfmSeverity" className={styles['nfm-label']}>Severity</label>
               <select
                 id="nfmSeverity"
                 name="Severity"
                 defaultValue="1"
-                className="nfm-select"
+                className={styles['nfm-select']}
                 onChange={({ target: { value } }) => { setSelectedSeverity(value); }}
               >
                 <option value="1">Low</option>
@@ -95,15 +95,15 @@ export default function NewFormModal({ show, setShow }) {
               </select>
             </div>
           </div>
-          <label htmlFor="nfmBody" className="nfm-label">Description</label>
+          <label htmlFor="nfmBody" className={styles['nfm-label']}>Description</label>
           <textarea
             id="nfmBody"
             name="Description"
-            className="nfm-body"
+            className={styles['nfm-body']}
             value={body}
             onChange={(e) => { setBody(e.target.value); }}
           />
-          <div className="nfm-group">
+          <div className={styles['nfm-group']}>
             <Button
               type="submit"
               disabled={title === '' || body === ''}
@@ -114,7 +114,7 @@ export default function NewFormModal({ show, setShow }) {
         </form>
       </div>
       <div
-        className="nfm-background"
+        className={styles['nfm-background']}
         onClick={() => {
           setShow(false);
           setTitle('');

@@ -3,7 +3,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Button from '../../components/Button';
 import { useAuth } from '../../services/auth';
-import './TicketDisplay.css';
+import styles from './TicketDisplay.css';
 
 const TICKET_API_URL = `${process.env.TICKET_API_URL}/api`;
 
@@ -26,24 +26,24 @@ const TicketView = ({tickets}) => {
   }
 
   return (
-    <div className="tickets-container">
+    <div className={styles['tickets-container']}>
       <h1 id="main-title">Tickets</h1>
       {tickets.map((ticket) => {
         //remove when api give data on ticketOwner
         const ticketOwner = {user_id: 1234, company: 'Big Tech', first_name: 'Bob', last_name: 'Bill'};
         return (
-          <div key={ticket.id} className="active-ticket">
-            <h3 className="main-info" id="ticket-title" >{ticket.title}</h3>
-            <div className="ticket-body">
-              <h4 className="main-info" >Ticket ID - {ticket.id}</h4>
-              <p className="main-info" >
+          <div key={ticket.id} className={styles['active-ticket']}>
+            <h3 className={styles['main-info']} id="ticket-title" >{ticket.title}</h3>
+            <div className={styles['ticket-body']}>
+              <h4 className={styles['main-info']} >Ticket ID - {ticket.id}</h4>
+              <p className={styles['main-info']} >
                 <b>Status - </b> {ticket.status === 0 ? 'Closed' : 'Open' }
                 &nbsp;<b>Priority - </b>{severityTraslation(ticket.ticket_severity)}
               </p>
-              <p className="main-info"><b>Date Created - </b> {new Date(ticket.created).toUTCString()}</p>
-              <p className="main-info" ><b>{ticketOwner.company}</b>: 
+              <p className={styles['main-info']}><b>Date Created - </b> {new Date(ticket.created).toUTCString()}</p>
+              <p className={styles['main-info']} ><b>{ticketOwner.company}</b>: 
                 {ticketOwner.user_id} - {ticketOwner.first_name} {ticketOwner.last_name}</p>
-              <p className="ticket-detail" >&emsp;{ticket.body}</p>
+              <p className={styles['ticket-detail']} >&emsp;{ticket.body}</p>
               <TicketNotesView
                 token={token}
                 ticketID={ticket.id}
@@ -117,7 +117,7 @@ const TicketNotesView = ({ticketID, activeDetails, setActiveDetails, handleDetai
     return (
     <div>
       <h3>Error Calling Server</h3>
-      <p className="error">{`${notesError}`}</p>
+      <p className={styles.error}>{`${notesError}`}</p>
     </div>
     );
   }
@@ -125,7 +125,7 @@ const TicketNotesView = ({ticketID, activeDetails, setActiveDetails, handleDetai
   if (parseInt(activeDetails, 10) !== ticketID) {
     return (
       <button
-        className="ticket-button details-button"
+        className={`${styles['ticket-button']} ${styles['details-button']}`}
         type="button"
         id={ticketID}
         onClick={handleDetails}>
@@ -137,17 +137,17 @@ const TicketNotesView = ({ticketID, activeDetails, setActiveDetails, handleDetai
   return (
     <div >
       {ticketNotes.map((note) =>
-      <div key={note.note_id} className="ticket-detail" >
+      <div key={note.note_id} className={styles['ticket-detail']} >
         <h5>{note.title}: {noteOwner.userID} - {noteOwner.firstName} {noteOwner.lastName}</h5>
         <p>&emsp;{note.body}</p>
       </div>,
       )}
-      <textarea id="ticket-input" className="textarea" onChange={handleNoteInfo}/>
-      <div className="button-container" >
-        <button className="ticket-button change-button" type="button" onClick={handleUpdate}>Update</button>
-        <button className="ticket-button change-button" type="button" onClick={handleClose}>Close</button>
+      <textarea id="ticket-input" className={styles.textarea} onChange={handleNoteInfo}/>
+      <div className={styles['button-container']}>
+        <button className={`${styles['ticket-button']} ${styles['change-button']}`} type="button" onClick={handleUpdate}>Update</button>
+        <button className={`${styles['ticket-button']} ${styles['change-button']}`} type="button" onClick={handleClose}>Close</button>
       </div>
-      <Button className="ticket-button details-button" id={ticketID} onClick={handleDetails}>Collapse Details</Button>
+      <Button className={`${styles['ticket-button']} ${styles['details-button']}`} id={ticketID} onClick={handleDetails}>Collapse Details</Button>
     </div>
   );
 };

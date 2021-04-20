@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../services/auth';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import './Login.css';
+
+import styles from './Login.css';
+import appStyles from '../../App.css';
 
 function Login() {
   const auth = useAuth();
@@ -28,22 +30,22 @@ function Login() {
   return (
     <Fragment>
       <header>
-        <h1 className="logo">
+        <h1 className={appStyles.logo}>
           <Link to="/">IT Ticketing Systems Inc.</Link>
         </h1>
       </header>
-      <main className="login-page">
-        <div className="login-container">
-          <span className="login-header">Log in to your account</span>
-          <form className="login-form" onSubmit={handleLoginSubmit}>
-            <label htmlFor="loginUsername" className="login-label">Username</label>
+      <main className={styles['login-page']}>
+        <div className={styles['login-container']}>
+          <span className={styles['login-header']}>Log in to your account</span>
+          <form className={styles['login-form']} onSubmit={handleLoginSubmit}>
+            <label htmlFor="loginUsername" className={styles['login-label']}>Username</label>
             <Input
               id="loginUsername"
               name="Username"
               value={username}
               onChange={(e) => { setInput('username', e.target.value); }}
             />
-            <label htmlFor="loginPassword" className="login-label">Password</label>
+            <label htmlFor="loginPassword" className={styles['login-label']}>Password</label>
             <Input
               id="loginPassword"
               name="Password"
@@ -59,8 +61,8 @@ function Login() {
               Login
             </Button>
           </form>
-          <Link className="login-retrieval" to="/accountRetrival">Forgot your username or password?</Link>
-          <span className="login-register">
+          <Link className={styles['login-retrieval']} to="/accountRetrival">Forgot your username or password?</Link>
+          <span className={styles['login-register']}>
             Don&apos;t have an account?
             <Link to="/registration">Register Here</Link>
           </span>

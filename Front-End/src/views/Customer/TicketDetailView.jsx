@@ -12,7 +12,7 @@ import MessageView from '../../components/MessageView';
 import { useAuth } from '../../services/auth';
 import request from '../../services/api';
 
-import './TicketDetailView.css';
+import styles from './TicketDetailView.css';
 
 export default function TicketDetailView({ ticketInstances, socket }) {
   const { ticketId } = useParams();
@@ -71,27 +71,27 @@ export default function TicketDetailView({ ticketInstances, socket }) {
 
   /* eslint-disable jsx-a11y/no-autofocus */
   return (
-    <div className="it-ticket-detail-view">
-      <div className="it-tdv-content">
-        <div className="it-tdv-details">
-          <h2 className="it-tdv-title">
+    <div className={styles.view}>
+      <div className={styles.content}>
+        <div className={styles['ticket-details']}>
+          <h2 className={styles['ticket-title']}>
             <span>{ticket.title}</span>
-            <span className="it-tdv-id">{`#${ticket.id}`}</span>
+            <span className={styles['ticket-id']}>{`#${ticket.id}`}</span>
           </h2>
-          <p className="it-tdv-body">{ticket.body}</p>
+          <p className={styles['ticket-description']}>{ticket.body}</p>
         </div>
-        <div className="it-tdv-hv">
+        <div className={styles['message-area']}>
           <MessageView messages={messages} />
-          <div className="it-tdv-bottom">
+          <div className={styles['message-controls']}>
             <textarea
               autoFocus
               placeholder="Enter Message"
               name="Message"
-              className="it-tdv-message"
+              className={styles['message-input']}
               ref={inputEl}
             />
             <button
-              className="it-tdv-btn"
+              className={styles['message-send-btn']}
               type="button"
               onClick={sendMessage}
             >

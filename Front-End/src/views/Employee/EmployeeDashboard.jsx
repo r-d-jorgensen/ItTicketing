@@ -5,7 +5,7 @@ import Navbar from 'components/Navbar';
 import Input from '../../components/Input';
 import TicketDisplay from './TicketDisplay';
 import { useAuth } from '../../services/auth';
-import './EmployeeDashboard.css';
+import styles from './EmployeeDashboard.css';
 
 const TICKET_API_URL = `${process.env.TICKET_API_URL}/api`;
 
@@ -24,14 +24,14 @@ const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
   };
 
   return (
-    <div className="page-button-container" >
-      <h2 className="control-header" >Pages</h2>
-      <div className="page-button-display" >
+    <div className={styles['page-button-container']}>
+      <h2 className={styles['control-header']}>Pages</h2>
+      <div className={styles['page-button-display']}>
         {Array.from({ length: numPages }, (_, i) => i + 1).map((pageNumber) =>
           <button
             key={pageNumber}
             type="button"
-            className="page-button"
+            className={styles['page-button']}
             value={pageNumber}
             onClick={handlePageEvent} >
             {(pageNumber).toString()}
@@ -39,19 +39,19 @@ const PageButtons = ({tickets, setPage, ticketsPerPage}) => {
         )}
         <Input
           name="userPage"
-          className="user-page-input"
+          className={styles['user-page-input']}
           value={userPage}
           type="number"
           onChange={handleUserPage} />
         <button
           type="button"
           name="customPageRequest"
-          className="page-button"
+          className={styles['page-button']}
           value={userPage}
           onClick={handlePageEvent}
         >GO
         </button>
-        {userPageError ? <p className="error" ><b>{userPageError}</b></p> : ''}
+        {userPageError ? <p className={styles.error} ><b>{userPageError}</b></p> : ''}
       </div>
     </div>
   );
@@ -116,28 +116,28 @@ const FilterView = ({setIsLoading, setTickets, setTicketError}) => {
   };
 
   return (
-    <div className="control-section">
-      <h2 className="control-header" >Filters</h2>
-      <div className="grid-display">
+    <div className={styles['control-section']}>
+      <h2 className={styles['control-header']} >Filters</h2>
+      <div className={styles['grid-display']}>
         {filterRadioSets.map(({ name, values }) =>
-        <div key={name} className="grid-set" >
-          <h5 className="grid-setname">{name}</h5>
+        <div key={name} className={styles['grid-set']} >
+          <h5 className={styles['grid-setname']}>{name}</h5>
           {values.map((value) =>
-          <div key={value} className="grid-values">
+          <div key={value} className={styles['grid-values']}>
             <input
-              className="grid-input"
+              className={styles['grid-input']}
               type="radio"
               name={name}
               value={value}
               defaultChecked={value === 'All' || value === 'Open'}
               onClick={handleParamChange} />
-            <label className="grid-label" htmlFor={value}>{value}&nbsp;</label>
+            <label className={styles['grid-label']} htmlFor={value}>{value}&nbsp;</label>
           </div>,
           )}
         </div>,
         )}
       </div>
-      <button type="button" className="control-button" onClick={resetFilters} >RESET FILTERS</button>
+      <button type="button" className={styles['control-button']} onClick={resetFilters} >RESET FILTERS</button>
     </div>
   );
 };
@@ -151,16 +151,16 @@ const SortView = ({setSorter}) => {
   const handlePrioityChange = ({ target: { value } }) => { setSorter(value); };
 
   return (
-    <div className="control-section">
-      <h2 className="control-header" >Sorters</h2>
-      <div className="grid-display">
+    <div className={styles['control-section']}>
+      <h2 className={styles['control-header']} >Sorters</h2>
+      <div className={styles['grid-display']}>
         {sorterSets.map(({ name, values }) =>
-        <div key={name} className="grid-set" >
-          <h5 className="grid-setname">{name}</h5>
+        <div key={name} className={styles['grid-set']} >
+          <h5 className={styles['grid-setname']}>{name}</h5>
           {values.map((value) =>
-          <div key={value} className="grid-values">
-            <input className="grid-input" type="radio" name={name} value={value} onClick={handlePrioityChange} />
-            <label className="grid-lable" htmlFor={value}>{value}&nbsp;</label>
+          <div key={value} className={styles['grid-values']}>
+            <input className={styles['grid-input']} type="radio" name={name} value={value} onClick={handlePrioityChange} />
+            <label className={styles['grid-lable']} htmlFor={value}>{value}&nbsp;</label>
           </div>,
           )}
         </div>,
@@ -187,21 +187,21 @@ const EmployeeDashboard = () => {
   }, [token]);
 
   const MainDisplay = () => {
-    if (isLoading) { return <h1 className="nonTicket-display">Loading Tickets</h1>; } 
+    if (isLoading) { return <h1 className={styles['nonTicket-display']}>Loading Tickets</h1>; } 
     if (ticketError) {
       return (
-        <div className="nonTicket-display">
+        <div className={styles['nonTicket-display']}>
           <h1>An Error Occoured when calling Server</h1>
-          <h4 className="error">{`${ticketError}`}</h4>
+          <h4 className={styles.error}>{`${ticketError}`}</h4>
         </div>
       );
     }
     if (tickets.length === 0) {
       return (
-        <div className="nonTicket-display">
-          <h1 className="error">There are no Tickets that match those filters</h1>
+        <div className={styles['nonTicket-display']}>
+          <h1 className={styles.error}>There are no Tickets that match those filters</h1>
           <h2>Or</h2>
-          <h1 className="success">There are no more tickets assigned to You</h1>
+          <h1 className={styles.success}>There are no more tickets assigned to You</h1>
         </div>
       );
     }
@@ -219,8 +219,8 @@ const EmployeeDashboard = () => {
   return (
     <Fragment>
       <Navbar />
-      <main className="employee-dashboard">
-        <div className="controls-container">
+      <main className={styles['employee-dashboard']}>
+        <div className={styles['controls-container']}>
           <PageButtons setPage={setPage} ticketsPerPage={ticketsPerPage} tickets={tickets}/>
           <FilterView
             setIsLoading={setIsLoading}

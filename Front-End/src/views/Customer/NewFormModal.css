@@ -1,14 +1,7 @@
-.it-nfm {
+.nfm {
   opacity: 0;
   pointer-events: none;
-}
 
-.it-nfm.nfm--active {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.it-nfm {
   position: fixed;
   top: 0;
   left: 0;
@@ -21,7 +14,12 @@
   align-items: center;
 }
 
-.nfm-wrapper {
+.nfm--active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.wrapper {
   position: relative;
   display: flex;
   flex-direction: column;
