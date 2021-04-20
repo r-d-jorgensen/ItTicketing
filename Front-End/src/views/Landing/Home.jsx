@@ -1,27 +1,74 @@
 import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from 'components/Navbar';
 
 import styles from './Home.css';
-// The simpler solution to ticketing problems
+
 function Home() {
   return (
     <Fragment>
       <Navbar />
-      <main className={styles['home-page']}>
-        <h2 className={styles['home-title']}>About Us</h2>
-        <p className={styles['home-body']}>
-          ItTicketing strives to provide a simpler and more pleasant
-        </p>
-
-        <h2 className={styles['home-title']}>Contact</h2>
-        <form className={styles['home-body']}>
-          <input
-            className={styles['home-from']}
-          />
-          <textarea
-            className={styles['home-contact']}
-          />
-        </form>
+      <main className={styles.home}>
+        <div className={styles.content}>
+          <p className={styles.intro}>
+            A
+            <span className={styles.emphasis}> simpler </span>
+            ticketing
+            <br />
+            software experience
+          </p>
+          <p className={styles.subtitle}>
+            It Ticketing solutions strives to provide a more fluid experience
+            as a simpler solution to ticketing problems.
+          </p>
+          <div className={styles.actions}>
+            <Link
+              className={styles.link}
+              to="/login"
+            >
+              Log In
+            </Link>
+            or
+            <Link
+              className={styles.link}
+              to="/registration"
+            >
+              Sign Up
+            </Link>
+          </div>
+          <hr />
+          <h2 className={styles['home-title']}>Contact</h2>
+          <form className={styles.body}>
+            <label
+              className={styles.label}
+              htmlFor="homeFrom"
+            >
+              From
+            </label>
+            <input
+              id="homeFrom"
+              name="from"
+              className={styles['home-from']}
+            />
+            <label
+              className={styles.label}
+              htmlFor="homeContact"
+            >
+              Message
+            </label>
+            <textarea
+              id="homeContact"
+              name="message"
+              className={styles['home-contact']}
+            />
+            <button
+              className={styles.submit}
+              type="submit"
+            >
+              Send Message
+            </button>
+          </form>
+        </div>
       </main>
     </Fragment>
   );
