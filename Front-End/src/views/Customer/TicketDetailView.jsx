@@ -114,6 +114,7 @@ TicketDetailView.propTypes = {
       last_name: PropTypes.string.isRequired,
       phone_number: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
+      company: PropTypes.string.isRequired,
     })),
   })).isRequired,
   // eslint-disable-next-line react/forbid-prop-types

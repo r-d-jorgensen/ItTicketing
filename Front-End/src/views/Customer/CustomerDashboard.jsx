@@ -313,6 +313,7 @@ CustomerDashboardView.propTypes = {
       last_name: PropTypes.string.isRequired,
       phone_number: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
+      company: PropTypes.string.isRequired,
     })),
   })).isRequired,
   ticketSplitIds: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
