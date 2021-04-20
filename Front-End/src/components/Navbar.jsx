@@ -9,11 +9,17 @@ const DEVELOPMENT = process.env.NODE_ENV === 'development';
 const Navbar = () => {
   const auth = useAuth();
   const NavLinks = () => {
-    const navLandinglinks = DEVELOPMENT ? [
+    let navLandinglinks = DEVELOPMENT ? [
       { link: '/', name: 'Home' },
       { link: '/registration', name: 'Registration' },
       { link: '/accountRetrival', name: 'Account Retrival' },
     ] : [];
+
+    if (auth.user && auth.user.user_type === 'customer') {
+      navLandinglinks = [
+        { link: '/dashboard', name: 'Dashboard' },
+      ].concat(navLandinglinks);
+    }
 
     return (
       <nav className="navbar-links">
