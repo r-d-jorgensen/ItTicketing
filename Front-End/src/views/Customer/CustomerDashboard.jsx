@@ -28,10 +28,12 @@ const isDEV = process.env.NODE_ENV === 'development';
 
 function LoadingView() {
   return (
-    <div className={styles['it-loading-view']}>
-      <span className={styles['it-lv-message']}>
-        Loading...
-      </span>
+    <div className={styles['loading-view']}>
+      <div className={styles['loading-view-content']}>
+        <span className={styles['lv-message']}>
+          Loading...
+        </span>
+      </div>
     </div>
   );
 }

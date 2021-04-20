@@ -126,11 +126,6 @@
   height: 100%;
 }
 
-.it-loading-view {
-  font-size: 2rem;
-  font-weight: bold;
-}
-
 .cdv-tk-item-prim-line,
 .cdv-tk-item-sec-line {
   display: flex;
@@ -235,4 +230,43 @@
   border-color: #57A85F;
   appearance: none;
   border-radius: 3px;
+}
+
+.loading-view {
+  font-size: 2rem;
+  font-weight: bold;
+
+  min-width: 400px;
+  width: 60%;
+  max-width: 1200px;
+  height: calc(100vh - 70px - 4rem - 3.5rem);
+}
+
+.loading-view-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #FAFAFA;
+  border: 1px solid #B5CABD;
+  border-radius: 3px;
+  box-shadow: 0 3px 3px rgba(16, 16, 16, 0.1);
+  height: 100%;
+}
+
+@keyframes float {
+  0% { transform: translateY(-5%); }
+  25% { transform: translateY(12.5%); }
+  50% { transform: translateY(25%); }
+  90%, 100% { transform: translateY(-5%); }
+}
+
+.lv-message {
+  font-size: 2.88rem;
+  font-family: rift, sans-serif;
+  letter-spacing: 0.6rem;
+  animation-name: float;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
 }
