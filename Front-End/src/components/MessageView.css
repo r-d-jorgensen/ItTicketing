@@ -1,0 +1,38 @@
+.it-message-view-wrapper {
+  padding: 0;
+  height: calc(100% - 4rem);
+}
+
+.it-message-view-content {
+  height: 100%;
+  border: 1px solid #DBE5DF;
+  background-color: #F6F8F7;
+  overflow-y: auto;
+}
+
+.it-msg-cell {
+  padding: 8px;
+  text-align: left;
+}
+
+.msg-cell-name {
+  font-weight: bolder;
+}
+
+.msg-cell-date {
+  font-size: 0.75rem;
+  margin-left: 6px;
+  color: #808080;
+  transition: color 123ms linear;
+}
+
+.it-msg-cell:hover .msg-cell-date {
+  color: #6B6B6B;
+}
+
+.msg-cell-body {
+}
+
+.it-tdv-bottom {
+  display: flex;
+}

@@ -4,19 +4,22 @@
 }
 
 .it-ticket-detail-view {
+  position: relative;
   font-family: acumin-pro, sans-serif;
-
+  height: 100%;
   max-width: 1200px;
-  margin: 0 auto;
   padding: 0 32px;
+  height: calc(100% - 70px);
 }
 
 .it-tdv-content {
+  display: flex;
+  flex-direction: column;
   background-color: #FAFAFA;
   border: 1px solid #B5CABD;
   border-radius: 3px;
   box-shadow: 0 3px 3px rgba(16, 16, 16, 0.1);
-  overflow: hidden;
+  height: 100%;
 }
 
 .it-tdv-title {
@@ -28,4 +31,67 @@
   margin-left: 4px;
   font-weight: lighter;
   color: #808080;
+}
+
+.it-tdv-hv {
+  position: relative;
+  margin: 0 1rem 1rem;
+  overflow: hidden;
+  height: 100%;
+}
+
+.it-tdv-message {
+  padding: 8px;
+  flex-grow: 1;
+  background-color: #bdbdbd0e;
+  border: 1px solid #DBE5DF;
+  border-top: 0;
+  resize: none;
+
+  transition-property: border, box-shadow, background-color;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.1, 0, 0.25, 1);
+}
+
+.it-tdv-message:focus {
+  outline: 0;
+  background-color: white;
+  appearance: none;
+  border-radius: 3px;
+}
+
+.it-tdv-btn {
+  color: white;
+  background-color: #498D64;
+  border: 1px solid #3C7C55;
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(4, 4, 4, 0.28);
+
+  transition-property: background-color, box-shadow;
+  transition-duration: 128ms;
+  transition-timing-function: ease-out;
+}
+
+.it-tdv-btn:hover {
+  background-color: #57A85F;
+  box-shadow: 0 0 5px rgba(4, 4, 4, 0.33);
+}
+
+.it-tdv-btn:active {
+  background-color: #3C7C55;
+  box-shadow: 0 0 3px rgba(4, 4, 4, 0.35);
+}
+
+.it-tdv-btn:disabled {
+  opacity: 95%;
+  pointer-events: none;
+  background-color: #E0E0E0;
+  border-color: #BDBDBD;
+  color: #525252;
+  box-shadow: 0 0 0 rgba(8, 8, 8, 0.1);
+}
+
+.it-tdv-body {
+  text-align: left;
+  margin: -0.25rem 1rem 1.3rem;
 }

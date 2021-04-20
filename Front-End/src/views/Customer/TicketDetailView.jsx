@@ -7,7 +7,7 @@ import React, {
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import HistoryView from '../../components/HistoryView';
+import MessageView from '../../components/MessageView';
 
 import { useAuth } from '../../services/auth';
 import request from '../../services/api';
@@ -73,15 +73,26 @@ export default function TicketDetailView({ ticketInstances, socket }) {
             <span>{ticket.title}</span>
             <span className="it-tdv-id">{`#${ticket.id}`}</span>
           </h2>
+          <p className="it-tdv-body">{ticket.body}</p>
         </div>
-        <HistoryView messages={messages} />
-        <input
-          name="Message"
-          placeholder="Send Message"
-          ref={inputEl}
-          type="text"
-        />
-        <button type="button" onClick={sendMessage}>Send</button>
+        <div className="it-tdv-hv">
+          <MessageView messages={messages} />
+          <div className="it-tdv-bottom">
+            <textarea
+              placeholder="Enter Message"
+              name="Message"
+              className="it-tdv-message"
+              ref={inputEl}
+            />
+            <button
+              className="it-tdv-btn"
+              type="button"
+              onClick={sendMessage}
+            >
+              Send
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
