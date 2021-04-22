@@ -9,7 +9,7 @@
 
 .view {
   min-width: 400px;
-  width: 60%;
+  width: 80%;
   max-width: 1200px;
   padding: 0 32px;
 }
@@ -168,7 +168,7 @@
 
 .cdv-tk-action-line {
   min-width: 400px;
-  width: 60%;
+  width: 80%;
   height: 2.5rem;
   max-width: 1200px;
   padding: 0 32px;
