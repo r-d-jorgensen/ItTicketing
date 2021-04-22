@@ -24,37 +24,32 @@ const TicketView = ({tickets}) => {
       default: return 'Error in database storage of ticket severity';
     }
   }
-
+  const ticketOwner = {user_id: 1234, company: 'Big Tech', first_name: 'Bob', last_name: 'Bill'};
   return (
     <div className={styles['tickets-container']}>
-      <h1 id="main-title">Tickets</h1>
-      {tickets.map((ticket) => {
-        //remove when api give data on ticketOwner
-        const ticketOwner = {user_id: 1234, company: 'Big Tech', first_name: 'Bob', last_name: 'Bill'};
-        return (
-          <div key={ticket.id} className={styles['active-ticket']}>
-            <h3 className={styles['main-info']} id="ticket-title" >{ticket.title}</h3>
-            <div className={styles['ticket-body']}>
-              <h4 className={styles['main-info']} >Ticket ID - {ticket.id}</h4>
-              <p className={styles['main-info']} >
-                <b>Status - </b> {ticket.status === 0 ? 'Closed' : 'Open' }
-                &nbsp;<b>Priority - </b>{severityTraslation(ticket.ticket_severity)}
-              </p>
-              <p className={styles['main-info']}><b>Date Created - </b> {new Date(ticket.created).toUTCString()}</p>
-              <p className={styles['main-info']} ><b>{ticketOwner.company}</b>: 
-                {ticketOwner.user_id} - {ticketOwner.first_name} {ticketOwner.last_name}</p>
-              <p className={styles['ticket-detail']} >&emsp;{ticket.body}</p>
-              <TicketNotesView
-                token={token}
-                ticketID={ticket.id}
-                activeDetails={activeDetails}
-                setActiveDetails={setActiveDetails}
-                handleDetails={handleDetails}
-              />
-            </div>
-          </div>
-        );
-      })}
+      <h1 id="main-title">Ticket</h1>
+      {tickets.map((ticket) => 
+      <div key={ticket.id} className={styles['active-ticket']}>
+        <h3 className={styles['main-info']} id="ticket-title" >{ticket.title}</h3>
+        <div className={styles['ticket-body']}>
+          <h4 className={styles['main-info']} >Ticket ID - {ticket.id}</h4>
+          <p className={styles['main-info']} >
+            <b>Status - </b> {ticket.status === 0 ? 'Closed' : 'Open' }
+            &nbsp;<b>Priority - </b>{severityTraslation(ticket.ticket_severity)}
+          </p>
+          <p className={styles['main-info']}><b>Date Created - </b> {new Date(ticket.created).toUTCString()}</p>
+          <p className={styles['main-info']} ><b>{ticketOwner.company}</b>: 
+            {ticketOwner.user_id} - {ticketOwner.first_name} {ticketOwner.last_name}</p>
+          <p className={styles['ticket-detail']} >&emsp;{ticket.body}</p>
+          <TicketNotesView
+            token={token}
+            ticketID={ticket.id}
+            activeDetails={activeDetails}
+            setActiveDetails={setActiveDetails}
+            handleDetails={handleDetails}
+          />
+        </div>
+      </div>)}
     </div>
   );
 };

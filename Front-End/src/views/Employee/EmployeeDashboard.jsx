@@ -159,7 +159,12 @@ const SortView = ({setSorter}) => {
           <h5 className={styles['grid-setname']}>{name}</h5>
           {values.map((value) =>
           <div key={value} className={styles['grid-values']}>
-            <input className={styles['grid-input']} type="radio" name={name} value={value} onClick={handlePrioityChange} />
+            <input
+              className={styles['grid-input']}
+              type="radio"
+              name={name}
+              value={value}
+              onClick={handlePrioityChange} />
             <label className={styles['grid-lable']} htmlFor={value}>{value}&nbsp;</label>
           </div>,
           )}
@@ -221,13 +226,19 @@ const EmployeeDashboard = () => {
       <Navbar />
       <main className={styles['employee-dashboard']}>
         <div className={styles['controls-container']}>
-          <PageButtons setPage={setPage} ticketsPerPage={ticketsPerPage} tickets={tickets}/>
+          <PageButtons
+            setPage={setPage}
+            ticketsPerPage={ticketsPerPage}
+            tickets={tickets}/>
           <FilterView
             setIsLoading={setIsLoading}
             setTickets={setTickets}
             setTicketError={setTicketError}/>
           <SortView setSorter={setSorter}/>
-          <PageButtons setPage={setPage} ticketsPerPage={ticketsPerPage} tickets={tickets}/>
+          <PageButtons
+            setPage={setPage}
+            ticketsPerPage={ticketsPerPage}
+            tickets={tickets}/>
         </div>
         <MainDisplay />
       </main>
