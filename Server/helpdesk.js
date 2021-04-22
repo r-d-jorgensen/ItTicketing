@@ -401,9 +401,9 @@ app.post('/api/clientcreate', validateAuth,function(req, res) {
 	let ticket_severity;
 
 	try {
-		title  			= req.body.params.title;
-		body   			= req.body.params.body;
-		ticket_severity = req.body.params.ticket_severity;
+		title  			= req.body.title;
+		body   			= req.body.body;
+		ticket_severity = req.body.ticket_severity;
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
@@ -429,13 +429,13 @@ app.post('/api/clientdelete/:id', validateAuth, function(req, res) {
 		`SELECT user_id FROM ticket WHERE (user_id = ${user_id} AND ticket_id = ${ticket_id})`,
 		(err, [result]) => {
 			if (err || !(result && result.user_id === req.user.id)) {
-				res.status(401).json('Unauthorized');
+				return res.status(401).json('Unauthorized');
 			}
 			connection.query(
 				`DELETE FROM ticket WHERE ticket_id = ${ticket_id}`,
 				(delErr, resp) => {
 					if (delErr) {
-						res.status(500).json('Internal Server Error');
+						return res.status(500).json('Internal Server Error');
 					}
 					res.status(202).json({ id: ticket_id });
 				},
