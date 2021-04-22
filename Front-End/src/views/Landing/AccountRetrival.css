@@ -5,12 +5,45 @@
   padding: 30px;
 }
 
-.account-retrival-page div {
-  margin-top: 50px;
-  padding: 25px;
+.account-container {
+  margin: 1.5rem auto 6rem;
+  min-width: 320px;
+  width: 66%;
+  padding: 40px 42px 48px;
+
+  border: 1px solid white;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 3px 3px rgba(16, 16, 16, 0.1);
+  border-radius: 3px;
 }
 
-.account-retrival-page h3 {
-  font-size: 40px;
-  padding: 10px;
+.account-retrieval-page h2 {
+  text-align: left;
+  font-size: 2rem;
+  margin: 3rem 0 1rem;
+  padding: 0;
+}
+
+.form {
+  margin-bottom: 3rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+
+.form label {
+  text-align: left;
+}
+
+.group {
+  margin-top: -16px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.group * {
+  flex-grow: 1;
 }
