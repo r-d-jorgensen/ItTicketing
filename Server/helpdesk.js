@@ -642,17 +642,21 @@ app.post('/api/updateseverity', validateAuth,function(req, res) {
 
 });
 
+app.use((err, _, __, next) => {
+	console.error(err.stack);
+	next(err);
+});
 
 app.use(function(err, req, res, next){
 	if (err.name === 'SyntaxError') {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
 
-	console.error(err);
-	if(err.name === 'UnauthorizedError'){
-		console.log('jwt error');
-		next();
+	if (err.name == 'UnauthorizedError') {
+		return res.status(401).json('Unauthorized');
 	}
+
+	return res.status(500).json('Server Error');
 });
 
 prexit(async () => {
