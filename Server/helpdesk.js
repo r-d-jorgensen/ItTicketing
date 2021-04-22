@@ -378,7 +378,7 @@ app.post('/api/auth', function apiAuth(req, res) {
 app.get('/api/ticketnotes', validateAuth, function(req, res) {
 	let ticketID;
 	try {
-		ticketID = req.query.ticketID;
+		ticketID = req.body.ticketID;
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
@@ -406,9 +406,9 @@ app.post('/api/clientcreate', validateAuth,function(req, res) {
 	let ticket_severity;
 
 	try {
-		title  			= req.body.title;
-		body   			= req.body.body;
-		ticket_severity = req.body.ticket_severity;
+		title  			= req.body.params.title;
+		body   			= req.body.params.body;
+		ticket_severity = req.body.params.ticket_severity;
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
@@ -461,19 +461,19 @@ app.post('/api/addnote', validateAuth,function(req, res) {
 	}
 
 	let ticketID;
-	let body;
-
+	let bodytext;
+	
 	try {
-		ticketID 		= req.body.ticketID;
-		body   			= req.body.body;
+		ticketID 		= req.body.params.ticketID;
+		bodytext		= req.body.params.body;
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
 
-	var sql    = "INSERT INTO ticket_notes (body, ticket_id) VALUES ?";
-	var values = [body, ticketID];
+	var sql    = "INSERT INTO `ticket_notes` (body, ticket_id) VALUES (?, ?)";
+	var values = [bodytext, ticketID];
 
-	connection.query(sql, [values], function(err,result) {
+	connection.query(sql, values, function(err,result) {
 		if(err) throw err;
 		
 		res.status(200).json(result)
@@ -511,7 +511,7 @@ app.post('/api/adduser', validateAuth,function(req, res) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
 
-	var sql    = "INSERT INTO user (email, first_name, last_name, password, phone_number, user_type, username) VALUES ?";
+	var sql    = "INSERT INTO user (email, first_name, last_name, password, phone_number, user_type, username) VALUES (?,?,?,?,?,?,?)";
 	var values = [email, first_name, last_name, password, phone_number, user_type, username];
 
 	connection.query(sql, [values], function(err,result) {
@@ -536,15 +536,15 @@ app.post('/api/updatenote', validateAuth,function(req, res) {
 	let body;
 
 	try {
-		ticketID 		= req.body.ticketID;
-		noteID			= req.body.noteID;
-		body   			= req.body.body;
+		ticketID 		= req.body.params.ticketID;
+		noteID			= req.body.params.noteID;
+		body   			= req.body.params.body;
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
 
 	var sql    = "UPDATE ticket_notes SET body = ? WHERE note_id = ? AND ticket_id = ?";
-	var values = [body, note_id, ticketID];
+	var values = [body, noteID, ticketID];
 
 	connection.query(sql, [values], function(err,result) {
 		if(err) throw err;
@@ -568,8 +568,8 @@ app.post('/api/updatestatus', validateAuth,function(req, res) {
 	let status;
 
 	try {
-		ticketID 		= req.body.ticketID;
-		status			= req.body.status;
+		ticketID 		= req.body.params.ticketID;
+		status			= req.body.params.status;
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
@@ -599,8 +599,8 @@ app.post('/api/deletenote', validateAuth,function(req, res) {
 	let noteID;
 
 	try {
-		ticketID 		= req.body.ticketID;
-		noteID			= req.body.noteID;
+		ticketID 		= req.body.params.ticketID;
+		noteID			= req.body.params.noteID;
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
@@ -630,8 +630,8 @@ app.post('/api/updateseverity', validateAuth,function(req, res) {
 	let severity;
 
 	try {
-		ticketID 		= req.body.ticketID;
-		severity		= req.body.severity;
+		ticketID 		= req.body.params.ticketID;
+		severity		= req.body.params.severity;
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
