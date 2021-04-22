@@ -9,7 +9,11 @@ const ESLintWebpackPlugin = require('eslint-webpack-plugin');
 const PRODUCTION = process.env.NODE_ENV === 'production';
 
 // dotenv loads environment variables from .env.local
-dotenv.config({ path: '.env.local' });
+if (PRODUCTION) {
+  dotenv.config({ path: '.env.prod.local' });
+} else {
+  dotenv.config({ path: '.env.local' });
+}
 
 const PostCSSLoader = {
   loader: 'postcss-loader',
