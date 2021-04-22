@@ -378,17 +378,12 @@ app.post('/api/auth', function apiAuth(req, res) {
 app.get('/api/ticketnotes', validateAuth, function(req, res) {
 	let ticketID;
 	try {
-		ticketID = req.body.ticketID;
+		ticketID = req.query.ticketID;
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
 
-	//Trying to figure out how to get the notes to send with the ticket.
-	//Current sql call that pulls the ticket and the notes is
-	//select * from ticket left join ticket_notes on ticket.ticket_id = ticket_notes.ticket_id where ticket.ticket_id = <ticket_id>
-	//Only problems is it pulls the ticket info multiple times if there are multiple notes
-
-	connection.query('SELECT * FROM  `ticket_notes` WHERE `ticket_id` = ?', [ticketID], (err, result) => {
+	connection.query('SELECT * FROM ticket_notes WHERE ticket_id = ?', [ticketID], (err, result) => {
 		res.status(200).json(result)
 	});
 });
