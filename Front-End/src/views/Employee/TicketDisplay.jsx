@@ -9,9 +9,9 @@ const TICKET_API_URL = `${process.env.TICKET_API_URL}/api`;
 
 const TicketView = ({tickets}) => {
   const { token } = useAuth();
-  const [activeDetails, setActiveDetails] = useState(null);
+  const [activeDetails, setActiveDetails] = useState('');
   const handleDetails = ({ target }) => {
-    if (activeDetails === target.id) setActiveDetails(null); 
+    if (activeDetails === target.id) setActiveDetails(''); 
     else setActiveDetails(target.id);
   };
 
@@ -24,7 +24,7 @@ const TicketView = ({tickets}) => {
       default: return 'Error in database storage of ticket severity';
     }
   }
-  const ticketOwner = {user_id: 1234, company: 'Big Tech', first_name: 'Bob', last_name: 'Bill'};
+
   return (
     <div className={styles['tickets-container']}>
       <h1 id="main-title">Ticket</h1>
@@ -38,8 +38,8 @@ const TicketView = ({tickets}) => {
             &nbsp;<b>Priority - </b>{severityTraslation(ticket.ticket_severity)}
           </p>
           <p className={styles['main-info']}><b>Date Created - </b> {new Date(ticket.created).toUTCString()}</p>
-          <p className={styles['main-info']} ><b>{ticketOwner.company}</b>: 
-            {ticketOwner.user_id} - {ticketOwner.first_name} {ticketOwner.last_name}</p>
+          <p className={styles['main-info']} ><b>{ticket.owner.company}</b>: 
+            {ticket.owner.id} - {ticket.owner.first_name} {ticket.owner.last_name}</p>
           <p className={styles['ticket-detail']} >&emsp;{ticket.body}</p>
           <TicketNotesView
             token={token}
@@ -128,12 +128,13 @@ const TicketNotesView = ({ticketID, activeDetails, setActiveDetails, handleDetai
       </button>
     );
   }
-  const noteOwner = {userID: 123456, firstName: 'Steve', lastName: 'Rodreges'};
+  //should be replaced when API sends right data
+  const noteOwner = {userID: 123456, title: 'Tech', firstName: 'Steve', lastName: 'Johnson'};
   return (
     <div >
       {ticketNotes.map((note) =>
       <div key={note.note_id} className={styles['ticket-detail']} >
-        <h5>{note.title}: {noteOwner.userID} - {noteOwner.firstName} {noteOwner.lastName}</h5>
+        <h5>{noteOwner.title}: {noteOwner.userID} - {noteOwner.firstName} {noteOwner.lastName}</h5>
         <p>&emsp;{note.body}</p>
       </div>,
       )}
@@ -208,7 +209,7 @@ TicketView.propTypes = {
 };
 TicketNotesView.propTypes = {
   ticketID: PropTypes.number.isRequired,
-  activeDetails: PropTypes.number,
+  activeDetails: PropTypes.string,
   setActiveDetails: PropTypes.func.isRequired,
   handleDetails: PropTypes.func.isRequired,
 };

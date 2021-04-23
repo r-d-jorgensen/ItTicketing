@@ -129,7 +129,7 @@ const FilterView = ({setIsLoading, setTickets, setTicketError}) => {
               type="radio"
               name={name}
               value={value}
-              defaultChecked={value === 'All' || value === 'Open'}
+              defaultChecked={value === 'All' || value === 'Both'}
               onClick={handleParamChange} />
             <label className={styles['grid-label']} htmlFor={value}>{value}&nbsp;</label>
           </div>,
