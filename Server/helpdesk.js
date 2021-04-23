@@ -586,18 +586,16 @@ app.post('/api/updatestatus', validateAuth,function(req, res) {
 		ticketID 		= req.body.params.ticketID;
 		status			= req.body.params.status;
 
-		console.log(ticketID)
-		console.log(status)
+		//console.log(ticketID)
+		//console.log(status)
 	} catch (_) {
 		return res.status(400).send({ message: 'Bad Request' });
 	}
 
-	var sql    = "UPDATE ticket SET status = '?' WHERE ticket_id = '?'";
-	var values = [status, ticketID];
+	var sql    = "UPDATE `ticket` SET `status`='"+status+"' WHERE `ticket_id` = '"+ticketID+"'";
 
-	connection.query(sql, [values], function(err,result) {
+	connection.query(sql, function(err,result) {
 		if(err) throw err;
-		
 		res.status(200).json(result)
 	})
 
