@@ -28,7 +28,7 @@ function Home() {
             >
               Log In
             </Link>
-            or
+            &nbsp;or&nbsp;
             <Link
               className={styles.link}
               to="/registration"
