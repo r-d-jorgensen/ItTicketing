@@ -260,6 +260,7 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 	connection.query(query, (err, tickets) => {
 		res.status(200).json(Array.from(tickets || [], (t) => {
 			t.owner = JSON.parse(t.owner);
+			t.owner.company = t.company;
 			t.assigned = JSON.parse(t.assigned);
 			t.assigned && t.assigned.forEach((emp) => { emp.company = t.company; });
 			delete t.company;
