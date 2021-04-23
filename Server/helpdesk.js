@@ -170,15 +170,15 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 	const userId = connection.escape(req.user.id);
 	const query = `
 		select
-			t.ticket_id as id,
-			t.created,
-			t.title,
-			t.body,
-			t.status,
-			t.date_closed,
-			t.user_id,
-			t.company,
-			t.ticket_severity,
+			ff.ticket_id as id,
+			ff.created,
+			ff.title,
+			ff.body,
+			ff.status,
+			ff.date_closed,
+			ff.owner,
+			ff.company,
+			ff.ticket_severity,
 			JSON_ARRAYAGG(JSON_OBJECT(
 				'first_name', uta.first_name,
 				'last_name', uta.last_name,
@@ -186,7 +186,16 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 				'email', uta.email
 			)) as assigned
 		from
-			ticket t
+			(select
+				t.*,
+				JSON_OBJECT(
+				'first_name', u.first_name,
+				'last_name', u.last_name,
+				'email', u.email,
+				'id', u.user_id
+				) as owner
+			from ticket t
+			join user u using(user_id)) as ff
 			join (
 				select
 					ta.ticket_id,
@@ -202,26 +211,35 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 			) uta using(ticket_id)
 		where (
 			${filters.date ? `created BETWEEN ${filters.date.start} and ${filters.date.end} and` : ''}
-			${filters.priority ? 't.ticket_severity = ' + filters.priority + ' and' : ''}
-			${filters.status ? 't.status = ' + filters.status + ' and' : ''}
-			(t.user_id = ${userId} or uta.employee_id = ${userId}) and
-			((t.date_closed <= now() and (uta.assign_end is null or uta.assign_end = t.date_closed)) or
-			(t.date_closed is null and (uta.assign_end is null or not uta.assign_end < now())))
+			${filters.priority ? 'ff.ticket_severity = ' + filters.priority + ' and' : ''}
+			${filters.status ? 'ff.status = ' + filters.status + ' and' : ''}
+			(ff.user_id = ${userId} or uta.employee_id = ${userId}) and
+			((ff.date_closed <= now() and (uta.assign_end is null or uta.assign_end = ff.date_closed)) or
+			(ff.date_closed is null and (uta.assign_end is null or not uta.assign_end < now())))
 		)
-		group by t.ticket_id
+		group by ff.ticket_id
 		union select
-			t2.ticket_id as id,
-			t2.created,
-			t2.title,
-			t2.body,
-			t2.status,
-			t2.date_closed,
-			t2.user_id,
-			t2.company,
-			t2.ticket_severity,
+			ff2.ticket_id as id,
+			ff2.created,
+			ff2.title,
+			ff2.body,
+			ff2.status,
+			ff2.date_closed,
+			ff2.owner,
+			ff2.company,
+			ff2.ticket_severity,
 			null
 		from
-			ticket t2
+			(select
+				t2.*,
+				JSON_OBJECT(
+				'first_name', u.first_name,
+				'last_name', u.last_name,
+				'email', u.email,
+				'id', u.user_id
+				) as owner
+			from ticket t2
+			join user u using(user_id)) as ff2
 			join (
 				select
 					ta.ticket_id,
@@ -232,15 +250,16 @@ app.get('/api/tickets', validateAuth, function(req, res) {
 			) unassigned using(ticket_id)
 		where (
 			${filters.date ? `created BETWEEN ${filters.date.start} and ${filters.date.end} and` : ''}
-			${filters.priority ? 't2.ticket_severity = ' + filters.priority + ' and' : ''}
-			${filters.status ? 't2.status = ' + filters.status + ' and' : ''}
-			t2.user_id = ${userId}
+			${filters.priority ? 'ff2.ticket_severity = ' + filters.priority + ' and' : ''}
+			${filters.status ? 'ff2.status = ' + filters.status + ' and' : ''}
+			ff2.user_id = ${userId}
 		)
 		order by created
 	`;
 
 	connection.query(query, (err, tickets) => {
 		res.status(200).json(Array.from(tickets || [], (t) => {
+			t.owner = JSON.parse(t.owner);
 			t.assigned = JSON.parse(t.assigned);
 			t.assigned && t.assigned.forEach((emp) => { emp.company = t.company; });
 			delete t.company;
