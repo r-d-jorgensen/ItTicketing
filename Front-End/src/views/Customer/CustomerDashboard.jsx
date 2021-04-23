@@ -318,7 +318,13 @@ CustomerDashboardView.propTypes = {
     body: PropTypes.string.isRequired,
     status: PropTypes.number.isRequired,
     date_closed: PropTypes.string,
-    user_id: PropTypes.number.isRequired,
+    owner: PropTypes.exact({
+      id: PropTypes.number.isRequired,
+      first_name: PropTypes.string.isRequired,
+      last_name: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+      company: PropTypes.string.isRequired,
+    }).isRequired,
     ticket_severity: PropTypes.number.isRequired,
     assigned: PropTypes.arrayOf(PropTypes.exact({
       first_name: PropTypes.string.isRequired,
