@@ -32,14 +32,14 @@ const TicketView = ({tickets}) => {
       <div key={ticket.id} className={styles['active-ticket']}>
         <h3 className={styles['main-info']} id="ticket-title" >{ticket.title}</h3>
         <div className={styles['ticket-body']}>
-          <h4 className={styles['main-info']} >Ticket ID - {ticket.id}</h4>
+          <h4 className={styles['main-info']} >Ticket ID #{ticket.id}</h4>
           <p className={styles['main-info']} >
             <b>Status - </b> {ticket.status === 0 ? 'Closed' : 'Open' }
             &nbsp;<b>Priority - </b>{severityTraslation(ticket.ticket_severity)}
           </p>
           <p className={styles['main-info']}><b>Date Created - </b> {new Date(ticket.created).toUTCString()}</p>
           <p className={styles['main-info']} ><b>{ticket.owner.company}</b>: 
-            {ticket.owner.id} - {ticket.owner.first_name} {ticket.owner.last_name}</p>
+            #{ticket.owner.id} - {ticket.owner.first_name} {ticket.owner.last_name}</p>
           <p className={styles['ticket-detail']} >&emsp;{ticket.body}</p>
           <TicketNotesView
             token={token}
@@ -134,7 +134,7 @@ const TicketNotesView = ({ticketID, activeDetails, setActiveDetails, handleDetai
     <div >
       {ticketNotes.map((note) =>
       <div key={note.note_id} className={styles['ticket-detail']} >
-        <h5>{noteOwner.title}: {noteOwner.userID} - {noteOwner.firstName} {noteOwner.lastName}</h5>
+        <h5>{noteOwner.title}: #{noteOwner.userID} - {noteOwner.firstName} {noteOwner.lastName}</h5>
         <p>&emsp;{note.body}</p>
       </div>,
       )}
