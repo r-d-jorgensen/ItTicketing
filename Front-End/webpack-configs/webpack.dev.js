@@ -1,8 +1,10 @@
+// eslint-disable-next-line import/order
+const baseConfig = require('./webpack.base.js');
+
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
-//const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
-const baseConfig = require('./webpack.base.js');
+const ENABLE_REFRESH = process.env.ENABLE_REFRESH === 'true';
 
 module.exports = merge(baseConfig, {
   devServer: {
@@ -12,7 +14,7 @@ module.exports = merge(baseConfig, {
     // Necessary for an SPA
     historyApiFallback: true,
     // Only hot reload without page refresh
-    //hot: 'only',
+    hot: ENABLE_REFRESH ? 'only' : false,
 
     proxy: {
       '/api': 'http://localhost:8081',
@@ -27,15 +29,16 @@ module.exports = merge(baseConfig, {
           {
             loader: 'babel-loader',
             options: {
-              //plugins: ['react-refresh/babel'],
+              plugins: ENABLE_REFRESH ? ['react-refresh/babel'] : [],
             },
           },
         ],
       },
     ],
   },
-  plugins: [
-    //new webpack.HotModuleReplacementPlugin(),
-    //new ReactRefreshWebpackPlugin(),
-  ],
+  plugins: ENABLE_REFRESH ? [
+    new webpack.HotModuleReplacementPlugin(),
+    // eslint-disable-next-line global-require
+    new (require('@pmmmwh/react-refresh-webpack-plugin'))(),
+  ] : [],
 });
